@@ -1,16 +1,25 @@
 """
 Главный файл FastAPI приложения
 """
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from routes import registration, login, forgot_password
+from admin import init_admin
 
 # Создание приложения FastAPI
 app = FastAPI(
     title="SafeLogist API",
     description="API для системы логистики",
     version="1.0.0"
+)
+
+# Настройка сессий (нужно для админ панели)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SECRET_KEY", "admin-secret-key-change-this")
 )
 
 # Настройка CORS (разрешить запросы с фронтенда)
@@ -26,6 +35,9 @@ app.add_middleware(
 app.include_router(registration.router)
 app.include_router(login.router)
 app.include_router(forgot_password.router)
+
+# Подключение админ панели
+init_admin(app)
 
 
 @app.get("/")

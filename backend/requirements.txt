@@ -9,4 +9,6 @@ python-multipart==0.0.6
 pydantic[email]==2.5.0
 python-dotenv==1.0.0
 aiosmtplib==3.0.1
+sqladmin==0.17.0
+itsdangerous==2.1.2
 

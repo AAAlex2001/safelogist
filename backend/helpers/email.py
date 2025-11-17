@@ -34,7 +34,7 @@ async def send_email_code(to_email: str, code: str) -> None:
             username=EMAIL_HOST_USER,
             password=EMAIL_HOST_PASSWORD,
             use_tls=True,
-            source_address=("0.0.0.0", 0),  # <--- ⚡️ ФОРСИРУЕМ IPv4
+            source_address=("0.0.0.0", 0),
         )
 
         print(f"✅ Email успешно отправлен на {to_email}")

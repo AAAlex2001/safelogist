@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # PostgreSQL база данных
+  db:
+    image: postgres:15-alpine
+    container_name: safelogist_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-safelogist}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-safelogist_password}
+      POSTGRES_DB: ${DB_NAME:-safelogist_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-safelogist}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - safelogist_network
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: safelogist_backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-safelogist}:${DB_PASSWORD:-safelogist_password}@db:5432/${DB_NAME:-safelogist_db}
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads  # Для хранения загруженных файлов
+    networks:
+      - safelogist_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  safelogist_network:
+    driver: bridge
+

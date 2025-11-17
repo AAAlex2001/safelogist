@@ -1,10 +1,18 @@
+import os
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения
+load_dotenv()
 
 # --------------------------------------------------------------------
 # Настройки токена
 # --------------------------------------------------------------------
-SECRET_KEY = "SUPER_SECRET_KEY_CHANGE_THIS"     # поменять потом
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    ""
+)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

@@ -16,13 +16,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class PasswordResetService:
     CODE_EXPIRE_MINUTES = 10
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     # ----------------------------------------------------------------------
     # 1. Запрос кода по email
     # ----------------------------------------------------------------------
-    async def request_code(self, email: str):
+    async def request_code(self, email: str) -> None:
         result = await self.db.execute(select(User).where(User.email == email))
         user = result.scalars().first()
 
@@ -31,7 +31,7 @@ class PasswordResetService:
 
         user.password_reset_codes.clear()
 
-        code = random.randint(100000, 999999)
+        code: int = random.randint(100000, 999999)
 
         reset_code = PasswordResetCode(
             code=str(code),
@@ -43,12 +43,10 @@ class PasswordResetService:
         await self.db.commit()
         await send_email_code(user.email, str(code))
 
-        return {"message": "Код отправлен на почту"}
-
     # ----------------------------------------------------------------------
-    # 2. Проверка кода
+    # 2. Проверка кода — возвращаем user_id
     # ----------------------------------------------------------------------
-    async def verify_code(self, code: str):
+    async def verify_code(self, code: str) -> int:
         result = await self.db.execute(
             select(PasswordResetCode).where(PasswordResetCode.code == code)
         )
@@ -65,20 +63,16 @@ class PasswordResetService:
     # ----------------------------------------------------------------------
     # 3. Установка нового пароля (по user_id)
     # ----------------------------------------------------------------------
-    async def set_new_password(self, user_id: int, new_password: str):
-        # находим пользователя
+    async def set_new_password(self, user_id: int, new_password: str) -> None:
         result = await self.db.execute(select(User).where(User.id == user_id))
         user = result.scalars().first()
 
         if not user:
             raise HTTPException(404, "Пользователь не найден")
 
-        # обновляем пароль
         user.password = pwd_context.hash(new_password)
 
-        # чистим все коды этого пользователя (одноразовые)
+        # чистим одноразовые коды
         user.password_reset_codes.clear()
 
         await self.db.commit()
-
-        return {"message": "Пароль успешно обновлён"}

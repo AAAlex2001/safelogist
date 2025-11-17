@@ -7,7 +7,7 @@ SMTP_USER = "your_email@mail.ru"
 SMTP_PASSWORD = "your_app_password"
 
 
-async def send_email_code(to_email: str, code: str):
+async def send_email_code(to_email: str, code: str) -> None:
     message = EmailMessage()
     message["From"] = SMTP_USER
     message["To"] = to_email

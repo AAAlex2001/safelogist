@@ -6,7 +6,7 @@ from schemas.registration import UserRegistration, UserResponse
 from services.registration import RegistrationService
 
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/register", tags=["auth"])
 
 
 @router.post("/register", response_model=UserResponse)

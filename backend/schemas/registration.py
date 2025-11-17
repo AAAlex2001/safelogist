@@ -33,7 +33,7 @@ class UserRegistration(BaseModel):
 class UserResponse(BaseModel):
     "модель для ответа на фронтенд"
     id: int
-    first_name: str
+    name: str | None = None
     role: UserRole
     email: EmailStr
     phone: str

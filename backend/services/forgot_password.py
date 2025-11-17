@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import delete
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 import random
@@ -29,17 +30,20 @@ class PasswordResetService:
         if not user:
             raise HTTPException(404, "Пользователь с таким email не найден")
 
-        user.password_reset_codes.clear()
+        # Удаляем старые коды
+        await self.db.execute(
+            delete(PasswordResetCode).where(PasswordResetCode.user_id == user.id)
+        )
 
         code: int = random.randint(100000, 999999)
 
         reset_code = PasswordResetCode(
+            user_id=user.id,
             code=str(code),
             expires_at=datetime.utcnow() + timedelta(minutes=self.CODE_EXPIRE_MINUTES),
         )
 
-        user.password_reset_codes.append(reset_code)
-
+        self.db.add(reset_code)
         await self.db.commit()
         await send_email_code(user.email, str(code))
 
@@ -58,7 +62,7 @@ class PasswordResetService:
         if code_obj.expires_at < datetime.utcnow():
             raise HTTPException(400, "Код истёк")
 
-        return code_obj.user.id
+        return code_obj.user_id
 
     # ----------------------------------------------------------------------
     # 3. Установка нового пароля (по user_id)
@@ -73,6 +77,8 @@ class PasswordResetService:
         user.password = pwd_context.hash(new_password)
 
         # чистим одноразовые коды
-        user.password_reset_codes.clear()
+        await self.db.execute(
+            delete(PasswordResetCode).where(PasswordResetCode.user_id == user.id)
+        )
 
         await self.db.commit()

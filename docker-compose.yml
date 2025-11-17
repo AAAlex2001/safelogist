@@ -25,6 +25,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: safelogist_backend
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql+asyncpg://${DB_USER:-safelogist}:${DB_PASSWORD:-safelogist_password}@db:5432/${DB_NAME:-safelogist_db}
       SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this}

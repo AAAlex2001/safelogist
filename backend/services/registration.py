@@ -55,7 +55,7 @@ class RegistrationService:
 
         # Создание пользователя
         new_user = User(
-            first_name=data.first_name,
+            name=data.first_name,
             role=data.role,
             phone=data.phone,
             email=data.email,

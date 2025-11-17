@@ -9,7 +9,7 @@ from schemas.forgot_password import (
     PasswordResetReset,
 )
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/forgot-password", tags=["auth"])
 
 
 # ----------------------------------------------------------------------

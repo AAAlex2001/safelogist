@@ -19,7 +19,7 @@ app = FastAPI(
 # Настройка сессий (нужно для админ панели)
 app.add_middleware(
     SessionMiddleware,
-    secret_key=os.getenv("SECRET_KEY", "admin-secret-key-change-this")
+    secret_key=os.getenv("SECRET_KEY")
 )
 
 # Настройка CORS (разрешить запросы с фронтенда)

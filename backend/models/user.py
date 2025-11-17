@@ -6,7 +6,7 @@ from enum import Enum as PyEnum
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, BigInteger, Enum
 from sqlalchemy.orm import relationship
 
-from backend.models.base import Base
+from models.base import Base
 
 
 class UserRole(str, PyEnum):

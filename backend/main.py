@@ -4,7 +4,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.routes import registration, login, forgot_password
+from routes import registration, login, forgot_password
 
 # Создание приложения FastAPI
 app = FastAPI(

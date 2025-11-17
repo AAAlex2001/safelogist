@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from backend.models.base import Base
+from sqlalchemy.orm import relationship
+from models.base import Base
 
 class PasswordResetCode(Base):
     __tablename__ = "password_reset_codes"

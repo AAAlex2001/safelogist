@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from backend.models.user import User
-from backend.schemas.registration import UserRegistration
+from models.user import User
+from schemas.registration import UserRegistration
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
 

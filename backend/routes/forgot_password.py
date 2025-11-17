@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database import get_db
-from backend.services.forgot_password import PasswordResetService
-from backend.schemas.forgot_password import (
+from database import get_db
+from services.forgot_password import PasswordResetService
+from schemas.forgot_password import (
     PasswordResetRequest,
     PasswordResetVerify,
     PasswordResetReset,

@@ -6,9 +6,9 @@ import random
 
 from passlib.context import CryptContext
 
-from backend.models.user import User
-from backend.models.password_reset import PasswordResetCode
-from backend.helpers.email import send_email_code
+from models.user import User
+from models.forgot_password import PasswordResetCode
+from helpers.email import send_email_code
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

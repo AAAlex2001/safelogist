@@ -17,6 +17,6 @@ async def login(
     service = LoginService(db)
     user = await service.login(data)
 
-    token = create_access_token({"sub": str(user.id)})
+    token = create_access_token(user.id)
 
     return LoginResponse(access_token=token)

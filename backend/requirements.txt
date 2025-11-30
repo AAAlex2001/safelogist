@@ -11,4 +11,5 @@ python-dotenv==1.0.0
 aiosmtplib==3.0.1
 sqladmin==0.17.0
 itsdangerous==2.1.2
+httpx==0.25.2
 

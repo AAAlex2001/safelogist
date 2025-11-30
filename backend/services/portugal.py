@@ -12,7 +12,7 @@ load_dotenv()
 
 # Токен для API португальских компаний
 PORTUGAL_API_TOKEN = os.getenv("PORTUGAL_API_TOKEN", "692c9b66aa3165c927048dd3")
-PORTUGAL_API_BASE_URL = os.getenv("PORTUGAL_API_BASE_URL", "https://company.openai.com")
+PORTUGAL_API_BASE_URL = os.getenv("PORTUGAL_API_BASE_URL", "https://company.openapi.com")
 
 
 class PortugalService:
@@ -43,7 +43,7 @@ class PortugalService:
         }
         
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.get(url, headers=headers)
                 
                 # Проверяем статус ответа
@@ -54,9 +54,10 @@ class PortugalService:
                     )
                 
                 if response.status_code != 200:
+                    error_text = response.text[:200] if response.text else "No error message"
                     raise HTTPException(
                         status_code=status.HTTP_502_BAD_GATEWAY,
-                        detail=f"External API error: {response.status_code}"
+                        detail=f"External API error: {response.status_code}, {error_text}"
                     )
                 
                 # Парсим ответ

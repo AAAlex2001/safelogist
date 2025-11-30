@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, status, Path
 from schemas.portugal import PortugalApiResponse, PtAdvanced
 from schemas.france import FranceApiResponse, FrAdvanced
 from schemas.poland import PolandApiResponse, PlAdvanced
+from schemas.switzerland import SwitzerlandApiResponse, ChAdvanced
 from services.openapi_service import OpenAPIService
 
 router = APIRouter(tags=["openapi"])
@@ -113,3 +114,42 @@ async def get_poland_company_advanced(
         )
 
     return response.data[0]
+
+
+# ============================================================================
+# Швейцария
+# ============================================================================
+
+@router.get("/CH-advanced/{code}", response_model=ChAdvanced)
+async def get_switzerland_company_advanced(
+    code: str = Path(..., description="Swiss company ID, VAT, taxCode или Commercial Register number")
+):
+    """
+    Получить информацию о швейцарской компании по идентификатору:
+
+    - companyNumber (Швейцарский Торговый Реестр)
+    - VAT номер
+    - Swiss tax identifier
+    - LEI
+    - любой поддерживаемый ID
+
+    Returns:
+        ChAdvanced — расширенная информация о компании
+    """
+    service = OpenAPIService()
+    response = await service.get_company("CH", "advanced", code, SwitzerlandApiResponse)
+
+    if not response.success:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=response.message or "Request failed",
+        )
+
+    if not response.data or len(response.data) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Company not found",
+        )
+
+    return response.data[0]
+

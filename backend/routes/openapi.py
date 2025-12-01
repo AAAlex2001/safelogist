@@ -2,104 +2,45 @@
 Роуты для работы с OpenAPI компаний (разделены по странам)
 """
 from fastapi import APIRouter, HTTPException, status, Path
-
-from schemas.portugal import PortugalApiResponse, PtAdvanced
-from schemas.france import FranceApiResponse, FrAdvanced
-from schemas.poland import PolandApiResponse, PlAdvanced
-from schemas.switzerland import SwitzerlandApiResponse, ChAdvanced
+from schemas.world import WorldApiResponse, WorldCompany
 from services.openapi_service import OpenAPIService
 
 router = APIRouter(tags=["openapi"])
 
 
 # ============================================================================
-# Португалия
+# Мир (World / WW)
 # ============================================================================
 
-@router.get("/PT-advanced/{code}", response_model=PtAdvanced)
-async def get_portugal_company(
-    code: str = Path(..., description="VAT код, налоговый код или ID компании (например: PT500273170)")
+@router.get("/WW-advanced/{code}", response_model=WorldCompany)
+async def get_world_company_advanced(
+    code: str = Path(
+        ...,
+        description=(
+            "Идентификатор компании (VAT, taxCode, companyNumber и т.п.), "
+            "по которому выполняется глобальный поиск (Italy/FR/DE/ES/PT/GB/BE/AT/CH/PL/WW)"
+        ),
+    )
 ):
     """
-    Получить информацию о португальской компании по VAT коду, налоговому коду или ID
-    
-    - **code**: VAT код, налоговый код или ID компании (например: PT500273170)
-    
-    Returns:
-        PtAdvanced: Расширенная информация о португальской компании
+    Глобальный поиск компании по любому коду (VAT, taxCode, companyNumber и т.д.)
+    среди стран и глобального реестра (WW).
+
+    Возвращает первую найденную компанию соответствующего типа:
+    - ItAdvanced
+    - FrAdvanced
+    - DeAdvanced
+    - EsAdvanced
+    - PtAdvanced
+    - GbAdvanced
+    - BeAdvanced
+    - AtAdvanced
+    - ChAdvanced
+    - PlAdvanced
+    - WwAdvanced
     """
     service = OpenAPIService()
-    response = await service.get_company("PT", "advanced", code, PortugalApiResponse)
-    
-    if not response.success:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=response.message or "Request failed"
-        )
-    
-    if not response.data or len(response.data) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Company not found"
-        )
-    
-    return response.data[0]
-
-
-# ============================================================================
-# Франция
-# ============================================================================
-
-@router.get("/FR-advanced/{code}", response_model=FrAdvanced)
-async def get_france_company_advanced(
-    code: str = Path(..., description="SIRET код, налоговый код или ID компании")
-):
-    """
-    Получить информацию о французской компании по SIRET коду, налоговому коду или ID
-    
-    - **code**: SIRET код, налоговый код или ID компании
-    
-    Returns:
-        FrAdvanced: Расширенная информация о французской компании
-    """
-    service = OpenAPIService()
-    response = await service.get_company("FR", "advanced", code, FranceApiResponse)
-    
-    if not response.success:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=response.message or "Request failed"
-        )
-    
-    if not response.data or len(response.data) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Company not found"
-        )
-    
-    return response.data[0]
-
-# ============================================================================
-# Польша
-# ============================================================================
-
-@router.get("/PL-advanced/{code}", response_model=PlAdvanced)
-async def get_poland_company_advanced(
-    code: str = Path(..., description="NIP, REGON, KRS, VAT код или ID компании")
-):
-    """
-    Получить информацию о польской компании по любому идентификатору:
-    - **NIP** (налоговый номер)
-    - **REGON** (реестр гос. экономики)
-    - **KRS** (нац. судовой реестр)
-    - **VAT** номер
-    - **любой ID**, поддерживаемый OpenAPI
-
-    Returns:
-        PlAdvanced — расширенная информация о польской компании
-    """
-    service = OpenAPIService()
-    response = await service.get_company("PL", "advanced", code, PolandApiResponse)
+    response = await service.get_company("WW", "advanced", code, WorldApiResponse)
 
     if not response.success:
         raise HTTPException(
@@ -113,43 +54,10 @@ async def get_poland_company_advanced(
             detail="Company not found",
         )
 
+    # Берём первую найденную; тип будет один из WorldCompany (Union[…])
     return response.data[0]
 
 
-# ============================================================================
-# Швейцария
-# ============================================================================
 
-@router.get("/CH-advanced/{code}", response_model=ChAdvanced)
-async def get_switzerland_company_advanced(
-    code: str = Path(..., description="Swiss company ID, VAT, taxCode или Commercial Register number")
-):
-    """
-    Получить информацию о швейцарской компании по идентификатору:
 
-    - companyNumber (Швейцарский Торговый Реестр)
-    - VAT номер
-    - Swiss tax identifier
-    - LEI
-    - любой поддерживаемый ID
-
-    Returns:
-        ChAdvanced — расширенная информация о компании
-    """
-    service = OpenAPIService()
-    response = await service.get_company("CH", "advanced", code, SwitzerlandApiResponse)
-
-    if not response.success:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=response.message or "Request failed",
-        )
-
-    if not response.data or len(response.data) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Company not found",
-        )
-
-    return response.data[0]
 

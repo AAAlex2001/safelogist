@@ -2,7 +2,7 @@
 Роуты для работы с OpenAPI компаний (разделены по странам)
 """
 from fastapi import APIRouter, HTTPException, status, Path
-from schemas.world import WorldApiResponse, WorldCompany
+from schemas.world import WwTopApiResponse, WwTop
 from services.openapi_service import OpenAPIService
 
 router = APIRouter(tags=["openapi"])
@@ -12,35 +12,25 @@ router = APIRouter(tags=["openapi"])
 # Мир (World / WW)
 # ============================================================================
 
-@router.get("/WW-advanced/{code}", response_model=WorldCompany)
-async def get_world_company_advanced(
-    code: str = Path(
-        ...,
-        description=(
-            "Идентификатор компании (VAT, taxCode, companyNumber и т.п.), "
-            "по которому выполняется глобальный поиск (Italy/FR/DE/ES/PT/GB/BE/AT/CH/PL/WW)"
-        ),
-    )
+@router.get("/WW-top/{country}/{code}", response_model=WwTop)
+async def get_world_top_company(
+        country: str = Path(..., description="ISO2 код страны (IT, FR, DE, ES, PT, GB, BE, AT, CH, PL, ...)"),
+        code: str = Path(..., description="VAT, taxCode, companyNumber или ID компании")
 ):
     """
-    Глобальный поиск компании по любому коду (VAT, taxCode, companyNumber и т.д.)
-    среди стран и глобального реестра (WW).
+    Получить расширенную Top-информацию компании через Worldwide Top endpoint.
 
-    Возвращает первую найденную компанию соответствующего типа:
-    - ItAdvanced
-    - FrAdvanced
-    - DeAdvanced
-    - EsAdvanced
-    - PtAdvanced
-    - GbAdvanced
-    - BeAdvanced
-    - AtAdvanced
-    - ChAdvanced
-    - PlAdvanced
-    - WwAdvanced
+    API endpoint:
+        /WW-top/{country}/{code}
     """
     service = OpenAPIService()
-    response = await service.get_company("WW", "advanced", code, WorldApiResponse)
+
+    response = await service.get_company(
+        "WW",
+        f"top/{country}",
+        code,
+        WwTopApiResponse
+    )
 
     if not response.success:
         raise HTTPException(
@@ -54,8 +44,8 @@ async def get_world_company_advanced(
             detail="Company not found",
         )
 
-    # Берём первую найденную; тип будет один из WorldCompany (Union[…])
     return response.data[0]
+
 
 
 

@@ -1,195 +1,10 @@
-"""
-Схемы для "мирового" поиска компаний (WW-advanced)
-"""
-from typing import Optional, List, Union
-from enum import Enum
+from typing import Optional, List
 from pydantic import BaseModel, Field
-
-# Импортируем уже существующие схемы стран
-from schemas.france import FrAdvanced
-from schemas.germany import DeAdvanced
-from schemas.spain import EsAdvanced
-from schemas.portugal import PtAdvanced
-from schemas.united_kingdom import GbAdvanced
-from schemas.belgium import BeAdvanced
-from schemas.austria import AtAdvanced
-from schemas.switzerland import ChAdvanced
-from schemas.poland import PlAdvanced
+from enum import Enum
 
 
 # ============================================================================
-# Итальянская часть (Advanced / Italy)
-# ============================================================================
-
-class ItRegion(BaseModel):
-    code: Optional[str] = None
-    description: Optional[str] = None
-
-
-class ItRegisteredOffice(BaseModel):
-    toponym: Optional[str] = None
-    street: Optional[str] = None
-    street_number: Optional[str] = Field(None, alias="streetNumber")
-    street_name: Optional[str] = Field(None, alias="streetName")
-    town: Optional[str] = None
-    hamlet: Optional[str] = None
-    province: Optional[str] = None
-    zip_code: Optional[str] = Field(None, alias="zipCode")
-    gps: Optional["ItGpsCoordinates"] = None
-    town_code: Optional[str] = Field(None, alias="townCode")
-    region: Optional[ItRegion] = None
-
-    class Config:
-        populate_by_name = True
-
-
-class ItGpsCoordinates(BaseModel):
-    coordinates: List[float] = Field(..., description="(longitude, latitude)")
-
-
-ItRegisteredOffice.model_rebuild()
-
-
-class ItAddress(BaseModel):
-    registered_office: Optional[ItRegisteredOffice] = Field(
-        None,
-        alias="registeredOffice",
-    )
-
-    class Config:
-        populate_by_name = True
-
-
-class ItActivityStatus(str, Enum):
-    ATTIVA = "ATTIVA"
-    REGISTRATA = "REGISTRATA"
-    INATTIVA = "INATTIVA"
-    SOSPESA = "SOSPESA"
-    IN_ISCRIZIONE = "IN_ISCRIZIONE"
-    CESSATA = "CESSATA"
-
-
-class ItAtecoCode(BaseModel):
-    code: Optional[str] = None
-    description: Optional[str] = None
-
-
-class ItAtecoClassification(BaseModel):
-    ateco: Optional[ItAtecoCode] = None           # ATECO 2025
-    ateco2022: Optional[ItAtecoCode] = None       # ATECO 2022
-    ateco2007: Optional[ItAtecoCode] = None       # ATECO 2007
-
-
-class ItLegalForms(BaseModel):
-    code: Optional[str] = None
-    description: Optional[str] = None
-
-
-class ItVatGroup(BaseModel):
-    vat_group_participation: Optional[bool] = Field(
-        None,
-        alias="vatGroupParticipation",
-    )
-    is_vat_group_leader: Optional[bool] = Field(
-        None,
-        alias="isVatGroupLeader",
-    )
-    registry_ok: Optional[bool] = Field(
-        None,
-        alias="registryOk",
-    )
-
-    class Config:
-        populate_by_name = True
-
-
-class ItBalanceSheet(BaseModel):
-    year: Optional[int] = None
-    balance_sheet_date: Optional[str] = Field(None, alias="balanceSheetDate")
-    turnover: Optional[int] = None
-    net_worth: Optional[int] = Field(None, alias="netWorth")
-    employees: Optional[int] = None
-    share_capital: Optional[int] = Field(None, alias="shareCapital")
-    total_staff_cost: Optional[int] = Field(None, alias="totalStaffCost")
-    total_assets: Optional[int] = Field(None, alias="totalAssets")
-    avg_gross_salary: Optional[float] = Field(None, alias="avgGrossSalary")
-
-    class Config:
-        populate_by_name = True
-
-
-class ItBalanceSheets(BaseModel):
-    last: Optional[ItBalanceSheet] = None
-    all: Optional[List[ItBalanceSheet]] = None
-
-
-class ItShareHolder(BaseModel):
-    company_name: Optional[str] = Field(None, alias="companyName")
-    name: Optional[str] = None
-    surname: Optional[str] = None
-    tax_code: Optional[str] = Field(None, alias="taxCode")
-    percent_share: Optional[float] = Field(None, alias="percentShare")
-
-    class Config:
-        populate_by_name = True
-
-
-class ItAdvanced(BaseModel):
-    """Italian Advanced (world endpoint)"""
-    tax_code: Optional[str] = Field(None, alias="taxCode")
-    company_name: Optional[str] = Field(None, alias="companyName")
-    vat_code: Optional[str] = Field(None, alias="vatCode")
-    address: Optional[ItAddress] = None
-    activity_status: Optional[ItActivityStatus] = Field(
-        None,
-        alias="activityStatus",
-    )
-    rea_code: Optional[str] = Field(None, alias="reaCode")
-    cciaa: Optional[str] = None
-    ateco_classification: Optional[ItAtecoClassification] = Field(
-        None,
-        alias="atecoClassification",
-    )
-    detailed_legal_form: Optional[ItLegalForms] = Field(
-        None,
-        alias="detailedLegalForm",
-    )
-    start_date: Optional[str] = Field(None, alias="startDate")
-    registration_date: Optional[str] = Field(None, alias="registrationDate")
-    end_date: Optional[str] = Field(None, alias="endDate")
-    pec: Optional[str] = None
-    tax_code_ceased: Optional[bool] = Field(None, alias="taxCodeCeased")
-    tax_code_ceased_timestamp: Optional[int] = Field(
-        None,
-        alias="taxCodeCeasedTimestamp",
-    )
-    vat_group: Optional[ItVatGroup] = Field(None, alias="vatGroup")
-    creation_timestamp: Optional[int] = Field(None, alias="creationTimestamp")
-    last_update_timestamp: Optional[int] = Field(
-        None,
-        alias="lastUpdateTimestamp",
-    )
-    sdi_code: Optional[str] = Field(None, alias="sdiCode")
-    sdi_code_timestamp: Optional[int] = Field(
-        None,
-        alias="sdiCodeTimestamp",
-    )
-    balance_sheets: Optional[ItBalanceSheets] = Field(
-        None,
-        alias="balanceSheets",
-    )
-    share_holders: Optional[List[ItShareHolder]] = Field(
-        None,
-        alias="shareHolders",
-    )
-    id: Optional[str] = None
-
-    class Config:
-        populate_by_name = True
-
-
-# ============================================================================
-# WorldWide (WwAdvanced)
+# Activity status
 # ============================================================================
 
 class WwActivityStatus(str, Enum):
@@ -206,60 +21,131 @@ class WwActivityStatus(str, Enum):
     ACTIVE_ADMIN_NON_COMPLIANT = "ACTIVE (ADMINISTRATIVELY NON-COMPLIANT)"
     BANKRUPTCY = "BANKRUPTCY"
     ACTIVE_INSOLVENCY_PROCEEDINGS = "ACTIVE (INSOLVENCY PROCEEDINGS)"
-    ACTIVE_DEFAULT_PAYMENT = "ACTIVE (DEFAULT OF PAYMENT)"
+    ACTIVE_DEFAULT_OF_PAYMENT = "ACTIVE (DEFAULT OF PAYMENT)"
     ACTIVE_REORGANIZATION = "ACTIVE (REORGANIZATION)"
     DISSOLVED_DEMERGER = "DISSOLVED (DEMERGER)"
     ACTIVE_RESCUE_PLAN = "ACTIVE (RESCUE PLAN)"
 
 
-class WwGpsCoordinates(BaseModel):
+# ============================================================================
+# Company markers
+# ============================================================================
+
+class WwMarker(BaseModel):
+    label: Optional[str] = None
+    number: Optional[str] = None
+    types: Optional[List[str]] = None
+
+
+# ============================================================================
+# Address + GPS
+# ============================================================================
+
+class WwGps(BaseModel):
     coordinates: List[float] = Field(..., description="(longitude, latitude)")
 
 
-class WwRegisteredOffice(BaseModel):
+class WwLocationArea(BaseModel):
+    type: Optional[str] = None
+    description: Optional[str] = None
+
+
+class WwRegisteredOfficeTop(BaseModel):
+    town: Optional[str] = None
+    native_town: Optional[str] = Field(None, alias="nativeTown")
+    country: Optional[str] = None
+    zip_code: Optional[str] = Field(None, alias="zipCode")
     street_number: Optional[str] = Field(None, alias="streetNumber")
     street_name: Optional[str] = Field(None, alias="streetName")
-    town: Optional[str] = None
-    zip_code: Optional[str] = Field(None, alias="zipCode")
-    country: Optional[str] = None
-    gps: Optional[WwGpsCoordinates] = None
+    gps: Optional[WwGps] = None
+
+    county: Optional[str] = None
+
+    nuts1: Optional[str] = None
+    nuts2: Optional[str] = None
+    nuts3: Optional[str] = None
+
+    us_metropolitan_area: Optional[str] = Field(None, alias="usMetropolitanArea")
+    us_state: Optional[str] = Field(None, alias="usState")
+
+    location_area: Optional[List[WwLocationArea]] = Field(None, alias="locationArea")
 
     class Config:
         populate_by_name = True
 
 
-class WwAddress(BaseModel):
-    registered_office: Optional[WwRegisteredOffice] = Field(
-        None,
-        alias="registeredOffice",
-    )
+class WwAddressTop(BaseModel):
+    registered_office: Optional[WwRegisteredOfficeTop] = Field(None, alias="registeredOffice")
 
     class Config:
         populate_by_name = True
 
 
-class WwNace(BaseModel):
+# ============================================================================
+# International classification (NACE / NAICS / SIC)
+# ============================================================================
+
+class WwNaceCode(BaseModel):
     code: Optional[str] = None
     description: Optional[str] = None
+    core: Optional[str] = None
+    section: Optional[str] = None
+    division: Optional[str] = None
+    group: Optional[str] = None
 
 
-class WwNaics(BaseModel):
+class WwNaceClassification(BaseModel):
+    primary: Optional[List[WwNaceCode]] = None
+    secondary: Optional[List[WwNaceCode]] = None
+
+
+class WwNaicsCode(BaseModel):
     code: Optional[str] = None
     description: Optional[str] = None
+    section: Optional[str] = None
+    division: Optional[str] = None
+    group: Optional[str] = None
 
 
-class WwSic(BaseModel):
+class WwNaicsClassification(BaseModel):
+    primary: Optional[List[WwNaicsCode]] = None
+    secondary: Optional[List[WwNaicsCode]] = None
+
+
+class WwSicCode(BaseModel):
     code: Optional[str] = None
     description: Optional[str] = None
+    section: Optional[str] = None
+    division: Optional[str] = None
+    group: Optional[str] = None
 
 
-class WwInternationalClassification(BaseModel):
-    nace: Optional[WwNace] = None
-    naics: Optional[WwNaics] = None
-    sic: Optional[WwSic] = None
+class WwSicClassification(BaseModel):
+    primary: Optional[List[WwSicCode]] = None
+    secondary: Optional[List[WwSicCode]] = None
 
 
-class WwBalanceSheet(BaseModel):
+class WwInternationalClassificationTop(BaseModel):
+    nace: Optional[WwNaceClassification] = None
+    naics: Optional[WwNaicsClassification] = None
+    sic: Optional[WwSicClassification] = None
+
+
+# ============================================================================
+# National classification
+# ============================================================================
+
+class WwNationalClassification(BaseModel):
+    type: Optional[List[str]] = None
+    primary: Optional[List[str]] = None
+    secondary: Optional[List[str]] = None
+
+
+# ============================================================================
+# Balance sheets
+# ============================================================================
+
+class WwTopBalanceEntry(BaseModel):
     year: Optional[int] = None
     balance_sheet_date: Optional[str] = Field(None, alias="balanceSheetDate")
     employees: Optional[int] = None
@@ -272,62 +158,67 @@ class WwBalanceSheet(BaseModel):
         populate_by_name = True
 
 
-class WwBalanceSheets(BaseModel):
-    last: Optional[WwBalanceSheet] = None
-    all: Optional[List[WwBalanceSheet]] = None
+class WwBalanceSheetsTop(BaseModel):
+    last: Optional[WwTopBalanceEntry] = None
+    all: Optional[List[WwTopBalanceEntry]] = None
 
 
-class WwAdvanced(BaseModel):
-    id: Optional[str] = None
-    company_name: Optional[str] = Field(None, alias="companyName")
-    tax_code: Optional[str] = Field(None, alias="taxCode")
-    vat_code: Optional[str] = Field(None, alias="vatCode")
-    company_number: Optional[str] = Field(None, alias="companyNumber")
-    lei_code: Optional[str] = Field(None, alias="leiCode")
-    activity_status: Optional[WwActivityStatus] = Field(None, alias="activityStatus")
-    incorporation_date: Optional[str] = Field(None, alias="incorporationDate")
-    address: Optional[WwAddress] = None
-    last_update_timestamp: Optional[int] = Field(None, alias="lastUpdateTimestamp")
-    contacts: Optional["WwContacts"] = None
-    international_classification: Optional[
-        WwInternationalClassification
-    ] = Field(None, alias="internationalClassification")
-    balance_sheets: Optional[WwBalanceSheets] = Field(None, alias="balanceSheets")
+# ============================================================================
+# Contacts
+# ============================================================================
 
-    class Config:
-        populate_by_name = True
-
-
-class WwContacts(BaseModel):
+class WwTopContacts(BaseModel):
     fax: Optional[str] = None
     phone: Optional[str] = None
     website: Optional[str] = None
 
 
-WwAdvanced.model_rebuild()
+# ============================================================================
+# MAIN ENTITY
+# ============================================================================
+
+class WwTop(BaseModel):
+    id: Optional[str] = None
+    last_update_timestamp: Optional[int] = Field(None, alias="lastUpdateTimestamp")
+
+    company_name: Optional[str] = Field(None, alias="companyName")
+    native_company_name: Optional[str] = Field(None, alias="nativeCompanyName")
+
+    company_size: Optional[str] = Field(None, alias="companySize")
+
+    tax_code: Optional[str] = Field(None, alias="taxCode")
+    vat_code: Optional[str] = Field(None, alias="vatCode")
+    company_number: Optional[str] = Field(None, alias="companyNumber")
+    lei_code: Optional[str] = Field(None, alias="leiCode")
+
+    markers: Optional[List[WwMarker]] = None
+    address: Optional[WwAddressTop] = None
+
+    activity_status: Optional[WwActivityStatus] = Field(None, alias="activityStatus")
+    incorporation_date: Optional[str] = Field(None, alias="incorporationDate")
+
+    contacts: Optional[WwTopContacts] = None
+
+    international_classification: Optional[WwInternationalClassificationTop] = Field(
+        None, alias="internationalClassification"
+    )
+
+    national_classification: Optional[WwNationalClassification] = Field(
+        None, alias="nationalClassification"
+    )
+
+    balance_sheets: Optional[WwBalanceSheetsTop] = Field(None, alias="balanceSheets")
+
+    class Config:
+        populate_by_name = True
 
 
 # ============================================================================
-# Union всех возможных типов в мировом ответе
+# API WRAPPER
 # ============================================================================
 
-WorldCompany = Union[
-    ItAdvanced,
-    FrAdvanced,
-    DeAdvanced,
-    EsAdvanced,
-    PtAdvanced,
-    GbAdvanced,
-    BeAdvanced,
-    AtAdvanced,
-    ChAdvanced,
-    PlAdvanced,
-    WwAdvanced,
-]
-
-
-class WorldApiResponse(BaseModel):
-    data: Optional[List[WorldCompany]] = None
+class WwTopApiResponse(BaseModel):
+    data: Optional[List[WwTop]] = None
     success: Optional[bool] = None
     message: Optional[str] = None
     error: Optional[int] = None

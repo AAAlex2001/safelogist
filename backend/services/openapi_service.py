@@ -1,5 +1,5 @@
 """
-Универсальный сервис для работы с OpenAPI компаний
+Универсальный сервис для работы с OpenAPI компаний (только WW-top)
 """
 import os
 from typing import TypeVar, Type
@@ -20,7 +20,7 @@ T = TypeVar("T", bound=BaseModel)
 
 
 class OpenAPIService:
-    """Универсальный сервис для получения данных о компаниях через OpenAPI"""
+    """Сервис для получения данных о компаниях через OpenAPI (WW-top)"""
 
     def __init__(self) -> None:
         self.token = OPENAPI_TOKEN
@@ -34,27 +34,27 @@ class OpenAPIService:
         response_model: Type[T],
     ) -> T:
         """
-        Получает информацию о компании через OpenAPI
+        Получает информацию о компании через OpenAPI.
 
         Args:
-            country: Код страны (PT, FR, IT и т.д.)
-            endpoint: Тип эндпоинта (advanced, aml и т.д.)
-            code: VAT код, налоговый код или ID компании
-            response_model: Pydantic модель для парсинга ответа
-
-        Returns:
-            Экземпляр response_model с данными о компании
+            country: Код страны (для WW всегда "WW")
+            endpoint: Например: "top/IT", "top/FR", "top/PL" и т.п.
+            code: Идентификатор компании
+            response_model: Pydantic-модель для парсинга ответа
         """
-        # Формируем URL: https://company.openapi.com/{COUNTRY}-{endpoint}/{code}
-        url = f"{self.base_url}/{country.upper()}-{endpoint}/{code}"
 
-        headers = {
-            "Accept": "application/json",
-        }
+        # -------------------------------
+        # Формирование URL
+        # -------------------------------
+        url = f"{self.base_url}/WW-{endpoint}/{code}"
+
+        headers = {"Accept": "application/json"}
         if self.token:
             headers["Authorization"] = f"Bearer {self.token}"
 
-        # ---- 1. Делаем запрос и обрабатываем сетевые ошибки ----
+        # -------------------------------
+        # HTTP запрос
+        # -------------------------------
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.get(url, headers=headers)
@@ -69,7 +69,9 @@ class OpenAPIService:
                 detail=f"External API request error: {str(e)}",
             )
 
-        # ---- 2. Обрабатываем HTTP-статусы ----
+        # -------------------------------
+        # HTTP статус
+        # -------------------------------
         if response.status_code == status.HTTP_404_NOT_FOUND:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -77,13 +79,14 @@ class OpenAPIService:
             )
 
         if response.status_code != status.HTTP_200_OK:
-            error_text = response.text[:200] if response.text else "No error message"
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"External API error: {response.status_code}, {error_text}",
+                detail=f"External API error: {response.status_code}, {response.text}",
             )
 
-        # ---- 3. Парсим JSON ----
+        # -------------------------------
+        # JSON парсинг
+        # -------------------------------
         try:
             data = response.json()
         except ValueError as e:
@@ -92,11 +95,13 @@ class OpenAPIService:
                 detail=f"Invalid JSON from external API: {str(e)}",
             )
 
-        # ---- 4. Валидируем через response_model ----
+        # -------------------------------
+        # Валидация ответа схемой
+        # -------------------------------
         try:
             return response_model(**data)
         except ValidationError as e:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"Response schema mismatch from external API: {e.errors()}",
+                detail=f"Response schema mismatch: {e.errors()}",
             )

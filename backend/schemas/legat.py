@@ -358,3 +358,238 @@ class KzFullResponse(BaseModel):
     debt: Optional[KzDebtResponse] = None
     court: Optional[KzCourtResponse] = None
     directors: Optional[KzDirectorsLinksResponse] = None
+
+
+# =======================================
+#   Ukraine — /api2/ua/data
+# =======================================
+
+class UaDetails(BaseModel):
+    edrpou: Optional[str]
+    full: Optional[str]
+    short: Optional[str]
+    address: Optional[str]
+    date_reg: Optional[str]
+    status: Optional[str]
+    status_id: Optional[int]
+    ruk: Optional[str]
+    code_oked: Optional[str]
+    oked: Optional[str]
+
+
+class UaFounder(BaseModel):
+    name: str
+    fund: Optional[float] = None
+
+
+class UaExec(BaseModel):
+    debtor: Optional[int] = None
+    creditor: Optional[int] = None
+
+
+class UaCourt(BaseModel):
+    criminal: Optional[int] = None
+    administrative: Optional[int] = None
+    economic: Optional[int] = None
+    civil: Optional[int] = None
+    cases_administrative: Optional[int] = None
+
+
+class UaKgk(BaseModel):
+    planned: Optional[int] = None
+    unplanned: Optional[int] = None
+
+
+class UaLiquidation(BaseModel):
+    action: Optional[str] = None
+    liquidator: Optional[str] = None
+    committee: Optional[List[str]] = None
+    reorg_type: Optional[str] = None
+
+
+class UaDataResponse(BaseModel):
+    error: Optional[Any]
+    details: Optional[UaDetails]
+    founders: Optional[List[UaFounder]] = None
+    exec: Optional[UaExec]
+    court: Optional[UaCourt]
+    kgk: Optional[UaKgk]
+    bankrupt: Optional[int] = None
+    sanct: Optional[Any] = None
+    liquidation: Optional[UaLiquidation] = None
+    foreign_branch_rf: Optional[int] = None
+
+
+# =======================================
+#   Ukraine — /api2/ua/court
+# =======================================
+
+class UaCourtCase(BaseModel):
+    number: Optional[str] = None
+    case_number: Optional[str] = None
+    date_decision: Optional[str] = None
+    date_legal: Optional[str] = None
+    chairmen_Name: Optional[str] = None
+    court_name: Optional[str] = None
+    jud_decision: Optional[str] = None
+
+
+class UaCourtResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+
+    criminal: Optional[List[UaCourtCase]] = None
+    administrative: Optional[List[UaCourtCase]] = None
+    economic: Optional[List[UaCourtCase]] = None
+    civil: Optional[List[UaCourtCase]] = None
+    cases_administrative: Optional[List[UaCourtCase]] = None
+
+# =======================================
+#   Ukraine — /api2/ua/bankrupt
+# =======================================
+
+class UaBankruptItem(BaseModel):
+    date: Optional[str] = None
+    number: Optional[str] = None
+    type: Optional[str] = None
+    name_debtor: Optional[str] = None
+    num_court: Optional[str] = None
+    date_event_from: Optional[str] = None
+    date_event_to: Optional[str] = None
+    date_end: Optional[str] = None
+
+
+class UaBankruptResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    bankrupt: Optional[List[UaBankruptItem]] = None
+
+
+# =======================================
+#   Ukraine — /api2/ua/liquidation
+# =======================================
+
+class UaLiquidationItem(BaseModel):
+    reg_act: Optional[str] = None
+    liquidator: Optional[str] = None
+    liq_commission: Optional[str] = None
+    date_demand: Optional[str] = None
+    type_org: Optional[str] = None
+
+
+class UaLiquidationResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    liquidation: Optional[List[UaLiquidationItem]] = None
+
+
+# =======================================
+#   Ukraine — /api2/ua/vehicles
+# =======================================
+
+class UaVehicleItem(BaseModel):
+    licStatus: Optional[str] = None
+    licStartDate: Optional[str] = None
+    vhclType: Optional[str] = None
+    vhclVendorID: Optional[str] = None
+    vhclModel: Optional[str] = None
+    vchlManufYear: Optional[str] = None
+    vhclSerie: Optional[str] = None
+    docNum: Optional[str] = None
+
+
+class UaVehiclesResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    vehicles: Optional[List[UaVehicleItem]] = None
+
+
+# =======================================
+#   Ukraine — FULL schema
+# =======================================
+
+class UaFullResponse(BaseModel):
+    data: Optional[UaDataResponse] = None
+    court: Optional[UaCourtResponse] = None
+    bankrupt: Optional[UaBankruptResponse] = None
+    liquidation: Optional[UaLiquidationResponse] = None
+    vehicles: Optional[UaVehiclesResponse] = None
+
+
+
+# =======================================
+#   Kyrgyzstan — /api2/kg/data
+# =======================================
+
+class KgDetails(BaseModel):
+    full_off: Optional[str] = None
+    full_offkr: Optional[str] = None
+    short: Optional[str] = None
+    short_off: Optional[str] = None
+    inn: Optional[str] = None
+    number: Optional[str] = None
+    date: Optional[str] = None
+    okpo: Optional[str] = None
+    status: Optional[str] = None
+    legal_form: Optional[str] = None
+    alien: Optional[str] = None
+    region: Optional[str] = None
+    district: Optional[str] = None
+    city: Optional[str] = None
+    microdistrict: Optional[str] = None
+    street: Optional[str] = None
+    hause: Optional[str] = None
+    apartament: Optional[str] = None
+    phone: Optional[str] = None
+    fax: Optional[str] = None
+    email: Optional[str] = None
+    date_first: Optional[str] = None
+    create: Optional[str] = None
+    form_create: Optional[str] = None
+    fio: Optional[str] = None
+    activities: Optional[str] = None
+    code: Optional[str] = None
+    quantity_fiz: Optional[int] = None
+    quantity_ur: Optional[int] = None
+    quantity_partner: Optional[int] = None
+
+
+class KgSez(BaseModel):
+    name_sez: Optional[str] = None
+    project: Optional[str] = None
+    date: Optional[str] = None
+    name_authority: Optional[str] = None
+    number: Optional[str] = None
+
+
+class KgDataResponse(BaseModel):
+    error: Optional[Any]
+    details: Optional[KgDetails]
+    sez: Optional[KgSez] = None
+    foreign_branch_rf: Optional[int] = None
+    soft_registry: Optional[int] = None
+
+
+# =======================================
+#   Kyrgyzstan — /api2/kg/debt
+# =======================================
+
+
+class KgDebtItem(BaseModel):
+    date: Optional[str] = None
+    sum: Optional[float] = None
+
+
+class KgDebtResponse(BaseModel):
+    error: Optional[Any]
+    debt: Optional[List[KgDebtItem]] = None
+
+
+
+# =======================================
+#   Kyrgyzstan — FULL
+# =======================================
+
+class KgFullResponse(BaseModel):
+    data: KgDataResponse
+    debt: KgDebtResponse

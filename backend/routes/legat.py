@@ -10,7 +10,16 @@ from schemas.legat import (ByCourtResponse,
                            KzRiskResponse,
                            KzDebtResponse,
                            KzCourtResponse,
-                           KzDirectorsLinksResponse)
+                           KzDirectorsLinksResponse,
+                           UaFullResponse,
+                           UaDataResponse,
+                           UaCourtResponse,
+                           UaBankruptResponse,
+                           UaLiquidationResponse,
+                           UaVehiclesResponse,
+                           KgFullResponse,
+                           KgDataResponse,
+                           KgDebtResponse)
 from services.legat_service import LegatService
 from services.legat_service import LEGAT_TOKEN
 
@@ -62,10 +71,10 @@ async def get_by_full(unp: str):
 # =======================================
 
 @router.get(
-    "/KZ/full/{bin}",
+    "/KZ/full/{unp}",
     response_model=KzFullResponse
 )
-async def get_kz_full(bin: str):
+async def get_kz_full(unp: str):
     """
     Полная сводная юридическая информация по компании Казахстана из Legat API:
     - Регистрационные данные
@@ -80,37 +89,37 @@ async def get_kz_full(bin: str):
     service = LegatService()
 
     data = await service.get(
-        f"/api2/kz/data?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/data?unp={unp}&key={LEGAT_TOKEN}",
         KzDataResponse
     )
 
     tax = await service.get(
-        f"/api2/kz/tax?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/tax?unp={unp}&key={LEGAT_TOKEN}",
         KzTaxResponse
     )
 
     contacts = await service.get(
-        f"/api2/kz/contacts?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/contacts?unp={unp}&key={LEGAT_TOKEN}",
         KzContactsResponse
     )
 
     risk = await service.get(
-        f"/api2/kz/risk?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/risk?unp={unp}&key={LEGAT_TOKEN}",
         KzRiskResponse
     )
 
     debt = await service.get(
-        f"/api2/kz/debt?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/debt?unp={unp}&key={LEGAT_TOKEN}",
         KzDebtResponse
     )
 
     court = await service.get(
-        f"/api2/kz/court?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/court?unp={unp}&key={LEGAT_TOKEN}",
         KzCourtResponse
     )
 
     directors = await service.get(
-        f"/api2/kz/directorsLinks?unp={bin}&key={LEGAT_TOKEN}",
+        f"/api2/kz/directorsLinks?unp={unp}&key={LEGAT_TOKEN}",
         KzDirectorsLinksResponse
     )
 
@@ -124,3 +133,82 @@ async def get_kz_full(bin: str):
         directors=directors
     )
 
+
+@router.get("/UA/full/{unp}", response_model=UaFullResponse)
+async def get_ua_full(unp: str):
+    """
+    Полная юридическая информация по украинской компании из Legat API:
+    - Общие регистрационные данные (data)
+    - Судебные дела по всем категориям (court)
+    - Банкротство (bankrupt)
+    - Сведения о ликвидации (liquidation)
+    - Лицензированные транспортные средства (vehicles)
+    """
+
+    service = LegatService()
+
+    data = await service.get(
+        f"/api2/ua/data?unp={unp}&key={LEGAT_TOKEN}",
+        UaDataResponse
+    )
+
+    court = await service.get(
+        f"/api2/ua/court?unp={unp}&key={LEGAT_TOKEN}",
+        UaCourtResponse
+    )
+
+    bankrupt = await service.get(
+        f"/api2/ua/bankrupt?unp={unp}&key={LEGAT_TOKEN}",
+        UaBankruptResponse
+    )
+
+    liquidation = await service.get(
+        f"/api2/ua/liquidation?unp={unp}&key={LEGAT_TOKEN}",
+        UaLiquidationResponse
+    )
+
+    vehicles = await service.get(
+        f"/api2/ua/vehicles?unp={unp}&key={LEGAT_TOKEN}",
+        UaVehiclesResponse
+    )
+
+    return UaFullResponse(
+        data=data,
+        court=court,
+        bankrupt=bankrupt,
+        liquidation=liquidation,
+        vehicles=vehicles,
+    )
+
+
+# =======================================
+#   Kyrgyzstan
+# =======================================
+
+@router.get(
+    "/KG/full/{unp}",
+    response_model=KgFullResponse
+)
+async def get_kg_full(unp: str):
+    """
+    Полная юридическая информация по компании из Legat API (Кыргызстан):
+    - Общие регистрационные сведения (data)
+    - Задолженности по датам (debt)
+    """
+
+    service = LegatService()
+
+    data = await service.get(
+        f"/api2/kg/data?unp={unp}&key={LEGAT_TOKEN}",
+        KgDataResponse
+    )
+
+    debt = await service.get(
+        f"/api2/kg/debt?unp={unp}&key={LEGAT_TOKEN}",
+        KgDebtResponse
+    )
+
+    return KgFullResponse(
+        data=data,
+        debt=debt
+    )

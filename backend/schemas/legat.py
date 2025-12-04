@@ -896,3 +896,90 @@ class UzFullResponse(BaseModel):
     founders: Optional[UzFoundersResponse] = None
     contacts: Optional[UzContactsResponse] = None
     address: Optional[UzAddressResponse] = None
+
+
+# =======================================
+#   Armenia — /api2/am/data
+# =======================================
+
+class AmDetails(BaseModel):
+    inn: Optional[str] = None
+    reg_number: Optional[str] = None
+    full: Optional[str] = None
+    full_ru: Optional[str] = None
+    address: Optional[str] = None
+
+    status_egr: Optional[str] = None
+    status_egr_ru: Optional[str] = None
+    status_egr_id: Optional[int] = None
+
+    status: Optional[str] = None
+    status_ru: Optional[str] = None
+    status_id: Optional[int] = None
+
+    date_reg_egr: Optional[str] = None
+    date_reg: Optional[str] = None
+
+    reg_name: Optional[str] = None
+    reg_name_ru: Optional[str] = None
+
+    tax_regime: Optional[str] = None
+    tax_regime_ru: Optional[str] = None
+
+    z_code: Optional[int] = None
+
+    opf_code: Optional[int] = None
+    opf_name: Optional[str] = None
+    opf_name_ru: Optional[str] = None
+
+    okved_code: Optional[str] = None
+    okved_name: Optional[str] = None
+    okved_name_ru: Optional[str] = None
+
+
+class AmDataResponse(BaseModel):
+    error: Optional[Any] = None
+    details: Optional[AmDetails] = None
+    foreign_branch_rf: Optional[int] = None
+
+
+# =======================================
+#   Armenia — /api2/am/address
+# =======================================
+
+class AmAddressItem(BaseModel):
+    address: Optional[str] = None
+    postcode: Optional[str] = None
+    active: Optional[int] = None
+
+
+class AmAddressResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    address: Optional[List[AmAddressItem]] = None
+
+
+# =======================================
+#   Armenia — /api2/am/names
+# =======================================
+
+class AmNameItem(BaseModel):
+    full: Optional[str] = None
+    full_ru: Optional[str] = None
+    active: Optional[int] = None
+
+
+class AmNamesResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    names: Optional[List[AmNameItem]] = None
+
+
+# =======================================
+#   Armenia — Full
+# =======================================
+
+class AmFullResponse(BaseModel):
+    data: Optional[AmDataResponse] = None
+    address: Optional[AmAddressResponse] = None
+    names: Optional[AmNamesResponse] = None

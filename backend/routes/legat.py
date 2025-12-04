@@ -32,7 +32,11 @@ from schemas.legat import (ByFullResponse,
                            UzCourtResponse,
                            UzFoundersResponse,
                            UzContactsResponse,
-                           UzAddressResponse)
+                           UzAddressResponse,
+                           AmFullResponse,
+                           AmDataResponse,
+                           AmAddressResponse,
+                           AmNamesResponse)
 from services.legat_service import LegatService
 from services.legat_service import LEGAT_TOKEN
 
@@ -343,4 +347,44 @@ async def get_uz_full(unp: str):
         founders=founders,
         contacts=contacts,
         address=address
+    )
+
+
+# =======================================
+#   Armenia
+# =======================================
+
+@router.get(
+    "/AM/full/{unp}",
+    response_model=AmFullResponse
+)
+async def get_am_full(unp: str):
+    """
+    Полная юридическая информация по компании из Legat API (Армения):
+    - Основные регистрационные данные
+    - Юридические адреса
+    - История наименований
+    """
+
+    service = LegatService()
+
+    data = await service.get(
+        f"/api2/am/data?unp={unp}&key={LEGAT_TOKEN}",
+        AmDataResponse
+    )
+
+    address = await service.get(
+        f"/api2/am/address?unp={unp}&key={LEGAT_TOKEN}",
+        AmAddressResponse
+    )
+
+    names = await service.get(
+        f"/api2/am/names?unp={unp}&key={LEGAT_TOKEN}",
+        AmNamesResponse
+    )
+
+    return AmFullResponse(
+        data=data,
+        address=address,
+        names=names
     )

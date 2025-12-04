@@ -136,7 +136,8 @@ class InspectionRecord(OfdataBaseModel):
     obosn: Optional[str] = Field(None, alias="Обосн")
     org_kontr: Optional[ControlOrgInfo] = Field(None, alias="ОргКонтр")
     treb: Optional[List[str]] = Field(None, alias="Треб")
-    dolzh_litsa: Optional[ResponsiblePerson] = Field(None, alias="ДолжЛица")
+    # В ответе Ofdata поле "ДолжЛица" — это МАССИВ объектов, а не один объект
+    dolzh_litsa: Optional[List[ResponsiblePerson]] = Field(None, alias="ДолжЛица")
     obekty: Optional[List[InspectionObject]] = Field(None, alias="Объекты")
     meropr: Optional[List[InspectionMeasure]] = Field(None, alias="Меропр")
 
@@ -169,5 +170,6 @@ class OfdataInspectionsResponse(OfdataBaseModel):
     entrepreneur: Optional[InspectionEntrepreneurInfo] = Field(None, alias="entrepreneur")
     data: Optional[InspectionsData] = Field(None, alias="data")
     meta: Optional[MetaInfo] = Field(None, alias="meta")
+
 
 

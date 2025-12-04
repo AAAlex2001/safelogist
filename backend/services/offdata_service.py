@@ -69,3 +69,4 @@ class OffdataService:
             return response_model.model_validate(data)
         except ValidationError as e:
             raise HTTPException(502, f"Schema mismatch for Offdata API: {e.errors()}")
+

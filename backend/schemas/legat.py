@@ -99,7 +99,7 @@ class ByBankruptResponse(BaseModel):
 
 
 # ================================
-#   Belarus — /api2/by/full
+#   Belarus — FULL
 # ================================
 
 class ByFullResponse(BaseModel):
@@ -505,7 +505,7 @@ class UaVehiclesResponse(BaseModel):
 
 
 # =======================================
-#   Ukraine — FULL schema
+#   Ukraine — FULL
 # =======================================
 
 class UaFullResponse(BaseModel):
@@ -593,3 +593,306 @@ class KgDebtResponse(BaseModel):
 class KgFullResponse(BaseModel):
     data: KgDataResponse
     debt: KgDebtResponse
+
+
+
+
+# =======================================
+#   Moldova — /api2/mda/data
+# =======================================
+
+class MdaDetails(BaseModel):
+    idno: Optional[str] = None
+    name: Optional[str] = None
+    date: Optional[str] = None
+    date_liquidation: Optional[str] = None
+    address: Optional[str] = None
+    status: Optional[int] = None
+    status_name: Optional[str] = None
+    forma: Optional[str] = None
+    ruk: Optional[str] = None
+    founder: Optional[str] = None
+
+
+class MdaActivityItem(BaseModel):
+    name: Optional[str] = None
+    code: Optional[str] = None
+
+
+class MdaDataResponse(BaseModel):
+    error: Optional[Any]
+    details: Optional[MdaDetails] = None
+    unlicensed: Optional[List[MdaActivityItem]] = None
+    licensed: Optional[List[MdaActivityItem]] = None
+
+
+# =======================================
+#   Moldova — /api2/mda/directors
+# =======================================
+
+class MdaDirectorItem(BaseModel):
+    name: Optional[str] = None
+    type: Optional[str] = None
+    date_update: Optional[str] = None
+    active: Optional[int] = None
+
+
+class MdaDirectorsResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    directors: Optional[List[MdaDirectorItem]] = None
+
+
+# =======================================
+#   Moldova — /api2/mda/founders
+# =======================================
+
+class MdaFounderItem(BaseModel):
+    name: Optional[str] = None
+    percent: Optional[float] = None
+    date_update: Optional[str] = None
+    active: Optional[int] = None
+
+
+class MdaFoundersResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    founders: Optional[List[MdaFounderItem]] = None
+
+
+# =======================================
+#   Moldova — /api2/mda/beneficiaries
+# =======================================
+
+class MdaBeneficiaryItem(BaseModel):
+    name: Optional[str] = None
+    country: Optional[str] = None
+    date_update: Optional[str] = None
+    active: Optional[int] = None
+
+
+class MdaBeneficiariesResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    beneficiaries: Optional[List[MdaBeneficiaryItem]] = None
+
+
+
+# =======================================
+#   Moldova — FULL
+# =======================================
+
+class MdaFullResponse(BaseModel):
+    data: Optional[MdaDataResponse] = None
+    directors: Optional[MdaDirectorsResponse] = None
+    founders: Optional[MdaFoundersResponse] = None
+    beneficiaries: Optional[MdaBeneficiariesResponse] = None
+
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/data
+# =======================================
+
+class UzDirector(BaseModel):
+    name: Optional[str] = None
+    inn: Optional[str] = None
+
+
+class UzFounder(BaseModel):
+    name: Optional[str] = None
+    percent: Optional[float] = None
+
+
+class UzDetails(BaseModel):
+    type: Optional[int] = None
+    pinfl: Optional[str] = None
+    inn: Optional[str] = None
+    full: Optional[str] = None
+    address: Optional[str] = None
+    reg_number: Optional[str] = None
+    status: Optional[str] = None
+    status_id: Optional[int] = None
+    date_reg: Optional[str] = None
+    date_update: Optional[str] = None
+    date_liquidation: Optional[str] = None
+    liquidation_reason: Optional[str] = None
+    date_liquidation_begin: Optional[str] = None
+    date_liquidation_end: Optional[str] = None
+    reg_org: Optional[str] = None
+    opf_code: Optional[int] = None
+    opf_name: Optional[str] = None
+    soogu_code: Optional[int] = None
+    soogu_name: Optional[str] = None
+    capital: Optional[float] = None
+    currency: Optional[str] = None
+    small: Optional[int] = None
+    okved_code: Optional[str] = None
+    okved_name: Optional[str] = None
+    director: Optional[UzDirector] = None
+    founders: Optional[List[UzFounder]] = None
+
+
+class UzSales(BaseModel):
+    outlets: Optional[int] = None
+    kiosks: Optional[int] = None
+    location: Optional[str] = None
+
+
+class UzSharePartState(BaseModel):
+    share: Optional[float] = None
+    active: Optional[int] = None
+
+
+class UzDataResponse(BaseModel):
+    error: Optional[Any] = None
+    details: Optional[UzDetails] = None
+    foreign_branch_rf: Optional[int] = None
+    sales: Optional[UzSales] = None
+    dominant: Optional[int] = None
+    sharepart_state: Optional[UzSharePartState] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/unscrupulous
+# =======================================
+
+class UzUnscrupulousItem(BaseModel):
+    number_decision: Optional[str] = None
+    date_decision: Optional[str] = None
+    date_begin: Optional[str] = None
+    date_end: Optional[str] = None
+
+
+class UzUnscrupulousResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    unscrupulous: Optional[List[UzUnscrupulousItem]] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/risk
+# =======================================
+
+class UzRiskLawViolationItem(BaseModel):
+    law: Optional[str] = None
+    violation: Optional[str] = None
+    date: Optional[str] = None
+    active: Optional[int] = None
+
+
+class UzRiskData(BaseModel):
+    abusing_vat: Optional[int] = None
+    law_violation: Optional[List[UzRiskLawViolationItem]] = None
+
+
+class UzRiskResponse(BaseModel):
+    error: Optional[Any]
+    risk: Optional[UzRiskData] = None
+
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/court
+# =======================================
+
+class UzCourtParty(BaseModel):
+    name: Optional[str] = None
+    inn: Optional[str] = None
+
+
+class UzCourtParties(BaseModel):
+    ist: Optional[List[UzCourtParty]] = None
+    otv: Optional[List[UzCourtParty]] = None
+    dr: Optional[List[UzCourtParty]] = None
+
+
+class UzCourtHearing(BaseModel):
+    name_court: Optional[str] = None
+    instance: Optional[str] = None
+    judge: Optional[str] = None
+    date: Optional[str] = None
+    time: Optional[str] = None
+    name_doc: Optional[str] = None
+    result: Optional[str] = None
+    decision_number: Optional[str] = None
+    parties: Optional[UzCourtParties] = None
+
+
+class UzCourtItem(BaseModel):
+    case_number: Optional[str] = None
+    type: Optional[str] = None
+    category: Optional[str] = None
+    dispute: Optional[str] = None
+    court_hearing: Optional[List[UzCourtHearing]] = None
+
+
+class UzCourtResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    ist: Optional[List[UzCourtItem]] = None
+    otv: Optional[List[UzCourtItem]] = None
+    dr: Optional[List[UzCourtItem]] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/founders
+# =======================================
+
+class UzFounderItem(BaseModel):
+    name: Optional[str] = None
+    percent: Optional[float] = None
+    active: Optional[int] = None
+
+
+class UzFoundersResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    founders: Optional[List[UzFounderItem]] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/contacts
+# =======================================
+
+class UzContactsData(BaseModel):
+    phone: Optional[List[str]] = None
+    email: Optional[List[str]] = None
+    fax: Optional[str] = None
+    site: Optional[str] = None
+
+
+class UzContactsResponse(BaseModel):
+    error: Optional[Any]
+    contacts: Optional[UzContactsData] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/address
+# =======================================
+
+class UzAddressItem(BaseModel):
+    address: Optional[str] = None
+    soato_code: Optional[str] = None
+    soato_name: Optional[str] = None
+    active: Optional[int] = None
+
+
+class UzAddressResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    address: Optional[List[UzAddressItem]] = None
+
+
+# =======================================
+#   Uzbekistan — /api2/uz/full
+# =======================================
+
+class UzFullResponse(BaseModel):
+    data: Optional[UzDataResponse] = None
+    unscrupulous: Optional[UzUnscrupulousResponse] = None
+    risk: Optional[UzRiskResponse] = None
+    court: Optional[UzCourtResponse] = None
+    founders: Optional[UzFoundersResponse] = None
+    contacts: Optional[UzContactsResponse] = None
+    address: Optional[UzAddressResponse] = None

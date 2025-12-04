@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from schemas.legat import (ByCourtResponse,
+from schemas.legat import (ByFullResponse,
+                           ByCourtResponse,
                            ByActionalResponse,
                            ByBankruptResponse,
-                           ByFullResponse,
                            KzFullResponse,
                            KzDataResponse,
                            KzTaxResponse,
@@ -19,7 +19,20 @@ from schemas.legat import (ByCourtResponse,
                            UaVehiclesResponse,
                            KgFullResponse,
                            KgDataResponse,
-                           KgDebtResponse)
+                           KgDebtResponse,
+                           MdaFullResponse,
+                           MdaDataResponse,
+                           MdaDirectorsResponse,
+                           MdaFoundersResponse,
+                           MdaBeneficiariesResponse,
+                           UzFullResponse,
+                           UzDataResponse,
+                           UzUnscrupulousResponse,
+                           UzRiskResponse,
+                           UzCourtResponse,
+                           UzFoundersResponse,
+                           UzContactsResponse,
+                           UzAddressResponse)
 from services.legat_service import LegatService
 from services.legat_service import LEGAT_TOKEN
 
@@ -134,6 +147,10 @@ async def get_kz_full(unp: str):
     )
 
 
+# =======================================
+#   Ukraine
+# =======================================
+
 @router.get("/UA/full/{unp}", response_model=UaFullResponse)
 async def get_ua_full(unp: str):
     """
@@ -211,4 +228,119 @@ async def get_kg_full(unp: str):
     return KgFullResponse(
         data=data,
         debt=debt
+    )
+
+
+# =======================================
+#   Moldova
+# =======================================
+
+@router.get(
+    "/MDA/full/{unp}",
+    response_model=MdaFullResponse
+)
+async def get_mda_full(unp: str):
+    """
+    Полная юридическая информация по молдавской компании из Legat API:
+    - Общие регистрационные данные (data)
+    - Руководители (directors)
+    - Учредители (founders)
+    - Бенефициары (beneficiaries)
+    """
+
+    service = LegatService()
+
+    data = await service.get(
+        f"/api2/mda/data?unp={unp}&key={LEGAT_TOKEN}",
+        MdaDataResponse
+    )
+
+    directors = await service.get(
+        f"/api2/mda/directors?unp={unp}&key={LEGAT_TOKEN}",
+        MdaDirectorsResponse
+    )
+
+    founders = await service.get(
+        f"/api2/mda/founders?unp={unp}&key={LEGAT_TOKEN}",
+        MdaFoundersResponse
+    )
+
+    beneficiaries = await service.get(
+        f"/api2/mda/beneficiaries?unp={unp}&key={LEGAT_TOKEN}",
+        MdaBeneficiariesResponse
+    )
+
+    return MdaFullResponse(
+        data=data,
+        directors=directors,
+        founders=founders,
+        beneficiaries=beneficiaries
+    )
+
+
+# =======================================
+#   Uzbekistan
+# =======================================
+
+@router.get(
+    "/UZ/full/{unp}",
+    response_model=UzFullResponse
+)
+async def get_uz_full(unp: str):
+    """
+    Полная юридическая информация по компании из Legat API (Узбекистан):
+    - Основные регистрационные данные (data)
+    - Недобросовестные участники (unscrupulous)
+    - Риски (risk)
+    - Судебные дела (court)
+    - История и актуальные учредители (founders)
+    - Контакты (contacts)
+    - Адреса (address)
+    """
+
+    service = LegatService()
+
+    data = await service.get(
+        f"/api2/uz/data?unp={unp}&key={LEGAT_TOKEN}",
+        UzDataResponse
+    )
+
+    unscrupulous = await service.get(
+        f"/api2/uz/unscrupulous?unp={unp}&key={LEGAT_TOKEN}",
+        UzUnscrupulousResponse
+    )
+
+    risk = await service.get(
+        f"/api2/uz/risk?unp={unp}&key={LEGAT_TOKEN}",
+        UzRiskResponse
+    )
+
+    court = await service.get(
+        f"/api2/uz/court?unp={unp}&key={LEGAT_TOKEN}",
+        UzCourtResponse
+    )
+
+    founders = await service.get(
+        f"/api2/uz/founders?unp={unp}&key={LEGAT_TOKEN}",
+        UzFoundersResponse
+    )
+
+    contacts = await service.get(
+        f"/api2/uz/contacts?unp={unp}&key={LEGAT_TOKEN}",
+        UzContactsResponse
+    )
+
+    address = await service.get(
+        f"/api2/uz/address?unp={unp}&key={LEGAT_TOKEN}",
+        UzAddressResponse
+    )
+
+    return UzFullResponse(
+        data=data,
+        unscrupulous=unscrupulous,
+        risk=risk,
+        court=court,
+        founders=founders,
+        contacts=contacts,
+        address=address
     )

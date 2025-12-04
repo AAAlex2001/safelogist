@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import Field
 from typing import List, Optional, Any
-from schemas.ofdata.ofdata_company import OfdataBaseModel
+from schemas.ofdata.ofdata_company import OfdataBaseModel, MetaInfo
 
 
 # ================================
@@ -218,14 +218,6 @@ class EntrepreneurData(OfdataBaseModel):
 # ================================
 #   Модели ответа API
 # ================================
-
-class MetaInfo(OfdataBaseModel):
-    """Информация о результате запроса"""
-    status: Optional[str] = Field(None, alias="status")
-    today_request_count: Optional[int] = Field(None, alias="today_request_count")
-    balance: Optional[float] = Field(None, alias="balance")
-    message: Optional[str] = Field(None, alias="message")
-
 
 class OfdataEntrepreneurResponse(OfdataBaseModel):
     """Полный ответ от API Ofdata для предпринимателя"""

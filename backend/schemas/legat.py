@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Any
 
 
 # ================================
-#   SCHEMA: /api2/by/court
+#   Belarus — /api2/by/court
 # ================================
 
 class ByCourtCase(BaseModel):
@@ -23,13 +23,13 @@ class ByCourtCase(BaseModel):
 
 
 class ByCourtResponse(BaseModel):
-    error: Optional[str]
+    error: Optional[Any]
     total: int
     claimant: List[ByCourtCase]
 
 
 # ================================
-#   SCHEMA: /api2/by/actional
+#   Belarus — /api2/by/actional
 # ================================
 
 class ByActionalParty(BaseModel):
@@ -56,13 +56,13 @@ class ByActionalCase(BaseModel):
 
 
 class ByActionalResponse(BaseModel):
-    error: Optional[dict]
+    error: Optional[Any]
     total: int
     ist: List[ByActionalCase]
 
 
 # ================================
-#   SCHEMA: /api2/by/bankrupt
+#   Belarus — /api2/by/bankrupt
 # ================================
 
 class ByBankruptData(BaseModel):
@@ -93,16 +93,268 @@ class ByBankruptData(BaseModel):
 
 
 class ByBankruptResponse(BaseModel):
-    error: Optional[dict]
+    error: Optional[Any]
     bankrupt: Optional[ByBankruptData]
 
 
 
 # ================================
-#   SCHEMA: /api2/by/full
+#   Belarus — /api2/by/full
 # ================================
 
 class ByFullResponse(BaseModel):
     court: Optional[ByCourtResponse]
     actional: Optional[ByActionalResponse]
     bankrupt: Optional[ByBankruptResponse]
+
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/data
+# =======================================
+
+class KzDetails(BaseModel):
+    bin: Optional[str]
+    name: Optional[str]
+    date_reg: Optional[str]
+    oked: Optional[str]
+    code_oked: Optional[str]
+    code_oked2: Optional[str]
+    krp: Optional[int]
+    nkrp: Optional[str]
+    kato: Optional[str]
+    address: Optional[str]
+    ruk: Optional[str]
+    rnn: Optional[str]
+    d_reg: Optional[str]
+    date_end: Optional[str]
+    reason: Optional[str]
+    liq: Optional[int]
+    status_stat_id: Optional[int]
+    status_egov_id: Optional[int]
+    date_status_egov: Optional[str]
+
+
+class KzFalseEnterprise(BaseModel):
+    date_cancellations: Optional[str]
+    date_doc_cancellations: Optional[str]
+    base: Optional[str]
+    date: Optional[str]
+
+
+class KzBankrupt(BaseModel):
+    status: Optional[int]
+    date_start: Optional[str]
+    date_finish: Optional[str]
+    decision_number: Optional[str]
+
+
+class KzDebtCustoms(BaseModel):
+    total: Optional[float]
+    date: Optional[str]
+    months: Optional[int]
+
+
+class KzDebtTax(BaseModel):
+    organ: Optional[str]
+    total: Optional[float]
+    principal: Optional[float]
+    fine: Optional[float]
+    penalty: Optional[float]
+    months: Optional[int]
+    date: Optional[str]
+
+
+class KzDebtPension(BaseModel):
+    organ: Optional[str]
+    total: Optional[float]
+    principal: Optional[float]
+    fine: Optional[float]
+    penalty: Optional[float]
+    months: Optional[int]
+    date: Optional[str]
+
+
+class KzDataResponse(BaseModel):
+    error: Optional[Any]
+    details: Optional[KzDetails]
+    risk: Optional[int]
+    false_enterprise: Optional[KzFalseEnterprise]
+    bankrupt: Optional[KzBankrupt]
+    debt_customs: Optional[KzDebtCustoms]
+    debt_tax: Optional[KzDebtTax]
+    debt_pension: Optional[KzDebtPension]
+    kgk: Optional[int]
+    sez: Optional[Any]
+    signs: Optional[int]
+    license: Optional[int]
+    supplier: Optional[Any]
+    foreign_branch_rf: Optional[int]
+    industrial_products: Optional[int]
+    soft_registry: Optional[int]
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/tax
+# =======================================
+
+class KzTaxItem(BaseModel):
+    year: int
+    sum: float
+
+
+class KzTaxResponse(BaseModel):
+    error: Optional[Any]
+    date_update: Optional[str]
+    tax: List[KzTaxItem]
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/contacts
+# =======================================
+
+class KzContactsData(BaseModel):
+    phone: Optional[List[str]] = None
+    email: Optional[List[str]] = None
+    fax: Optional[str] = None
+    site: Optional[str] = None
+
+
+class KzContactsResponse(BaseModel):
+    error: Optional[Any]
+    contacts: KzContactsData
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/risk
+# =======================================
+
+class KzRiskItem(BaseModel):
+    base: Optional[str] = None
+    date: Optional[str] = None
+
+
+class KzRiskData(BaseModel):
+    missing_address: Optional[List[KzRiskItem]] = None
+    inactive: Optional[List[KzRiskItem]] = None
+    registration_invalid: Optional[List[KzRiskItem]] = None
+    violations_tax: Optional[List[KzRiskItem]] = None
+
+
+class KzRiskResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    risk: KzRiskData
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/debt
+# =======================================
+
+class KzDebtTaxItem(BaseModel):
+    debt_all: float
+    debt1: float
+    debt2: float
+    debt3: float
+    period: int
+    date: str
+
+
+class KzDebtPensionItem(BaseModel):
+    debt: float
+    period: int
+    date: str
+
+
+class KzDebtCustomsItem(BaseModel):
+    debt: float
+    date: str
+    period: int
+
+
+class KzDebtData(BaseModel):
+    debt_tax: Optional[List[KzDebtTaxItem]] = None
+    debt_pension: Optional[List[KzDebtPensionItem]] = None
+    debt_customs: Optional[List[KzDebtCustomsItem]] = None
+
+
+class KzDebtResponse(BaseModel):
+    error: Optional[Any]
+    total: Optional[int]
+    debt: KzDebtData
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/court
+# =======================================
+
+class KzCourtParty(BaseModel):
+    bin: Optional[str]
+    name: str
+
+
+class KzCourtParties(BaseModel):
+    ist: Optional[List[KzCourtParty]] = None
+    otv: Optional[List[KzCourtParty]] = None
+
+
+class KzCourtDocument(BaseModel):
+    file_name: str
+
+
+class KzCourtItem(BaseModel):
+    case_number: str
+    court: str
+    date_last: Optional[str]
+    court_time: Optional[str]
+    room: Optional[str]
+    judge: Optional[str]
+    parties: KzCourtParties
+    documents: Optional[List[KzCourtDocument]] = None
+
+
+class KzCourtResponse(BaseModel):
+    error: Optional[Any]
+    total: int
+    ist: List[KzCourtItem]
+
+
+# =======================================
+#   Kazakhstan — /api2/kz/directorsLinks
+# =======================================
+
+class KzDirectorCompany(BaseModel):
+    company_bin: str
+    company_name: str
+    address: str
+    active: int
+
+
+class KzDirectorItem(BaseModel):
+    total: int
+    name: str
+    director: Optional[List[KzDirectorCompany]] = None
+
+
+class KzDirectorsLinks(BaseModel):
+    active: Optional[List[KzDirectorItem]] = None
+    history: Optional[List[KzDirectorItem]] = None
+
+
+class KzDirectorsLinksResponse(BaseModel):
+    error: Optional[Any]
+    links: KzDirectorsLinks
+
+
+# =======================================
+#   Kazakhstan — FULL
+# =======================================
+
+class KzFullResponse(BaseModel):
+    data: Optional[KzDataResponse] = None
+    tax: Optional[KzTaxResponse] = None
+    contacts: Optional[KzContactsResponse] = None
+    risk: Optional[KzRiskResponse] = None
+    debt: Optional[KzDebtResponse] = None
+    court: Optional[KzCourtResponse] = None
+    directors: Optional[KzDirectorsLinksResponse] = None

@@ -55,7 +55,6 @@ def decode_access_token(token: str) -> Optional[TokenData]:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
-        # sub всегда строка → конвертируем в int
         sub_raw = payload.get("sub")
         user_id = int(sub_raw)
 

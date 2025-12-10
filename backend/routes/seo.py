@@ -94,36 +94,44 @@ async def sitemap_static(request: Request):
 
 @router.get("/sitemap-{page}.xml", response_class=Response)
 async def sitemap_companies(page: int, request: Request, db: AsyncSession = Depends(get_db)):
-    """
-    Динамический sitemap для страниц компаний и их отзывов
-    """
     from urllib.parse import quote
     base_url = str(request.base_url).rstrip('/')
     
-    # Пагинация - просто список компаний БЕЗ подсчета отзывов (быстро!)
     companies_per_sitemap = 5000
     offset = (page - 1) * companies_per_sitemap
-    
-    # Получаем только уникальные компании по алфавиту
+    reviews_per_page = 10
+
     query = (
-        select(Review.subject)
-        .distinct()
+        select(
+            Review.subject.label("subject"),
+            func.count(Review.id).label("reviews_count")
+        )
+        .group_by(Review.subject)
         .order_by(Review.subject)
         .limit(companies_per_sitemap)
         .offset(offset)
     )
     result = await db.execute(query)
-    companies = result.scalars().all()
+    companies = result.all()
     
     urls = []
-    for company_name in companies:
-        # URL-encode название компании для правильного slug
+    for row in companies:
+        company_name = row.subject
+        reviews_count = row.reviews_count or 0
         slug = quote(company_name, safe='')
-        
-        # Добавляем только главную страницу компании (первые 10 отзывов)
-        # Остальные страницы Google найдет сам через пагинацию
+        total_pages = max(1, (reviews_count + reviews_per_page - 1) // reviews_per_page)
+
         urls.append(f"""  <url>
     <loc>{base_url}/reviews/{slug}</loc>
+    <lastmod>{datetime.now().date().isoformat()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>""")
+
+        if total_pages > 1:
+            for page_num in range(2, total_pages + 1):
+                urls.append(f"""  <url>
+    <loc>{base_url}/reviews/{slug}?page={page_num}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

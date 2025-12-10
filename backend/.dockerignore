@@ -52,3 +52,7 @@ Thumbs.db
 # Uploads (не копируем загруженные файлы в образ)
 uploads/
 
+# Большие JSON файлы (не копируем в образ)
+*.json
+reviews_moldovafinreport_*.json
+

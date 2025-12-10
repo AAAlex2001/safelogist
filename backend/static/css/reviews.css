@@ -29,7 +29,7 @@ body::before {
 
 .container {
     margin: 0 auto;
-    padding: 16px;
+    padding: 20px;
     background: transparent;
     min-height: 100vh;
 }
@@ -44,7 +44,7 @@ body::before {
 .header h1 {
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     line-height: 32px;
     color: #0D0D0D;
 }
@@ -53,6 +53,7 @@ body::before {
     font-size: 16px;
     color: #0D0D0D;
     line-height: 24px;
+    font-weight: 400;
 }
 
 /* Поиск */
@@ -133,8 +134,9 @@ body::before {
     color: white;
     border: none;
     border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
@@ -263,17 +265,37 @@ body::before {
 
 
 @media (min-width: 768px) {
-    .container {
-        max-width: 768px;
-        padding: 24px;
-    }
 
-    .header h1 {
-        font-size: 32px;
+    .subtitle {
+        font-size: 20px;
+        line-height: 28px;
     }
 
     .reviews-list {
         gap: 16px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .review-card {
+        flex: 0 0 calc((100% - 16px)/2);
+    }
+
+    .search-button {
+        padding: 8px 32px;
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .search-input-wrapper {
+        gap: 16px;
+        padding: 8px 8px 8px 24px;
+    }
+
+    .search-input {
+        font-size: 18px;
+        line-height: 40px;
     }
 
     .review-card {

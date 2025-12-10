@@ -1,5 +1,7 @@
 from typing import Union
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_db
 from schemas.legat import (ByFullResponse,
                            ByCourtResponse,
                            ByActionalResponse,
@@ -40,6 +42,7 @@ from schemas.legat import (ByFullResponse,
                            AmNamesResponse)
 from services.legat_service import LegatService
 from services.legat_service import LEGAT_TOKEN
+from services.financial_reports import FinancialReportsService
 
 router = APIRouter(tags=["legat"])
 
@@ -60,7 +63,7 @@ router = APIRouter(tags=["legat"])
         AmFullResponse
     ]
 )
-async def get_full(country: str, unp: str):
+async def get_full(country: str, unp: str, db: AsyncSession = Depends(get_db)):
     """
     Универсальный эндпоинт для получения полной юридической информации по компании из Legat API.
     
@@ -194,11 +197,17 @@ async def get_full(country: str, unp: str):
             f"/api2/mda/beneficiaries?unp={unp}&key={LEGAT_TOKEN}",
             MdaBeneficiariesResponse
         )
+        
+        # Получаем финансовые отчеты из нашей БД
+        fin_service = FinancialReportsService(db)
+        financial_reports = await fin_service.get_reports_by_fiscal_code(unp)
+        
         return MdaFullResponse(
             data=data,
             directors=directors,
             founders=founders,
-            beneficiaries=beneficiaries
+            beneficiaries=beneficiaries,
+            financial_reports=financial_reports.dict() if financial_reports.total > 0 else None
         )
     
     elif country == "UZ":
@@ -466,13 +475,14 @@ async def get_kg_full(unp: str):
     "/MDA/full/{unp}",
     response_model=MdaFullResponse
 )
-async def get_mda_full(unp: str):
+async def get_mda_full(unp: str, db: AsyncSession = Depends(get_db)):
     """
     Полная юридическая информация по молдавской компании из Legat API:
     - Общие регистрационные данные (data)
     - Руководители (directors)
     - Учредители (founders)
     - Бенефициары (beneficiaries)
+    - Финансовые отчеты (financial_reports) - из нашей БД
     """
 
     service = LegatService()
@@ -497,11 +507,16 @@ async def get_mda_full(unp: str):
         MdaBeneficiariesResponse
     )
 
+    # Получаем финансовые отчеты из нашей БД
+    fin_service = FinancialReportsService(db)
+    financial_reports = await fin_service.get_reports_by_fiscal_code(unp)
+
     return MdaFullResponse(
         data=data,
         directors=directors,
         founders=founders,
-        beneficiaries=beneficiaries
+        beneficiaries=beneficiaries,
+        financial_reports=financial_reports.dict() if financial_reports.total > 0 else None
     )
 
 

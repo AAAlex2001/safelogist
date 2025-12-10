@@ -1,5 +1,8 @@
 from pydantic import BaseModel
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from schemas.financial_reports import FinancialReportsResponse
 
 
 # ================================
@@ -687,6 +690,7 @@ class MdaFullResponse(BaseModel):
     directors: Optional[MdaDirectorsResponse] = None
     founders: Optional[MdaFoundersResponse] = None
     beneficiaries: Optional[MdaBeneficiariesResponse] = None
+    financial_reports: Optional[dict] = None
 
 
 

@@ -40,12 +40,12 @@
         </div>
 
         <div class="pagination">
-            <span class="page-info">Страница {{ current_page }} из {{ total_pages }}</span>
+            <span class="page-info">Страница {{ current_page }}</span>
             <div class="pagination-buttons">
                 {% if current_page > 1 %}
                 <a href="?page={{ current_page - 1 }}" class="pagination-button">← Назад</a>
                 {% endif %}
-                {% if current_page < total_pages %}
+                {% if has_next %}
                 <a href="?page={{ current_page + 1 }}" class="pagination-button">Вперёд →</a>
                 {% endif %}
             </div>

@@ -26,7 +26,7 @@ async def reviews_list_page(
     """
     Страница со списком всех компаний с отзывами
     """
-    per_page = 10
+    per_page = 50
     offset = (page - 1) * per_page
     
     # Получаем компании с количеством отзывов
@@ -44,12 +44,10 @@ async def reviews_list_page(
     result = await db.execute(query)
     companies = result.all()
     
-    # Получаем общее количество компаний
-    count_query = select(func.count(func.distinct(Review.subject)))
-    count_result = await db.execute(count_query)
-    total_companies = count_result.scalar() or 0
-    
-    total_pages = (total_companies + per_page - 1) // per_page
+    # Примерный подсчет (быстрее чем точный COUNT)
+    # Если получили полную страницу, значит есть еще данные
+    has_next = len(companies) == per_page
+    total_pages = page + 1 if has_next else page
     
     # Формируем данные для шаблона
     reports_data = [
@@ -67,7 +65,8 @@ async def reviews_list_page(
             "reports": reports_data,
             "current_page": page,
             "total_pages": total_pages,
-            "total_companies": total_companies
+            "total_companies": None,  # Не показываем точное число
+            "has_next": has_next
         }
     )
 
@@ -118,7 +117,7 @@ async def reviews_search_page(
     )
 
 
-@router.get("/reviews/{company_slug}", response_class=HTMLResponse)
+@router.get("/reviews/{company_slug:path}", response_class=HTMLResponse)
 async def company_reviews_page(
     request: Request,
     company_slug: str,
@@ -127,25 +126,68 @@ async def company_reviews_page(
     """
     Страница с отзывами конкретной компании
     """
-    # Декодируем slug обратно в название компании
-    company_name = company_slug.replace('-', ' ')
+    from urllib.parse import unquote
     
-    # Получаем все отзывы компании
+    # Декодируем URL и slug
+    company_slug = unquote(company_slug)
+    
+    # Пробуем найти точное совпадение сначала
     query = (
         select(Review)
-        .where(Review.subject.ilike(f'%{company_name}%'))
+        .where(Review.subject == company_slug)
         .order_by(Review.review_date.desc())
     )
     
     result = await db.execute(query)
     reviews = result.scalars().all()
     
+    # Если не нашли, пробуем по частичному совпадению
+    if not reviews:
+        company_name = company_slug.replace('-', ' ')
+        query = (
+            select(Review)
+            .where(Review.subject.ilike(f'%{company_name}%'))
+            .order_by(Review.review_date.desc())
+            .limit(100)
+        )
+        result = await db.execute(query)
+        reviews = result.scalars().all()
+    
     if not reviews:
         return HTMLResponse(content="<h1>404 - Компания не найдена</h1>", status_code=404)
     
-    # TODO: создать шаблон для страницы компании
+    # Простая HTML страница с отзывами
+    reviews_html = ""
+    for review in reviews[:20]:  # Показываем первые 20
+        comment = review.comment or "Без комментария"
+        reviewer = review.reviewer or "Аноним"
+        date = review.review_date.strftime("%d.%m.%Y") if review.review_date else "Дата неизвестна"
+        reviews_html += f"""
+        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px;">
+            <p><strong>{reviewer}</strong> • {date}</p>
+            <p>{comment}</p>
+        </div>
+        """
+    
     return HTMLResponse(
-        content=f"<h1>{reviews[0].subject}</h1><p>Отзывов: {len(reviews)}</p>",
+        content=f"""
+        <!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>{reviews[0].subject} - Отзывы</title>
+            <meta name="description" content="Отзывы о компании {reviews[0].subject}. Всего отзывов: {len(reviews)}">
+        </head>
+        <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <a href="/reviews" style="color: #007bff; text-decoration: none;">← Назад к списку</a>
+            <h1>{reviews[0].subject}</h1>
+            <p style="color: #666;">Всего отзывов: {len(reviews)}</p>
+            <hr>
+            {reviews_html}
+        </body>
+        </html>
+        """,
         status_code=200
     )
 

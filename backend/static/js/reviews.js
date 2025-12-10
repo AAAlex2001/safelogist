@@ -75,7 +75,8 @@ function displayAutocompleteResults(companies, query) {
 
 // Скрываем результаты при клике вне поиска
 document.addEventListener('click', function(e) {
-    if (!searchInput.contains(e.target) && !autocompleteContainer.contains(e.target)) {
+    const searchWrapper = searchInput.closest('.search-input-wrapper');
+    if (!searchWrapper?.contains(e.target) && !autocompleteContainer.contains(e.target)) {
         autocompleteContainer.style.display = 'none';
     }
 });

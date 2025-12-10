@@ -11,6 +11,7 @@ from typing import Optional
 
 from database import get_db
 from models.review import Review
+from models.company import Company
 
 router = APIRouter(tags=["reviews_pages"])
 
@@ -29,22 +30,21 @@ async def reviews_list_page(
     """
     per_page = 10
     offset = (page - 1) * per_page
-    
-    # Быстрый запрос с COUNT через GROUP BY (с индексом это работает нормально)
+
     query = (
         select(
             Review.subject,
             func.count(Review.id).label('reviews_count')
         )
         .group_by(Review.subject)
-        .order_by(Review.subject)  # По алфавиту, а не по COUNT!
+        .order_by(Review.subject)
         .limit(per_page)
         .offset(offset)
     )
-    
+
     result = await db.execute(query)
     rows = result.all()
-    
+
     companies_data = [
         {
             'company_name': row.subject,
@@ -53,18 +53,17 @@ async def reviews_list_page(
         }
         for row in rows
     ]
-    
-    # Если получили полную страницу, значит есть еще данные
+
     has_next = len(companies_data) == per_page
-    
+
     return templates.TemplateResponse(
         "reviews_list.html",
         {
             "request": request,
             "reports": companies_data,
             "current_page": page,
-            "total_pages": None,  # Не показываем точное число
-            "total_companies": None,  # Не показываем точное число
+            "total_pages": None,
+            "total_companies": None,
             "has_next": has_next
         }
     )
@@ -77,26 +76,29 @@ async def reviews_search_api(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    API endpoint для автопоиска компаний (JSON)
+    API для быстрого автопоиска компаний
+    Ищет по таблице companies (166к строк) — ~1ms
     """
-    # Быстрый поиск без COUNT (для автопоиска)
+    search_term = q.strip().lower()
+    if not search_term:
+        return JSONResponse(content={"companies": []})
+
+    pattern = f'%{search_term}%'
+
+    # Поиск по таблице companies через SQLAlchemy
     query = (
-        select(Review.subject)
-        .distinct()
-        .where(Review.subject.ilike(f'%{q}%'))
-        .order_by(Review.subject)
+        select(Company.name)
+        .where(func.lower(Company.name).like(pattern))
+        .order_by(Company.name)
         .limit(limit)
     )
-    
+
     result = await db.execute(query)
     companies = result.scalars().all()
-    
+
     return JSONResponse(content={
         "companies": [
-            {
-                "name": company,
-                "slug": quote(company, safe='')
-            }
+            {"name": company, "slug": quote(company, safe='')}
             for company in companies
         ]
     })
@@ -111,30 +113,42 @@ async def reviews_search_page(
     """
     Страница поиска компаний
     """
-    # Поиск с COUNT
-    query = (
-        select(
-            Review.subject,
-            func.count(Review.id).label('reviews_count')
-        )
-        .where(Review.subject.ilike(f'%{q}%'))
-        .group_by(Review.subject)
-        .order_by(Review.subject)
+    search_term = q.strip().lower()
+    pattern = f'%{search_term}%'
+
+    # Сначала находим компании быстро
+    company_query = (
+        select(Company.name)
+        .where(func.lower(Company.name).like(pattern))
+        .order_by(Company.name)
         .limit(50)
     )
-    
-    result = await db.execute(query)
-    rows = result.all()
-    
-    reports_data = [
-        {
-            'company_name': row.subject,
-            'company_slug': quote(row.subject, safe=''),
-            'reviews_count': row.reviews_count
-        }
-        for row in rows
-    ]
-    
+    result = await db.execute(company_query)
+    company_names = result.scalars().all()
+
+    # Потом получаем количество отзывов
+    reports_data = []
+    if company_names:
+        count_query = (
+            select(
+                Review.subject,
+                func.count(Review.id).label('reviews_count')
+            )
+            .where(Review.subject.in_(company_names))
+            .group_by(Review.subject)
+            .order_by(Review.subject)
+        )
+        count_result = await db.execute(count_query)
+
+        reports_data = [
+            {
+                'company_name': row.subject,
+                'company_slug': quote(row.subject, safe=''),
+                'reviews_count': row.reviews_count
+            }
+            for row in count_result.all()
+        ]
+
     return templates.TemplateResponse(
         "reviews_list.html",
         {
@@ -156,33 +170,46 @@ async def company_reviews_page(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Страница с отзывами конкретной компании с пагинацией
+    Страница с отзывами конкретной компании
     """
     per_page = 10
     offset = (page - 1) * per_page
-    
-    # Декодируем URL и slug
-    company_slug = unquote(company_slug)
-    
-    # Получаем общее количество отзывов для компании
-    count_query = select(func.count(Review.id)).where(Review.subject == company_slug)
+
+    company_name = unquote(company_slug)
+
+    # Точное совпадение
+    count_query = select(func.count(Review.id)).where(Review.subject == company_name)
     count_result = await db.execute(count_query)
     total_reviews = count_result.scalar() or 0
-    
-    # Если не нашли, пробуем по частичному совпадению
-    if total_reviews == 0:
-        company_name = company_slug.replace('-', ' ')
-        count_query = select(func.count(Review.id)).where(Review.subject.ilike(f'%{company_name}%'))
+
+    if total_reviews > 0:
+        search_condition = Review.subject == company_name
+    else:
+        # Поиск по таблице companies
+        pattern = f'%{company_name.lower()}%'
+        like_query = (
+            select(Company.name)
+            .where(func.lower(Company.name).like(pattern))
+            .limit(1)
+        )
+        like_result = await db.execute(like_query)
+        found = like_result.scalar()
+
+        if not found:
+            return HTMLResponse(
+                content="""<!DOCTYPE html>
+                <html lang="ru"><head><meta charset="UTF-8"><title>404</title></head>
+                <body style="font-family:Arial;max-width:800px;margin:0 auto;padding:20px;">
+                <a href="/reviews">← Назад</a><h1>Компания не найдена</h1></body></html>""",
+                status_code=404
+            )
+
+        company_name = found
+        count_query = select(func.count(Review.id)).where(Review.subject == company_name)
         count_result = await db.execute(count_query)
         total_reviews = count_result.scalar() or 0
-        search_condition = Review.subject.ilike(f'%{company_name}%')
-    else:
-        search_condition = Review.subject == company_slug
-    
-    if total_reviews == 0:
-        return HTMLResponse(content="<h1>404 - Компания не найдена</h1>", status_code=404)
-    
-    # Получаем отзывы для текущей страницы
+        search_condition = Review.subject == company_name
+
     query = (
         select(Review)
         .where(search_condition)
@@ -190,17 +217,16 @@ async def company_reviews_page(
         .limit(per_page)
         .offset(offset)
     )
-    
+
     result = await db.execute(query)
     reviews = result.scalars().all()
-    
+
     if not reviews:
         return HTMLResponse(content="<h1>404 - Страница не найдена</h1>", status_code=404)
-    
-    # Вычисляем пагинацию
+
     total_pages = (total_reviews + per_page - 1) // per_page
-    
-    # Генерируем HTML с отзывами
+    display_name = reviews[0].subject
+
     reviews_html = ""
     for review in reviews:
         comment = review.comment or "Без комментария"
@@ -210,10 +236,8 @@ async def company_reviews_page(
         <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px;">
             <p><strong>{reviewer}</strong> • {date}</p>
             <p>{comment}</p>
-        </div>
-        """
-    
-    # Пагинация
+        </div>"""
+
     pagination_html = '<div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; align-items: center;">'
     if page > 1:
         pagination_html += f'<a href="?page={page - 1}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">← Назад</a>'
@@ -221,27 +245,24 @@ async def company_reviews_page(
     if page < total_pages:
         pagination_html += f'<a href="?page={page + 1}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Вперёд →</a>'
     pagination_html += '</div>'
-    
+
     return HTMLResponse(
-        content=f"""
-        <!DOCTYPE html>
+        content=f"""<!DOCTYPE html>
         <html lang="ru">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{reviews[0].subject} - Отзывы (страница {page})</title>
-            <meta name="description" content="Отзывы о компании {reviews[0].subject}. Всего отзывов: {total_reviews}. Страница {page} из {total_pages}">
+            <title>{display_name} - Отзывы (страница {page})</title>
+            <meta name="description" content="Отзывы о компании {display_name}. Всего: {total_reviews}">
         </head>
         <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
             <a href="/reviews" style="color: #007bff; text-decoration: none;">← Назад к списку</a>
-            <h1>{reviews[0].subject}</h1>
+            <h1>{display_name}</h1>
             <p style="color: #666;">Всего отзывов: {total_reviews} | Страница {page} из {total_pages}</p>
             <hr>
             {reviews_html}
             {pagination_html}
         </body>
-        </html>
-        """,
+        </html>""",
         status_code=200
     )
-

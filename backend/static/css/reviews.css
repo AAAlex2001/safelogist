@@ -21,7 +21,7 @@ body::before {
     top: 0;
     left: 0;
     right: 0;
-    height: 500px;
+    height: 100%;
     background: linear-gradient(180deg, rgba(1, 42, 249, 0.09) 0%, rgba(222, 246, 255, 0.039) 100%);
     z-index: -1;
     pointer-events: none;
@@ -153,7 +153,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
 }
 
 .review-card {
@@ -213,42 +213,55 @@ body::before {
 /* Пагинация */
 .pagination {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    padding: 16px 0;
-}
-
-.page-info {
-    font-size: 14px;
-    color: #666;
 }
 
 .pagination-buttons {
     display: flex;
-    gap: 12px;
+    align-items: center;
+    gap: 40px;
 }
 
 .pagination-button {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #012AF91A;
     border-radius: 8px;
     text-decoration: none;
-    color: #007AFF;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background-color 0.2s;
+    color: #0D0D0D;
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.2s;
+    cursor: pointer;
 }
 
 .pagination-button:hover {
-    background-color: #e0e0e0;
+    border-color: #012AF9;
+    background: #F5F5F5;
 }
 
 .pagination-button:active {
-    background-color: #d0d0d0;
+    background: #E5E5EA;
 }
 
-/* Адаптивность для больших экранов */
+.pagination-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.page-info {
+    font-size: 14px;
+    line-height: 20px;
+    color: #6B6B6B;
+    font-weight: 400;
+}
+
+
 @media (min-width: 768px) {
     .container {
         max-width: 768px;

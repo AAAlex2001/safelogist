@@ -48,13 +48,33 @@
         </div>
 
         <div class="pagination">
-            <span class="page-info">Страница {{ current_page }}</span>
             <div class="pagination-buttons">
                 {% if current_page > 1 %}
-                <a href="?page={{ current_page - 1 }}" class="pagination-button">← Назад</a>
+                <a href="?page={{ current_page - 1 }}" class="pagination-button">
+                    <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.25 0.75L1.25 4.75L5.25 8.75" stroke="#A3A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                {% else %}
+                <span class="pagination-button pagination-button-disabled">
+                    <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.25 0.75L1.25 4.75L5.25 8.75" stroke="#A3A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
                 {% endif %}
+                <span class="page-info">Страница {{ current_page }}</span>
                 {% if has_next %}
-                <a href="?page={{ current_page + 1 }}" class="pagination-button">Вперёд →</a>
+                <a href="?page={{ current_page + 1 }}" class="pagination-button">
+                    <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 0.75L4.75 4.75L0.75 8.75" stroke="#A3A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                {% else %}
+                <span class="pagination-button pagination-button-disabled">
+                    <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 0.75L4.75 4.75L0.75 8.75" stroke="#A3A3A3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
                 {% endif %}
             </div>
         </div>

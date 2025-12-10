@@ -27,6 +27,7 @@ searchInput.addEventListener('input', function() {
     if (query.length < 2) {
         autocompleteContainer.innerHTML = '';
         autocompleteContainer.style.display = 'none';
+        searchBox.classList.remove('expanded');
         return;
     }
     
@@ -48,6 +49,7 @@ function displayAutocompleteResults(companies, query) {
     if (companies.length === 0) {
         autocompleteContainer.innerHTML = '<div class="autocomplete-item">Ничего не найдено</div>';
         autocompleteContainer.style.display = 'block';
+        searchBox.classList.add('expanded');
         return;
     }
     
@@ -61,6 +63,7 @@ function displayAutocompleteResults(companies, query) {
     }).join('');
     
     autocompleteContainer.style.display = 'block';
+    searchBox.classList.add('expanded');
     
     // Обработчики клика на результат
     autocompleteContainer.querySelectorAll('.autocomplete-item').forEach(item => {
@@ -75,9 +78,9 @@ function displayAutocompleteResults(companies, query) {
 
 // Скрываем результаты при клике вне поиска
 document.addEventListener('click', function(e) {
-    const searchWrapper = searchInput.closest('.search-input-wrapper');
-    if (!searchWrapper?.contains(e.target) && !autocompleteContainer.contains(e.target)) {
+    if (!searchBox?.contains(e.target)) {
         autocompleteContainer.style.display = 'none';
+        searchBox.classList.remove('expanded');
     }
 });
 

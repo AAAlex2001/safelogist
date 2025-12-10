@@ -60,6 +60,10 @@ body::before {
 .search-box {
     margin-bottom: 40px;
     position: relative;
+    background: #FFFFFF;
+    border: 1px solid #012AF9;
+    border-radius: 20px;
+    box-shadow: 0 0 40px 0 #012AF966;
 }
 
 .search-input-wrapper {
@@ -68,10 +72,14 @@ body::before {
     align-items: center;
     gap: 8px;
     padding: 6px 10px;
-    border: 1px solid #012AF9;
-    border-radius: 50px;
-    background: white;
-    box-shadow: 0 0 40px 0 #012AF966;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.search-box.expanded .search-input-wrapper {
+    border-bottom: 1px solid #E5E5EA;
 }
 
 .search-icon {
@@ -91,40 +99,52 @@ body::before {
 }
 
 .autocomplete-results {
-    position: absolute;
-    top: 43px;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    position: relative;
+    background: #FFFFFF;
+    border: none;
+    border-radius: 0 0 20px 20px;
     max-height: 300px;
     overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     display: none;
+    padding: 0 0 8px 0;
+}
+
+/* Кастомный скроллбар */
+.autocomplete-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.autocomplete-results::-webkit-scrollbar-thumb {
+    background: #0D0D0D;
+    border-radius: 4px;
+}
+
+.autocomplete-results::-webkit-scrollbar-thumb:hover {
+    background: #1a1a1a;
 }
 
 .autocomplete-item {
-    padding: 12px 16px;
+    padding: 16px 24px;
     cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
     transition: background-color 0.2s;
-    font-size: 14px;
-    color: #333;
-}
-
-.autocomplete-item:last-child {
-    border-bottom: none;
+    font-size: 12px;
+    line-height: 28px;
+    font-weight: 400;
+    color: #0D0D0D;
 }
 
 .autocomplete-item:hover {
-    background-color: #f5f5f5;
+    background-color: #012AF914;
 }
 
 .autocomplete-item strong {
-    color: #007AFF;
-    font-weight: 600;
+    font-weight: 700;
+    color: #0D0D0D;
 }
 
 .search-button {
@@ -304,6 +324,16 @@ body::before {
     }
 
     .search-input {
+        font-size: 18px;
+        line-height: 40px;
+    }
+
+    .autocomplete-results {
+        top: calc(100% + 8px);
+    }
+
+    .autocomplete-item {
+        padding: 16px 32px;
         font-size: 18px;
         line-height: 40px;
     }

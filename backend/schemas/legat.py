@@ -25,7 +25,7 @@ class ByCourtCase(BaseModel):
 class ByCourtResponse(BaseModel):
     error: Optional[Any]
     total: int
-    claimant: List[ByCourtCase]
+    claimant: Optional[List[ByCourtCase]] = None
 
 
 # ================================
@@ -51,14 +51,14 @@ class ByActionalCase(BaseModel):
     judge_type: Optional[str]
     judge_name: Optional[str]
     cassation: Optional[int]
-    parties: List[ByActionalParty]
+    parties: Optional[List[ByActionalParty]] = None
     decision: Optional[Union[str, List[str]]]
 
 
 class ByActionalResponse(BaseModel):
     error: Optional[Any]
     total: int
-    ist: List[ByActionalCase]
+    ist: Optional[List[ByActionalCase]] = None
 
 
 # ================================
@@ -206,7 +206,7 @@ class KzTaxItem(BaseModel):
 class KzTaxResponse(BaseModel):
     error: Optional[Any]
     date_update: Optional[str]
-    tax: List[KzTaxItem]
+    tax: Optional[List[KzTaxItem]] = None
 
 
 # =======================================
@@ -316,7 +316,7 @@ class KzCourtItem(BaseModel):
 class KzCourtResponse(BaseModel):
     error: Optional[Any]
     total: int
-    ist: List[KzCourtItem]
+    ist: Optional[List[KzCourtItem]] = None
 
 
 # =======================================

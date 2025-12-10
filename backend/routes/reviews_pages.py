@@ -54,9 +54,8 @@ async def reviews_list_page(
     # Формируем данные для шаблона
     reports_data = [
         {
-            'fiscal_code': row.fiscal_code,
-            'company_name': row.company_name,
-            'reports_count': row.reports_count
+            'company_name': row.subject,
+            'reviews_count': row.reviews_count
         }
         for row in companies
     ]
@@ -100,9 +99,8 @@ async def reviews_search_page(
     # Формируем данные для шаблона
     reports_data = [
         {
-            'fiscal_code': row.fiscal_code,
-            'company_name': row.company_name,
-            'reports_count': row.reports_count
+            'company_name': row.subject,
+            'reviews_count': row.reviews_count
         }
         for row in companies
     ]

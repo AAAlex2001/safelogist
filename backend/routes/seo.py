@@ -95,29 +95,33 @@ async def sitemap_static(request: Request):
 @router.get("/sitemap-{page}.xml", response_class=Response)
 async def sitemap_companies(page: int, request: Request, db: AsyncSession = Depends(get_db)):
     """
-    Динамический sitemap для страниц компаний
+    Динамический sitemap для страниц компаний и их отзывов
     """
+    from urllib.parse import quote
     base_url = str(request.base_url).rstrip('/')
     
-    # Пагинация
-    urls_per_sitemap = 10000
-    offset = (page - 1) * urls_per_sitemap
+    # Пагинация - просто список компаний БЕЗ подсчета отзывов (быстро!)
+    companies_per_sitemap = 5000
+    offset = (page - 1) * companies_per_sitemap
     
-    # Получаем компании для этой страницы
+    # Получаем только уникальные компании по алфавиту
     query = (
         select(Review.subject)
         .distinct()
         .order_by(Review.subject)
-        .limit(urls_per_sitemap)
+        .limit(companies_per_sitemap)
         .offset(offset)
     )
     result = await db.execute(query)
     companies = result.scalars().all()
     
     urls = []
-    for company in companies:
-        # Создаем slug из названия компании
-        slug = company.replace(' ', '-').replace('"', '').replace("'", "")[:100]
+    for company_name in companies:
+        # URL-encode название компании для правильного slug
+        slug = quote(company_name, safe='')
+        
+        # Добавляем только главную страницу компании (первые 10 отзывов)
+        # Остальные страницы Google найдет сам через пагинацию
         urls.append(f"""  <url>
     <loc>{base_url}/reviews/{slug}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>

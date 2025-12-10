@@ -6,6 +6,7 @@ from database import engine
 from models.base import Base
 from models.user import User
 from models.forgot_password import PasswordResetCode
+from models.review import Review
 
 
 async def init_db():

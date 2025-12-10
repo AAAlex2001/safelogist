@@ -4,9 +4,10 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
-from routes import registration, login, forgot_password, profile, openapi, legat, offdata
+from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo
 from admin import init_admin
 
 # Создание приложения FastAPI
@@ -31,6 +32,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Подключение статических файлов
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Подключение роутеров
 app.include_router(registration.router)
 app.include_router(login.router)
@@ -39,6 +43,8 @@ app.include_router(profile.router)
 app.include_router(openapi.router)
 app.include_router(legat.router)
 app.include_router(offdata.router)
+app.include_router(reviews_pages.router)
+app.include_router(seo.router)
 
 # Подключение админ панели
 init_admin(app)

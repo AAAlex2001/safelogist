@@ -243,7 +243,7 @@ body::before {
 
 .pagination-button:hover {
     border-color: #012AF9;
-    background: #F5F5F5;
+    background: #012AF914;
 }
 
 .pagination-button:active {
@@ -265,6 +265,16 @@ body::before {
 
 
 @media (min-width: 768px) {
+
+    .search-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .search-icon svg {
+        width: 20px;
+        height: 20px;
+    }
 
     .subtitle {
         font-size: 20px;
@@ -300,6 +310,15 @@ body::before {
 
     .review-card {
         padding: 20px;
+    }
+}
+
+
+@media (min-width: 1440px) {
+
+
+    .container {
+        max-width: 1150px;
     }
 }
 

@@ -1,6 +1,7 @@
 """
 SEO роуты: sitemap.xml, robots.txt
 """
+import os
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,15 +35,16 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     """
     Sitemap Index - главный файл со ссылками на все sitemap
     """
-    base_url = str(request.base_url).rstrip('/')
+    base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
+    if base_url.startswith("http://"):
+        base_url = "https://" + base_url.removeprefix("http://")
     
     # Получаем общее количество компаний
     count_query = select(func.count(func.distinct(Review.subject)))
     count_result = await db.execute(count_query)
     total_companies = count_result.scalar() or 0
     
-    # Рассчитываем количество sitemap файлов (по 10000 URL в каждом)
-    urls_per_sitemap = 10000
+    urls_per_sitemap = 5000
     num_sitemaps = (total_companies + urls_per_sitemap - 1) // urls_per_sitemap
     
     sitemaps = []
@@ -73,7 +75,9 @@ async def sitemap_static(request: Request):
     """
     Статический sitemap для главных страниц
     """
-    base_url = str(request.base_url).rstrip('/')
+    base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
+    if base_url.startswith("http://"):
+        base_url = "https://" + base_url.removeprefix("http://")
     
     urls = [
         f"""  <url>
@@ -95,7 +99,9 @@ async def sitemap_static(request: Request):
 @router.get("/sitemap-{page}.xml", response_class=Response)
 async def sitemap_companies(page: int, request: Request, db: AsyncSession = Depends(get_db)):
     from urllib.parse import quote
-    base_url = str(request.base_url).rstrip('/')
+    base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
+    if base_url.startswith("http://"):
+        base_url = "https://" + base_url.removeprefix("http://")
     
     companies_per_sitemap = 5000
     offset = (page - 1) * companies_per_sitemap

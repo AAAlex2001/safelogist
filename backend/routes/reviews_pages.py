@@ -33,6 +33,8 @@ TRANSLATIONS = {
         "empty_results": "Ничего не найдено",
         "meta_title": "{name} — отзывы (страница {page})",
         "meta_desc": "Отзывы о компании {name}. Всего: {total_reviews}. Страница {page}.",
+        "source_label": "Источник",
+        "from_label": "От:",
     },
     "en": {
         "list_title": "All company reviews",
@@ -46,6 +48,8 @@ TRANSLATIONS = {
         "empty_results": "No results",
         "meta_title": "{name} — reviews (page {page})",
         "meta_desc": "Reviews about {name}. Total: {total_reviews}. Page {page}.",
+        "source_label": "Source",
+        "from_label": "From:",
     },
     "uk": {
         "list_title": "Усі відгуки компаній",
@@ -59,6 +63,8 @@ TRANSLATIONS = {
         "empty_results": "Нічого не знайдено",
         "meta_title": "{name} — відгуки (сторінка {page})",
         "meta_desc": "Відгуки про компанію {name}. Всього: {total_reviews}. Сторінка {page}.",
+        "source_label": "Джерело",
+        "from_label": "Від:",
     },
     "ro": {
         "list_title": "Toate recenziile companiilor",
@@ -72,6 +78,8 @@ TRANSLATIONS = {
         "empty_results": "Niciun rezultat",
         "meta_title": "{name} — recenzii (pagina {page})",
         "meta_desc": "Recenzii despre {name}. Total: {total_reviews}. Pagina {page}.",
+        "source_label": "Sursă",
+        "from_label": "De la:",
     },
 }
 
@@ -372,6 +380,7 @@ async def company_reviews_page(
         review_items.append({
             "comment": review.comment or "—",
             "reviewer": review.reviewer or "—",
+            "source": getattr(review, "source", None) or "—",
             "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",
         })
 

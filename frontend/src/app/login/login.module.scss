@@ -15,6 +15,30 @@
   color: var(--text-main);
   font-family: "BlinkMacSystemFont", -apple-system, "Segoe UI", Roboto, sans-serif;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loginPage::before,
+.loginPage::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 16vw;
+  height: 50%;
+  background: var(--accent-1, #012AF9);
+  filter: blur(70px);
+  opacity: 1;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.loginPage::before {
+  left: -15vw;
+}
+
+.loginPage::after {
+  right: -15vw;
 }
 
 .loginCard {
@@ -101,4 +125,30 @@
 .secondaryLink a {
   margin-left: 4px;
   color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .loginPage::before,
+  .loginPage::after {
+    width: 80%;
+    height: 28vh;
+    left: 50%;
+    opacity: 0.46;
+    filter: blur(60px);
+    transform: translateX(-50%);
+    top: auto;
+  }
+
+  .loginPage::before {
+    top: -26vh;
+  }
+
+  .loginPage::after {
+    bottom: -26vh;
+  }
+
+  .loginCard {
+    width: 100%;
+    max-width: 340px;
+  }
 }

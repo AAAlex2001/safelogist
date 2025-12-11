@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ meta_title }}</title>
+    <meta name="description" content="{{ meta_desc }}">
+    <link rel="canonical" href="{{ canonical }}">
+    {% for link in hreflangs %}
+    <link rel="alternate" hreflang="{{ link.hreflang }}" href="{{ link.href }}">
+    {% endfor %}
+    <meta property="og:title" content="{{ meta_title }}">
+    <meta property="og:description" content="{{ meta_desc }}">
+    <meta property="og:url" content="{{ og_url }}">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="{{ og_image }}">
+    <meta property="og:image:alt" content="{{ meta_title }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/company.css">
+</head>
+<body>
+    <div class="company-page">
+        <div class="hero">
+            <p class="hero-eyebrow">{{ t.list_title }}</p>
+            <h1 class="hero-title">{{ display_name }}</h1>
+            <p class="hero-subtitle">{{ t.list_subtitle }}</p>
+        </div>
+
+        <div class="actions">
+            <a class="btn ghost" href="/{{ lang }}/reviews">
+                <span class="icon">←</span>
+                {{ t.back_to_list }}
+            </a>
+            <a class="btn solid" href="/{{ lang }}/reviews/{{ display_name | urlencode }}?page=1#add-review">
+                Добавить отзыв
+            </a>
+        </div>
+
+        <div class="company-card">
+            <div class="company-avatar">🏢</div>
+            <div class="company-info">
+                <div class="company-name">{{ display_name }}</div>
+                <div class="company-meta">{{ t.total_reviews }}: {{ total_reviews }}</div>
+            </div>
+        </div>
+
+        <div class="reviews">
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-meta">
+                    <div class="review-source">{{ review.reviewer }}</div>
+                    <div class="review-date">{{ review.date }}</div>
+                </div>
+                <p class="review-text">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {% if page > 1 %}
+            <a class="page-btn" href="?page={{ page - 1 }}">←</a>
+            {% else %}
+            <span class="page-btn disabled">←</span>
+            {% endif %}
+            <span class="page-info">{{ t.page_label }} {{ page }} / {{ total_pages }}</span>
+            {% if page < total_pages %}
+            <a class="page-btn" href="?page={{ page + 1 }}">→</a>
+            {% else %}
+            <span class="page-btn disabled">→</span>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+

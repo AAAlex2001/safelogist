@@ -1,9 +1,10 @@
 """
 Роуты для серверного рендеринга страниц с отзывами
 """
+import os
 from urllib.parse import quote, unquote
 from fastapi import APIRouter, Depends, Request, Query
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
@@ -17,17 +18,107 @@ router = APIRouter(tags=["reviews_pages"])
 
 # Настройка Jinja2
 templates = Jinja2Templates(directory="templates")
+SUPPORTED_LANGS = ["ru", "en", "uk", "ro"]
+DEFAULT_LANG = "ru"
+TRANSLATIONS = {
+    "ru": {
+        "list_title": "Все отзывы компаний",
+        "list_subtitle": "Честные мнения партнёров и подрядчиков — обновляются ежедневно",
+        "search_placeholder": "Название компании или имя лица",
+        "search_button": "Поиск",
+        "page_label": "Страница",
+        "back_to_list": "← Назад к списку",
+        "not_found": "Компания не найдена",
+        "total_reviews": "Всего отзывов",
+        "empty_results": "Ничего не найдено",
+        "meta_title": "{name} — отзывы (страница {page})",
+        "meta_desc": "Отзывы о компании {name}. Всего: {total_reviews}. Страница {page}.",
+    },
+    "en": {
+        "list_title": "All company reviews",
+        "list_subtitle": "Honest feedback from partners and contractors — updated daily",
+        "search_placeholder": "Company name or person",
+        "search_button": "Search",
+        "page_label": "Page",
+        "back_to_list": "← Back to list",
+        "not_found": "Company not found",
+        "total_reviews": "Total reviews",
+        "empty_results": "No results",
+        "meta_title": "{name} — reviews (page {page})",
+        "meta_desc": "Reviews about {name}. Total: {total_reviews}. Page {page}.",
+    },
+    "uk": {
+        "list_title": "Усі відгуки компаній",
+        "list_subtitle": "Чесні думки партнерів і підрядників — оновлюється щодня",
+        "search_placeholder": "Назва компанії або ім'я особи",
+        "search_button": "Пошук",
+        "page_label": "Сторінка",
+        "back_to_list": "← Назад до списку",
+        "not_found": "Компанію не знайдено",
+        "total_reviews": "Всього відгуків",
+        "empty_results": "Нічого не знайдено",
+        "meta_title": "{name} — відгуки (сторінка {page})",
+        "meta_desc": "Відгуки про компанію {name}. Всього: {total_reviews}. Сторінка {page}.",
+    },
+    "ro": {
+        "list_title": "Toate recenziile companiilor",
+        "list_subtitle": "Opinii sincere de la parteneri și contractori — actualizate zilnic",
+        "search_placeholder": "Numele companiei sau al persoanei",
+        "search_button": "Căutare",
+        "page_label": "Pagina",
+        "back_to_list": "← Înapoi la listă",
+        "not_found": "Compania nu a fost găsită",
+        "total_reviews": "Total recenzii",
+        "empty_results": "Niciun rezultat",
+        "meta_title": "{name} — recenzii (pagina {page})",
+        "meta_desc": "Recenzii despre {name}. Total: {total_reviews}. Pagina {page}.",
+    },
+}
 
 
-@router.get("/reviews", response_class=HTMLResponse)
+def normalize_lang(lang: str) -> str:
+    lang_code = (lang or "").lower()
+    return lang_code if lang_code in SUPPORTED_LANGS else DEFAULT_LANG
+
+
+def build_base_url(request: Request) -> str:
+    base = os.getenv("BASE_URL", str(request.base_url)).rstrip("/")
+    if base.startswith("http://"):
+        base = "https://" + base.removeprefix("http://")
+    return base
+
+
+def build_alt_links(request: Request, path_without_lang: str, query: str):
+    query_part = f"?{query}" if query else ""
+    links = []
+    base = build_base_url(request)
+    for code in SUPPORTED_LANGS:
+        href = f"{base}/{code}{path_without_lang}{query_part}"
+        links.append({"hreflang": code, "href": href})
+    links.append({"hreflang": "x-default", "href": f"{base}/{DEFAULT_LANG}{path_without_lang}{query_part}"})
+    return links
+
+
+def extract_path_without_lang(request: Request) -> str:
+    path = request.url.path.lstrip("/")
+    parts = path.split("/", 1)
+    tail = parts[1] if parts and parts[0] in SUPPORTED_LANGS and len(parts) > 1 else path
+    return f"/{tail}" if tail else "/"
+
+
+@router.get("/reviews", response_class=RedirectResponse, status_code=302)
+async def reviews_root_redirect():
+    return RedirectResponse(url=f"/{DEFAULT_LANG}/reviews", status_code=302)
+
+
+@router.get("/{lang}/reviews", response_class=HTMLResponse)
 async def reviews_list_page(
     request: Request,
+    lang: str,
     page: int = Query(1, ge=1),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Страница со списком всех компаний с отзывами
-    """
+    lang_code = normalize_lang(lang)
     per_page = 10
     offset = (page - 1) * per_page
 
@@ -55,6 +146,13 @@ async def reviews_list_page(
     ]
 
     has_next = len(companies_data) == per_page
+    base_url = build_base_url(request)
+    path_without_lang = extract_path_without_lang(request)
+    query_part = request.url.query
+    hreflangs = build_alt_links(request, path_without_lang, query_part)
+    canonical = f"{base_url}/{lang_code}{path_without_lang}"
+    if query_part:
+        canonical = f"{canonical}?{query_part}"
 
     return templates.TemplateResponse(
         "reviews_list.html",
@@ -64,7 +162,12 @@ async def reviews_list_page(
             "current_page": page,
             "total_pages": None,
             "total_companies": None,
-            "has_next": has_next
+            "has_next": has_next,
+            "lang": lang_code,
+            "t": TRANSLATIONS.get(lang_code, TRANSLATIONS[DEFAULT_LANG]),
+            "canonical": canonical,
+            "hreflangs": hreflangs,
+            "base_url": base_url,
         }
     )
 
@@ -75,17 +178,12 @@ async def reviews_search_api(
     limit: int = Query(10, ge=1, le=50),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    API для быстрого автопоиска компаний
-    Ищет по таблице companies (166к строк) — ~1ms
-    """
     search_term = q.strip().lower()
     if not search_term:
         return JSONResponse(content={"companies": []})
 
     pattern = f'%{search_term}%'
 
-    # Поиск по таблице companies через SQLAlchemy
     query = (
         select(Company.name)
         .where(func.lower(Company.name).like(pattern))
@@ -104,19 +202,22 @@ async def reviews_search_api(
     })
 
 
-@router.get("/reviews/search", response_class=HTMLResponse)
+@router.get("/reviews/search", response_class=RedirectResponse, status_code=302)
+async def reviews_search_redirect(q: str = Query(..., min_length=1)):
+    return RedirectResponse(url=f"/{DEFAULT_LANG}/reviews/search?q={quote(q, safe='')}", status_code=302)
+
+
+@router.get("/{lang}/reviews/search", response_class=HTMLResponse)
 async def reviews_search_page(
     request: Request,
+    lang: str,
     q: str = Query(..., min_length=1),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Страница поиска компаний
-    """
+    lang_code = normalize_lang(lang)
     search_term = q.strip().lower()
     pattern = f'%{search_term}%'
 
-    # Сначала находим компании быстро
     company_query = (
         select(Company.name)
         .where(func.lower(Company.name).like(pattern))
@@ -126,7 +227,6 @@ async def reviews_search_page(
     result = await db.execute(company_query)
     company_names = result.scalars().all()
 
-    # Потом получаем количество отзывов
     reports_data = []
     if company_names:
         count_query = (
@@ -149,6 +249,14 @@ async def reviews_search_page(
             for row in count_result.all()
         ]
 
+    base_url = build_base_url(request)
+    path_without_lang = extract_path_without_lang(request)
+    query_part = request.url.query
+    hreflangs = build_alt_links(request, path_without_lang, query_part)
+    canonical = f"{base_url}/{lang_code}{path_without_lang}"
+    if query_part:
+        canonical = f"{canonical}?{query_part}"
+
     return templates.TemplateResponse(
         "reviews_list.html",
         {
@@ -157,27 +265,35 @@ async def reviews_search_page(
             "current_page": 1,
             "total_pages": 1,
             "total_companies": len(reports_data),
-            "search_query": q
+            "search_query": q,
+            "lang": lang_code,
+            "t": TRANSLATIONS.get(lang_code, TRANSLATIONS[DEFAULT_LANG]),
+            "canonical": canonical,
+            "hreflangs": hreflangs,
+            "base_url": base_url,
         }
     )
 
 
-@router.get("/reviews/{company_slug:path}", response_class=HTMLResponse)
+@router.get("/reviews/{company_slug:path}", response_class=RedirectResponse, status_code=302)
+async def company_reviews_redirect(company_slug: str, page: int = Query(1, ge=1)):
+    slug_encoded = quote(unquote(company_slug), safe="")
+    return RedirectResponse(url=f"/{DEFAULT_LANG}/reviews/{slug_encoded}?page={page}", status_code=302)
+
+
+@router.get("/{lang}/reviews/{company_slug:path}", response_class=HTMLResponse)
 async def company_reviews_page(
     request: Request,
+    lang: str,
     company_slug: str,
     page: int = Query(1, ge=1),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Страница с отзывами конкретной компании
-    """
+    lang_code = normalize_lang(lang)
     per_page = 10
     offset = (page - 1) * per_page
-
     company_name = unquote(company_slug)
 
-    # Точное совпадение
     count_query = select(func.count(Review.id)).where(Review.subject == company_name)
     count_result = await db.execute(count_query)
     total_reviews = count_result.scalar() or 0
@@ -185,7 +301,6 @@ async def company_reviews_page(
     if total_reviews > 0:
         search_condition = Review.subject == company_name
     else:
-        # Поиск по таблице companies
         pattern = f'%{company_name.lower()}%'
         like_query = (
             select(Company.name)
@@ -196,11 +311,26 @@ async def company_reviews_page(
         found = like_result.scalar()
 
         if not found:
+            base_url = build_base_url(request)
+            path_without_lang = extract_path_without_lang(request)
+            query_part = request.url.query
+            hreflangs = build_alt_links(request, path_without_lang, query_part)
+            canonical = f"{base_url}/{lang_code}{path_without_lang}"
+            if query_part:
+                canonical = f"{canonical}?{query_part}"
+            t = TRANSLATIONS.get(lang_code, TRANSLATIONS[DEFAULT_LANG])
             return HTMLResponse(
-                content="""<!DOCTYPE html>
-                <html lang="ru"><head><meta charset="UTF-8"><title>404</title></head>
-                <body style="font-family:Arial;max-width:800px;margin:0 auto;padding:20px;">
-                <a href="/reviews">← Назад</a><h1>Компания не найдена</h1></body></html>""",
+                content=f"""<!DOCTYPE html>
+                <html lang="{lang_code}">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>404</title>
+                    <link rel="canonical" href="{canonical}">
+                    {''.join([f'<link rel="alternate" hreflang="{h["hreflang"]}" href="{h["href"]}">' for h in hreflangs])}
+                </head>
+                <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+                <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">{t.get("back_to_list")}</a><h1>{t.get("not_found")}</h1></body></html>""",
                 status_code=404
             )
 
@@ -221,48 +351,47 @@ async def company_reviews_page(
     result = await db.execute(query)
     reviews = result.scalars().all()
 
-    if not reviews:
-        return HTMLResponse(content="<h1>404 - Страница не найдена</h1>", status_code=404)
-
     total_pages = (total_reviews + per_page - 1) // per_page
-    display_name = reviews[0].subject
+    display_name = reviews[0].subject if reviews else company_name
 
-    reviews_html = ""
+    t = TRANSLATIONS.get(lang_code, TRANSLATIONS[DEFAULT_LANG])
+    base_url = build_base_url(request)
+    path_without_lang = extract_path_without_lang(request)
+    query_part = request.url.query
+    hreflangs = build_alt_links(request, path_without_lang, query_part)
+    canonical = f"{base_url}/{lang_code}{path_without_lang}"
+    if query_part:
+        canonical = f"{canonical}?{query_part}"
+    meta_title = t.get("meta_title", "{name}").format(name=display_name, page=page, total_reviews=total_reviews)
+    meta_desc = t.get("meta_desc", "").format(name=display_name, page=page, total_reviews=total_reviews)
+    og_url = canonical
+    og_image = f"{base_url}/static/safelogist.jpg"
+
+    review_items = []
     for review in reviews:
-        comment = review.comment or "Без комментария"
-        reviewer = review.reviewer or "Аноним"
-        date = review.review_date.strftime("%d.%m.%Y") if review.review_date else "Дата неизвестна"
-        reviews_html += f"""
-        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px;">
-            <p><strong>{reviewer}</strong> • {date}</p>
-            <p>{comment}</p>
-        </div>"""
+        review_items.append({
+            "comment": review.comment or "—",
+            "reviewer": review.reviewer or "—",
+            "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",
+        })
 
-    pagination_html = '<div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; align-items: center;">'
-    if page > 1:
-        pagination_html += f'<a href="?page={page - 1}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">← Назад</a>'
-    pagination_html += f'<span style="padding: 10px;">Страница {page} из {total_pages}</span>'
-    if page < total_pages:
-        pagination_html += f'<a href="?page={page + 1}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Вперёд →</a>'
-    pagination_html += '</div>'
-
-    return HTMLResponse(
-        content=f"""<!DOCTYPE html>
-        <html lang="ru">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{display_name} - Отзывы (страница {page})</title>
-            <meta name="description" content="Отзывы о компании {display_name}. Всего: {total_reviews}">
-        </head>
-        <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <a href="/reviews" style="color: #007bff; text-decoration: none;">← Назад к списку</a>
-            <h1>{display_name}</h1>
-            <p style="color: #666;">Всего отзывов: {total_reviews} | Страница {page} из {total_pages}</p>
-            <hr>
-            {reviews_html}
-            {pagination_html}
-        </body>
-        </html>""",
-        status_code=200
+    return templates.TemplateResponse(
+        "company_reviews.html",
+        {
+            "request": request,
+            "lang": lang_code,
+            "t": t,
+            "display_name": display_name,
+            "total_reviews": total_reviews,
+            "page": page,
+            "total_pages": total_pages,
+            "reviews": review_items,
+            "canonical": canonical,
+            "hreflangs": hreflangs,
+            "meta_title": meta_title,
+            "meta_desc": meta_desc,
+            "og_url": og_url,
+            "og_image": og_image,
+            "base_url": base_url,
+        }
     )

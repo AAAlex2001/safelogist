@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: linear-gradient(180deg, rgba(1, 42, 249, 0.09) 0%, rgba(222, 246, 255, 0.039) 100%);
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.company-page {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 20px 40px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.hero-eyebrow {
+    font-size: 14px;
+    color: #2f80ed;
+    font-weight: 700;
+}
+
+.hero-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 8px 0 6px;
+}
+
+.hero-subtitle {
+    font-size: 12px;
+    color: #4f4f4f;
+    line-height: 18px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    flex: 1;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #012AF9;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn.ghost {
+    color: #012AF9;
+    background: #fff;
+}
+
+.btn.solid {
+    color: #fff;
+    background: #012AF9;
+}
+
+.icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.company-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 50px rgba(1, 42, 249, 0.15);
+    margin-bottom: 20px;
+}
+
+.company-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #e5e5ea;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+}
+
+.company-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.company-name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.company-meta {
+    font-size: 12px;
+    color: #4f4f4f;
+}
+
+.reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-card {
+    background: #f4f7ff;
+    border-radius: 14px;
+    padding: 14px 14px 16px;
+    border: 1px solid rgba(1, 42, 249, 0.15);
+}
+
+.review-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #4f4f4f;
+}
+
+.review-source {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.review-date {
+    font-weight: 500;
+}
+
+.review-text {
+    font-size: 12px;
+    line-height: 18px;
+    color: #1a1a1a;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(1, 42, 249, 0.15);
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    color: #012AF9;
+    font-weight: 700;
+}
+
+.page-btn.disabled {
+    color: #bdbdbd;
+    border-color: #e0e0e0;
+    pointer-events: none;
+}
+
+.page-info {
+    font-size: 12px;
+    color: #4f4f4f;
+    font-weight: 600;
+}
+
+@media (min-width: 480px) {
+    .company-page {
+        max-width: 480px;
+        padding: 32px 28px 48px;
+    }
+
+    .hero-title {
+        font-size: 22px;
+    }
+
+    .btn {
+        height: 42px;
+        font-size: 13px;
+    }
+}
+

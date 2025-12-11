@@ -1,3 +1,7 @@
+const root = document.getElementById('reviews-root');
+const lang = root?.dataset.lang || 'ru';
+const emptyText = root?.dataset.empty || 'Ничего не найдено';
+const basePath = `/${lang}/reviews`;
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 let searchTimeout = null;
@@ -41,7 +45,7 @@ searchInput.addEventListener('input', function() {
 
 function displayAutocompleteResults(companies, query) {
     if (companies.length === 0) {
-        autocompleteContainer.innerHTML = '<div class="autocomplete-item">Ничего не найдено</div>';
+        autocompleteContainer.innerHTML = `<div class="autocomplete-item">${emptyText}</div>`;
         searchBox.classList.add('expanded');
         setTimeout(() => autocompleteContainer.classList.add('show'), 10);
         return;
@@ -62,7 +66,7 @@ function displayAutocompleteResults(companies, query) {
         item.addEventListener('click', function() {
             const slug = this.getAttribute('data-slug');
             if (slug) {
-                window.location.href = `/reviews/${slug}`;
+                window.location.href = `${basePath}/${slug}`;
             }
         });
     });
@@ -81,7 +85,7 @@ document.addEventListener('click', function(e) {
 searchButton.addEventListener('click', function() {
     const query = searchInput.value.trim();
     if (query) {
-        window.location.href = `/reviews/search?q=${encodeURIComponent(query)}`;
+        window.location.href = `${basePath}/search?q=${encodeURIComponent(query)}`;
     }
 });
 
@@ -90,7 +94,7 @@ searchInput.addEventListener('keypress', function(e) {
         e.preventDefault();
         const query = this.value.trim();
         if (query) {
-            window.location.href = `/reviews/search?q=${encodeURIComponent(query)}`;
+            window.location.href = `${basePath}/search?q=${encodeURIComponent(query)}`;
         }
     }
     

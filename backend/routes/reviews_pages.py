@@ -377,12 +377,88 @@ async def company_reviews_page(
 
     review_items = []
     for review in reviews:
+        comment = (review.comment or "").strip()
+        if not comment:
+            continue  # если нет текста отзыва — не показываем
         review_items.append({
-            "comment": review.comment or "—",
+            "comment": comment,
             "reviewer": review.reviewer or "—",
             "source": getattr(review, "source", None) or "—",
+            "rating": review.rating if review.rating is not None else 5,
             "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",
         })
+
+    company_sections = []
+    if reviews:
+        first = reviews[0]
+
+        def v(val):
+            if val is None or (isinstance(val, str) and val.strip() == ""):
+                return "—"
+            return val
+
+        def section(title: str, rows: list):
+            company_sections.append({"title": title, "rows": rows})
+
+        section(
+            "Основная информация",
+            [
+                {"label": "Полное наименование", "value": v(first.subject)},
+                {"label": "Сокращённое наименование", "value": v(getattr(first, "short_name", None))},
+                {"label": "Страна регистрации", "value": v(getattr(first, "jurisdiction", None) or getattr(first, "country", None))},
+                {"label": "Статус компании", "value": v(getattr(first, "status", None))},
+                {"label": "Организационно-правовая форма", "value": v(getattr(first, "legal_form", None))},
+            ],
+        )
+
+        section(
+            "Регистрация",
+            [
+                {"label": "Регистрационный номер", "value": v(getattr(first, "registration_number", None) or getattr(first, "company_number", None))},
+                {"label": "Налоговый номер", "value": v(getattr(first, "inn", None))},
+                {"label": "Дата регистрации", "value": v(getattr(first, "registration_date", None))},
+            ],
+        )
+
+        section(
+            "Деятельность",
+            [
+                {"label": "Категория компании", "value": v(getattr(first, "subtype", None))},
+                {"label": "Вид деятельности", "value": v(getattr(first, "activity_type", None))},
+            ],
+        )
+
+        section(
+            "Адреса",
+            [
+                {"label": "Юридический адрес", "value": v(getattr(first, "legal_address", None))},
+                {"label": "Почтовый адрес", "value": v(getattr(first, "mailing_address", None))},
+            ],
+        )
+
+        section(
+            "Капитал",
+            [
+                {"label": "Уставный капитал", "value": v(getattr(first, "authorized_capital", None))},
+                {"label": "Оплаченный капитал", "value": v(getattr(first, "paid_up_capital", None))},
+            ],
+        )
+
+        section(
+            "Руководство и учредители",
+            [
+                {"label": "Руководитель", "value": v(getattr(first, "managers", None))},
+                {"label": "Учредитель", "value": v(getattr(first, "branch", None))},
+            ],
+        )
+
+        section(
+            "Статус существования",
+            [
+                {"label": "Статус", "value": v(getattr(first, "status", None))},
+                {"label": "Дата ликвидации", "value": v(getattr(first, "liquidation_date", None))},
+            ],
+        )
 
     return templates.TemplateResponse(
         "company_reviews.html",
@@ -395,6 +471,7 @@ async def company_reviews_page(
             "page": page,
             "total_pages": total_pages,
             "reviews": review_items,
+        "company_sections": company_sections,
             "canonical": canonical,
             "hreflangs": hreflangs,
             "meta_title": meta_title,

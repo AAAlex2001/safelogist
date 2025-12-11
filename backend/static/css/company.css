@@ -189,12 +189,19 @@ body {
 
 .actions.dual {
     justify-content: space-between;
-    max-width: 320px;
+    width: 320px;
     margin: 0 auto 40px;
 }
 
 .actions.dual .btn {
     flex: 1;
+}
+
+.company-top-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .icon {
@@ -216,7 +223,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin: 0 auto 20px;
+    margin: 0 auto 20px auto;
 }
 
 .company-meta-card {
@@ -378,7 +385,7 @@ body {
 
     .actions.dual {
         justify-content: space-between;
-        max-width: 425px;
+        width: 425px;
     }
 
     .company-name {
@@ -409,13 +416,25 @@ body {
 
 @media (min-width: 1440px) {
 
+    .company-card {
+        margin: 0 auto 40px 0;
+    }
+
     .company-page {
         width: 100%;
         max-width: 1150px;
     }
 
+    .company-top-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+    }
+
     .meta-columns {
         flex-direction: row;
+        align-items: flex-start;
     }
 
     .company-meta-card {

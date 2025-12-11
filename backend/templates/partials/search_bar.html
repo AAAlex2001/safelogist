@@ -1,0 +1,25 @@
+<div class="search-wrapper {{ extra_class | default('') }}">
+    <div class="search-box">
+        <div class="search-input-wrapper">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.63876 10.5292C8.33874 10.5292 10.5275 8.34007 10.5275 5.63961C10.5275 2.93915 8.33874 0.75 5.63876 0.75C2.93877 0.75 0.75 2.93915 0.75 5.63961C0.75 8.34007 2.93877 10.5292 5.63876 10.5292Z" stroke="#012AF9" stroke-width="1.5"/>
+                <path d="M9.19531 9.19531L12.7508 12.7514" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input
+                type="text"
+                class="search-input"
+                placeholder="{{ placeholder }}"
+                id="{{ input_id }}"
+                value="{{ value | default('') }}"
+            >
+            <button
+                class="search-button"
+                {% if button_id %}id="{{ button_id }}"{% endif %}
+                {% if button_onclick %}onclick="{{ button_onclick }}"{% endif %}
+            >
+                {{ button_text }}
+            </button>
+        </div>
+    </div>
+</div>
+

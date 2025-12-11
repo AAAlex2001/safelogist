@@ -1,0 +1,156 @@
+.search-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+  height: 44px;
+}
+
+.search-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #012af9;
+  border-radius: 20px;
+  box-shadow: 0 0 40px 0 #012af966;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+}
+
+.search-icon {
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0;
+  font-size: 12px;
+  line-height: 28px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.search-button {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  background-color: #012af9;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-button:hover {
+  background-color: #0020cc;
+}
+
+.search-button:active {
+  background-color: #0019a3;
+}
+
+.autocomplete-results {
+  position: relative;
+  background: #ffffff;
+  border: none;
+  border-radius: 0 0 20px 20px;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 1000;
+  padding: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.autocomplete-results.show {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 10px 8px 0;
+  scrollbar-gutter: stable;
+  opacity: 1;
+  scrollbar-width: auto;
+  scrollbar-color: #0d0d0d transparent;
+}
+
+.autocomplete-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.autocomplete-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.autocomplete-results::-webkit-scrollbar-thumb {
+  background: #0d0d0d;
+  border-radius: 3px;
+  border: 1px solid #ffffff;
+}
+
+.autocomplete-item {
+  padding: 8px 16px 8px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 12px;
+  line-height: 28px;
+  font-weight: 400;
+  color: #0d0d0d;
+}
+
+.autocomplete-item:hover {
+  background-color: #012af914;
+  color: #012af9;
+}
+
+.autocomplete-item strong {
+  font-weight: 700;
+  color: #0d0d0d;
+}
+
+.autocomplete-item:hover strong {
+  color: #012af9;
+}
+
+@media (min-width: 768px) {
+  .search-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-input-wrapper {
+    gap: 16px;
+    padding: 8px 8px 8px 24px;
+  }
+
+  .search-input {
+    font-size: 18px;
+    line-height: 40px;
+  }
+
+  .search-button {
+    padding: 8px 32px;
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .autocomplete-item {
+    font-size: 18px;
+    line-height: 40px;
+  }
+}
+

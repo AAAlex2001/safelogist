@@ -19,6 +19,7 @@
     <meta property="og:image:height" content="630">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/reviews.css">
+    <link rel="stylesheet" href="/static/css/searchbar.css">
 </head>
 <body>
     <div class="container" id="reviews-root" data-lang="{{ lang }}" data-empty="{{ t.empty_results }}">
@@ -27,21 +28,11 @@
             <p class="subtitle">{{ t.list_subtitle }}</p>
         </header>
 
-        <div class="search-wrapper">
-            <div class="search-box">
-                <div class="search-input-wrapper">
-                    <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.63876 10.5292C8.33874 10.5292 10.5275 8.34007 10.5275 5.63961C10.5275 2.93915 8.33874 0.75 5.63876 0.75C2.93877 0.75 0.75 2.93915 0.75 5.63961C0.75 8.34007 2.93877 10.5292 5.63876 10.5292Z" stroke="#012AF9" stroke-width="1.5"/>
-                        <path d="M9.19531 9.19531L12.7508 12.7514" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <input type="text" 
-                           class="search-input" 
-                           placeholder="{{ t.search_placeholder }}"
-                           id="searchInput">
-                    <button class="search-button" id="searchButton">{{ t.search_button }}</button>
-                </div>
-            </div>
-        </div>
+        {% set placeholder = t.search_placeholder %}
+        {% set button_text = t.search_button %}
+        {% set input_id = "searchInput" %}
+        {% set button_id = "searchButton" %}
+        {% include "partials/search_bar.html" with context %}
 
         <div class="reviews-list">
             {% for report in reports %}
@@ -94,7 +85,17 @@
         </div>
     </div>
 
-    <script src="/static/js/reviews.js"></script>
+    <script src="/static/js/search_bar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.initSearchBar({
+                inputId: 'searchInput',
+                buttonId: 'searchButton',
+                basePath: '/{{ lang }}/reviews',
+                emptyText: '{{ t.empty_results }}'
+            });
+        });
+    </script>
 </body>
 </html>
 

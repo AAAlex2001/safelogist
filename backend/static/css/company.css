@@ -260,6 +260,7 @@ body {
     display: flex;
     flex-direction: column;
     margin-bottom: 40px;
+    gap: 16px;
 }
 
 .review-card {
@@ -290,4 +291,40 @@ body {
     font-size: 16px;
     line-height: 19px;
     color: #CCCCCC;
+}
+
+.review-title-date {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.review-title {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #0D0D0D;
+}
+
+.review-date {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #0D0D0D;
+}
+
+.review-from-row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-bottom: 17px;
+}
+
+.review-bubble {
+    display: flex;
+    background: #012AF908;
+    border-radius: 15px;
+    padding: 16px;
 }

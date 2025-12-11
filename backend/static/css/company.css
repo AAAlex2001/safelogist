@@ -1,3 +1,52 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.pagination-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #012AF91A;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #0D0D0D;
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.pagination-button:hover {
+    border-color: #012AF9;
+    background: #012AF914;
+}
+
+.pagination-button:active {
+    background: #E5E5EA;
+}
+
+.pagination-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.page-info {
+    font-size: 14px;
+    line-height: 20px;
+    color: #6B6B6B;
+    font-weight: 400;
+}
 * {
     margin: 0;
     padding: 0;
@@ -63,20 +112,9 @@ body {
     color: #f5b301;
 }
 
-.star.half {
-    color: #f5b301;
-    opacity: 0.6;
-}
-
 .rating-value {
     font-weight: 700;
     color: #1a1a1a;
-}
-
-.hero-eyebrow {
-    font-size: 14px;
-    color: #2f80ed;
-    font-weight: 700;
 }
 
 .hero-title {
@@ -151,6 +189,8 @@ body {
 
 .actions.dual {
     justify-content: space-between;
+    max-width: 320px;
+    margin: 0 auto 40px;
 }
 
 .actions.dual .btn {
@@ -201,7 +241,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
+    justify-content: center;
 }
 
 .section-title {
@@ -327,4 +368,58 @@ body {
     background: #012AF908;
     border-radius: 15px;
     padding: 16px;
+}
+
+@media (min-width: 768px) {
+
+    .company-card {
+        margin: 0 auto 40px;
+    }
+
+    .actions.dual {
+        justify-content: space-between;
+        max-width: 425px;
+    }
+
+    .company-name {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .company-meta {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .company-avatar {
+        padding: 18px;
+    }
+
+    .btn {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .back-btn {
+        font-size: 18px;
+        line-height: 24px;
+    }
+    
+}
+
+@media (min-width: 1440px) {
+
+    .company-page {
+        width: 100%;
+        max-width: 1150px;
+    }
+
+    .meta-columns {
+        flex-direction: row;
+    }
+
+    .company-meta-card {
+        width: 370px;
+    }
+
 }

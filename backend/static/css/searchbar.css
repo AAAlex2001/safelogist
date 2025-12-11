@@ -1,6 +1,6 @@
 .search-wrapper {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   height: 44px;
 }
 
@@ -127,6 +127,9 @@
 }
 
 @media (min-width: 768px) {
+  .search-wrapper {
+    margin-bottom: 80px;
+  }
   .search-icon {
     width: 20px;
     height: 20px;

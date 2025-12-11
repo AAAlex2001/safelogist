@@ -1,0 +1,104 @@
+:root {
+  --primary: #012af9;
+  --primary-dark: #011993;
+  --text-main: #0d0d0d;
+  --text-muted: #aeaeb2;
+  --bg: #f8f9ff;
+}
+
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: "BlinkMacSystemFont", -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding: 20px;
+}
+
+.loginCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  width: 320px;
+}
+
+.logo {
+  width: 220px;
+  height: 39px;
+}
+
+.loginForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 18px;
+  line-height: 21px;
+  color: var(--primary);
+  text-align: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  filter: drop-shadow(0px 2px 12px rgba(1, 42, 249, 0.05));
+  border-radius: 16px;
+  padding: 40px 0 40px 0;
+  gap: 8px;
+}
+
+.forgot {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 37px;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn {
+  width: 100%;
+  height: 40px;
+  padding: 8px 32px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #f9fafb;
+  font-size: 18px;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.primaryBtn:hover {
+  background: var(--primary-dark);
+}
+
+.secondaryLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.secondaryLink a {
+  margin-left: 4px;
+  color: var(--primary);
+}

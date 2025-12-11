@@ -89,6 +89,37 @@ body {
     margin-bottom: 20px;
 }
 
+.company-meta-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 50px rgba(1, 42, 249, 0.15);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.meta-label {
+    font-size: 12px;
+    color: #4f4f4f;
+    min-width: 120px;
+}
+
+.meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: right;
+    flex: 1;
+}
+
 .company-avatar {
     width: 44px;
     height: 44px;

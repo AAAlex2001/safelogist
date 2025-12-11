@@ -47,7 +47,26 @@ async def import_reviews(jsonl_file_path: str, batch_size: int = 100):
                         rating=data.get('rating'),
                         status=data.get('status'),
                         review_date=review_date,
-                        source=data.get('source')
+                        source=data.get('source'),
+                        jurisdiction=data.get('jurisdiction'),
+                        country=data.get('country'),
+                        company_number=data.get('company_number'),
+                        registration_number=data.get('registration_number'),
+                        registration_date=data.get('registration_date'),
+                        legal_form=data.get('legal_form'),
+                        short_name=data.get('short_name'),
+                        cin=data.get('cin'),
+                        authorized_capital=data.get('authorized_capital'),
+                        paid_up_capital=data.get('paid_up_capital'),
+                        subtype=data.get('subtype'),
+                        activity_type=data.get('activity_type'),
+                        legal_address=data.get('legal_address'),
+                        ogrn=data.get('ogrn'),
+                        inn=data.get('inn'),
+                        liquidation_date=data.get('liquidation_date'),
+                        managers=data.get('managers'),
+                        branch=data.get('branch'),
+                        mailing_address=data.get('mailing_address'),
                     )
                     
                     batch.append(review)

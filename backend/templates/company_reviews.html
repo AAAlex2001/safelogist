@@ -46,6 +46,17 @@
             </div>
         </div>
 
+        {% if company_meta %}
+        <div class="company-meta-card">
+            {% for item in company_meta %}
+            <div class="meta-row">
+                <div class="meta-label">{{ item.label }}</div>
+                <div class="meta-value">{{ item.value }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="reviews">
             {% for review in reviews %}
             <div class="review-card">

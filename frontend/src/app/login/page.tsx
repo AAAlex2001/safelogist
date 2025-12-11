@@ -1,7 +1,25 @@
+"use client";
+
 import styles from "./login.module.scss";
 import { InputField } from "@/components/input/InputField";
+import { Button } from "@/components/button/Button";
+import { ErrorNotification } from "@/components/notifications/ErrorNotification";
+import { useLoginHook } from "./store/useLogin";
 
 export default function LoginPage() {
+  const {
+    email,
+    password,
+    loading,
+    error,
+    errorEmail,
+    errorPassword,
+    setEmail,
+    setPassword,
+    setError,
+    handleLogin,
+  } = useLoginHook();
+
   return (
     <div className={styles.loginPage}>
       <div className={styles.loginCard}>
@@ -62,22 +80,49 @@ export default function LoginPage() {
           </svg>
         </div>
 
-        <div className={styles.loginForm}>
+        <form className={styles.loginForm} onSubmit={handleLogin} noValidate>
+          {error ? (
+            <ErrorNotification
+              message={error}
+              duration={5000}
+              onClose={() => setError(null)}
+            />
+          ) : null}
           <p className={styles.title}>Войдите в аккаунт, чтобы продолжить</p>
 
           <div className={styles.card}>
-            <InputField label="Электронная почта" placeholder="username@example.com" type="email" />
-            <InputField label="Пароль" placeholder="****************" type="password" />
+            <InputField
+              label="Электронная почта"
+              placeholder="username@example.com"
+              type="email"
+              name="email"
+              value={email}
+              onChange={setEmail}
+              error={errorEmail}
+              disabled={loading}
+            />
+            <InputField
+              label="Пароль"
+              placeholder="****************"
+              type="password"
+              name="password"
+              value={password}
+              onChange={setPassword}
+              error={errorPassword}
+              disabled={loading}
+            />
             <div className={styles.forgot}>Забыли пароль?</div>
           </div>
 
           <div className={styles.actions}>
-            <button className={styles.primaryBtn}>Войти</button>
+            <Button type="submit" fullWidth disabled={loading} loading={loading}>
+              Войти
+            </Button>
             <div className={styles.secondaryLink}>
               Нет аккаунта? <a href="/register">Зарегистрироваться</a>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

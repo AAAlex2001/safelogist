@@ -17,9 +17,9 @@
   height: 44px;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #012AF91A;
-  background: #F8FAFF;
-  box-shadow: 0 2px 12px 0 #012AF90D;
+  border: 1px solid #012af91a;
+  background: #f8faff;
+  box-shadow: 0 2px 12px 0 #012af90d;
   font-size: 14px;
   line-height: 17px;
   color: #8c8c8c;
@@ -29,5 +29,11 @@
 
 .input:focus {
   border-color: #012af9;
+}
+
+.inputError {
+  border-color: #e5484d;
+  background: #fff0f2;
+  box-shadow: 0 0 0 1px #e5484d33;
 }
 

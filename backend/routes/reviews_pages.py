@@ -380,9 +380,12 @@ async def company_reviews_page(
         comment = (review.comment or "").strip()
         if not comment:
             continue  # если нет текста отзыва — не показываем
+        reviewer_name = review.reviewer or "—"
+        reviewer_slug = quote(unquote(reviewer_name), safe="") if reviewer_name and reviewer_name != "—" else None
         review_items.append({
             "comment": comment,
-            "reviewer": review.reviewer or "—",
+            "reviewer": reviewer_name,
+            "reviewer_slug": reviewer_slug,
             "source": getattr(review, "source", None) or "—",
             "rating": review.rating if review.rating is not None else 5,
             "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",

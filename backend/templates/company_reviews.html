@@ -144,7 +144,15 @@
 
                 <div class="review-from-row">
                     <div class="review-from-label">От:</div>
-                    <div class="review-author">{{ review.reviewer }}</div>
+                    <div class="review-author">
+                        {% if review.reviewer_slug %}
+                        <a href="/{{ lang }}/reviews/{{ review.reviewer_slug }}" class="review-author-link">
+                            {{ review.reviewer }}
+                        </a>
+                        {% else %}
+                        {{ review.reviewer }}
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="review-bubble">{{ review.comment }}</div>

@@ -117,11 +117,36 @@ body {
     height: 40px;
 }
 
+.btn.solid:hover {
+    background: #0020CC;
+    border-color: #0020CC;
+}
+
+.btn.solid:active {
+    background: #0019A3;
+    border-color: #0019A3;
+}
+
+.btn.ghost:hover,
+.back-btn:hover {
+    background: #0020CC;
+    border-color: #0020CC;
+    color: #ffffff;
+}
+
+.btn.ghost:active,
+.back-btn:active {
+    background: #0019A3;
+    border-color: #0019A3;
+    color: #ffffff;
+}
+
 .back-btn {
-    width: fit-content;
     height: 32px;
     gap: 10px;
     padding: 4px 24px 4px 16px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .actions.dual {
@@ -134,7 +159,16 @@ body {
 
 .icon {
     font-size: 14px;
-    line-height: 1;
+}
+
+.back-btn .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-btn .icon svg {
+    display: block;
 }
 
 .company-card {
@@ -319,34 +353,52 @@ body {
 }
 
 .pagination {
-    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
 }
 
-.page-btn {
-    width: 36px;
-    height: 36px;
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.pagination-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #012AF91A;
     border-radius: 8px;
-    border: 1px solid rgba(1, 42, 249, 0.15);
-    display: grid;
-    place-items: center;
     text-decoration: none;
-    color: #012AF9;
-    font-weight: 700;
+    color: #0D0D0D;
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.2s;
+    cursor: pointer;
 }
 
-.page-btn.disabled {
-    color: #bdbdbd;
-    border-color: #e0e0e0;
+.pagination-button:hover {
+    border-color: #012AF9;
+    background: #012AF914;
+}
+
+.pagination-button:active {
+    background: #E5E5EA;
+}
+
+.pagination-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
     pointer-events: none;
 }
 
 .page-info {
-    font-size: 12px;
-    color: #4f4f4f;
-    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #6B6B6B;
+    font-weight: 400;
 }
 

@@ -75,14 +75,8 @@ body {
     margin-top: 144px;
 }
 
-.header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 32px;
-    color: #0D0D0D;
-}
 
-.subtitle {
+.hero-subtitle {
     font-size: 16px;
     color: #0D0D0D;
     line-height: 24px;
@@ -120,7 +114,8 @@ body {
 .hero-title {
     font-size: 20px;
     font-weight: 700;
-    margin: 8px 0 6px;
+    margin: 0 auto 16px;
+    line-height: 32px;
 }
 
 .actions {
@@ -378,6 +373,16 @@ body {
 }
 
 @media (min-width: 768px) {
+
+    .hero-subtitle {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .company-page {
+        width: 100%;
+        max-width: 730px;
+    }
 
     .company-card {
         margin: 0 auto 40px;

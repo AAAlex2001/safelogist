@@ -67,14 +67,52 @@
             </a>
         </div>
 
-        {% if company_meta %}
-        <div class="company-meta-card">
-            {% for item in company_meta %}
-            <div class="meta-row">
-                <div class="meta-label">{{ item.label }}</div>
-                <div class="meta-value">{{ item.value }}</div>
+        {% if company_sections %}
+        <div class="meta-columns">
+            <div class="company-meta-card">
+                {% for section in company_sections[:2] %}
+                <div class="meta-section">
+                    <div class="section-title">{{ section.title }}</div>
+                    <div class="section-line"></div>
+                    {% for item in section.rows %}
+                    <div class="meta-row">
+                        <div class="meta-label">{{ item.label }}:</div>
+                        <div class="meta-value">{{ item.value }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+
+            <div class="company-meta-card">
+                {% for section in company_sections[2:4] %}
+                <div class="meta-section">
+                    <div class="section-title">{{ section.title }}</div>
+                    <div class="section-line"></div>
+                    {% for item in section.rows %}
+                    <div class="meta-row">
+                        <div class="meta-label">{{ item.label }}:</div>
+                        <div class="meta-value">{{ item.value }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="company-meta-card">
+                {% for section in company_sections[4:] %}
+                <div class="meta-section">
+                    <div class="section-title">{{ section.title }}</div>
+                    <div class="section-line"></div>
+                    {% for item in section.rows %}
+                    <div class="meta-row">
+                        <div class="meta-label">{{ item.label }}:</div>
+                        <div class="meta-value">{{ item.value }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
 

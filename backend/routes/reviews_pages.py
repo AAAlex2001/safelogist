@@ -319,17 +319,24 @@ async def reviews_search_api(
     if not search_term:
         return JSONResponse(content={"companies": []})
 
-    pattern = f'%{search_term}%'
+    pattern = f'%{search_term.lower()}%'
 
-    # Используем ILIKE вместо lower().like() - работает с триграммным индексом
+    # Ищем только в таблице companies (быстро, использует триграммный индекс)
+    # Получаем минимальный id из reviews через коррелированный подзапрос
+    subquery = (
+        select(func.min(Review.id))
+        .where(Review.subject == Company.name)
+        .correlate(Company)
+        .scalar_subquery()
+    )
+    
     query = (
         select(
-            Review.subject,
-            func.min(Review.id).label("company_id")
+            Company.name,
+            subquery.label("company_id")
         )
-        .where(Review.subject.ilike(pattern))
-        .group_by(Review.subject)
-        .order_by(Review.subject)
+        .where(func.lower(Company.name).ilike(pattern))
+        .order_by(Company.name)
         .limit(limit)
     )
 
@@ -338,7 +345,7 @@ async def reviews_search_api(
 
     return JSONResponse(content={
         "companies": [
-            {"name": row.subject, "id": row.company_id}
+            {"name": row.name, "id": row.company_id}
             for row in rows
         ]
     })

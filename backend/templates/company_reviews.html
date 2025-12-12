@@ -20,6 +20,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/company.css">
     <link rel="stylesheet" href="/static/css/searchbar.css">
+    {% if company_jsonld %}
+    <script type="application/ld+json">
+    {{ company_jsonld | tojson }}
+    </script>
+    {% endif %}
 </head>
 <body>
     <div class="company-page">
@@ -42,7 +47,7 @@
                         <path d="M0.243989 6.14691C0.0877627 5.99063 0 5.77871 0 5.55774C0 5.33677 0.0877627 5.12485 0.243989 4.96857L4.95816 0.254407C5.03503 0.174815 5.12698 0.11133 5.22865 0.0676557C5.33032 0.0239816 5.43967 0.000992977 5.55032 3.14637e-05C5.66097 -0.00093005 5.7707 0.0201549 5.87312 0.0620557C5.97553 0.103956 6.06857 0.165834 6.14682 0.244078C6.22506 0.322322 6.28694 0.415365 6.32884 0.517778C6.37074 0.620192 6.39183 0.729925 6.39086 0.840575C6.3899 0.951224 6.36691 1.06057 6.32324 1.16224C6.27957 1.26391 6.21608 1.35587 6.13649 1.43274L2.84482 4.72441H13.8807C14.1017 4.72441 14.3136 4.8122 14.4699 4.96848C14.6262 5.12477 14.714 5.33673 14.714 5.55774C14.714 5.77875 14.6262 5.99072 14.4699 6.147C14.3136 6.30328 14.1017 6.39107 13.8807 6.39107H2.84482L6.13649 9.68274C6.28829 9.83991 6.37228 10.0504 6.37038 10.2689C6.36848 10.4874 6.28084 10.6964 6.12634 10.8509C5.97183 11.0054 5.76282 11.0931 5.54432 11.095C5.32583 11.0969 5.11532 11.0129 4.95816 10.8611L0.243989 6.14691Z" fill="#012AF9"/>
                     </svg>
                 </span>
-                Назад
+                {{ t.back_button }}
             </a>
         </div>
 
@@ -61,10 +66,10 @@
 
             <div class="actions dual">
                 <a class="btn ghost" href="#">
-                    Это моя компания
+                    {{ t.my_company_button }}
                 </a>
-                <a class="btn solid" href="/{{ lang }}/reviews/{{ display_name | urlencode }}?page=1#add-review">
-                    Добавить отзыв
+                <a class="btn solid" href="/{{ lang }}/reviews/item/{{ company_id }}?page=1#add-review">
+                    {{ t.add_review_button }}
                 </a>
             </div>
         </div>
@@ -143,7 +148,7 @@
                 </div>
 
                 <div class="review-from-row">
-                    <div class="review-from-label">От:</div>
+                    <div class="review-from-label">{{ t.from_label }}</div>
                     <div class="review-author">
                         {% if review.reviewer_slug %}
                         <a href="/{{ lang }}/reviews/{{ review.reviewer_slug }}" class="review-author-link">

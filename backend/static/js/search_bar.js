@@ -55,7 +55,7 @@
       autocompleteContainer.innerHTML = companies
         .map((company) => {
           const highlightedName = company.name.replace(new RegExp(`(${query})`, "gi"), "<strong>$1</strong>");
-          return `<div class="autocomplete-item" data-slug="${company.slug}">${highlightedName}</div>`;
+          return `<div class="autocomplete-item" data-id="${company.id}">${highlightedName}</div>`;
         })
         .join("");
 
@@ -64,9 +64,9 @@
 
       autocompleteContainer.querySelectorAll(".autocomplete-item").forEach((item) => {
         item.addEventListener("click", function () {
-          const slug = this.getAttribute("data-slug");
-          if (slug) {
-            window.location.href = `${basePath}/${slug}`;
+          const id = this.getAttribute("data-id");
+          if (id) {
+            window.location.href = `${basePath}/item/${id}`;
           }
         });
       });

@@ -51,8 +51,9 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     count_result = await db.execute(count_query)
     total_companies = count_result.scalar() or 0
     
-    urls_per_sitemap = 40000
-    num_sitemaps = (total_companies + urls_per_sitemap - 1) // urls_per_sitemap
+    # Расчёт количества sitemap файлов на основе companies_per_sitemap (из sitemap_companies)
+    companies_per_sitemap = 10000  # должно совпадать с companies_per_sitemap в sitemap_companies
+    num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap
     
     sitemaps = []
     

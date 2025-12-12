@@ -8,7 +8,9 @@ from fastapi import APIRouter, Depends, Request, Query
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, and_
+import time
+from functools import lru_cache
 from typing import Optional
 
 from database import get_db
@@ -19,6 +21,29 @@ router = APIRouter(tags=["reviews_pages"])
 
 # Настройка Jinja2
 templates = Jinja2Templates(directory="templates")
+
+# Простой TTL-кэш для списка компаний
+_companies_cache = {}
+_cache_ttl = 300  # 5 минут
+
+
+def get_cached_companies(page: int):
+    """Получить кэшированные данные для страницы"""
+    cache_key = f"companies_page_{page}"
+    if cache_key in _companies_cache:
+        data, timestamp = _companies_cache[cache_key]
+        if time.time() - timestamp < _cache_ttl:
+            return data
+        del _companies_cache[cache_key]
+    return None
+
+
+def set_cached_companies(page: int, data):
+    """Сохранить данные в кэш"""
+    cache_key = f"companies_page_{page}"
+    _companies_cache[cache_key] = (data, time.time())
+
+
 SUPPORTED_LANGS = ["ru", "en", "uk", "ro"]
 DEFAULT_LANG = "ru"
 TRANSLATIONS = {
@@ -243,32 +268,53 @@ async def reviews_list_page(
     per_page = 10
     offset = (page - 1) * per_page
 
-    query = (
-        select(
-            Review.subject,
-            func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
-            func.min(Review.id).label('company_id'),
+    # Проверяем кэш
+    cached = get_cached_companies(page)
+    if cached:
+        companies_data, has_next = cached
+    else:
+        # Оптимизированный запрос: используем подзапрос для пагинации по уникальным subject
+        # Сначала получаем уникальные subject с пагинацией
+        subjects_subq = (
+            select(Review.subject)
+            .distinct()
+            .order_by(Review.subject)
+            .limit(per_page + 1)  # +1 для проверки has_next
+            .offset(offset)
+        ).subquery()
+
+        # Затем получаем агрегированные данные только для этих subject
+        query = (
+            select(
+                Review.subject,
+                func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
+                func.min(Review.id).label('company_id'),
+            )
+            .where(Review.subject.in_(select(subjects_subq.c.subject)))
+            .group_by(Review.subject)
+            .order_by(Review.subject)
         )
-        .group_by(Review.subject)
-        .order_by(Review.subject)
-        .limit(per_page)
-        .offset(offset)
-    )
 
-    result = await db.execute(query)
-    rows = result.all()
+        result = await db.execute(query)
+        rows = result.all()
 
-    companies_data = [
-        {
-            'company_name': row.subject,
-            'company_slug': quote(row.subject, safe=''),
-            'company_id': row.company_id,
-            'reviews_count': row.reviews_count
-        }
-        for row in rows
-    ]
+        companies_data = [
+            {
+                'company_name': row.subject,
+                'company_slug': quote(row.subject, safe=''),
+                'company_id': row.company_id,
+                'reviews_count': row.reviews_count
+            }
+            for row in rows
+        ]
 
-    has_next = len(companies_data) == per_page
+        has_next = len(companies_data) > per_page
+        if has_next:
+            companies_data = companies_data[:per_page]
+
+        # Сохраняем в кэш
+        set_cached_companies(page, (companies_data, has_next))
+
     base_url = build_base_url(request)
     path_without_lang = extract_path_without_lang(request)
     query_part = request.url.query
@@ -301,18 +347,19 @@ async def reviews_search_api(
     limit: int = Query(10, ge=1, le=50),
     db: AsyncSession = Depends(get_db)
 ):
-    search_term = q.strip().lower()
+    search_term = q.strip()
     if not search_term:
         return JSONResponse(content={"companies": []})
 
     pattern = f'%{search_term}%'
 
+    # Используем ILIKE вместо lower().like() - работает с триграммным индексом
     query = (
         select(
             Review.subject,
             func.min(Review.id).label("company_id")
         )
-        .where(func.lower(Review.subject).like(pattern))
+        .where(Review.subject.ilike(pattern))
         .group_by(Review.subject)
         .order_by(Review.subject)
         .limit(limit)
@@ -342,44 +389,34 @@ async def reviews_search_page(
     db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
-    search_term = q.strip().lower()
+    search_term = q.strip()
     pattern = f'%{search_term}%'
 
-    company_query = (
+    # Один объединённый запрос вместо двух отдельных
+    # Используем ILIKE для работы с триграммным индексом
+    query = (
         select(
             Review.subject,
-            func.min(Review.id).label("company_id")
+            func.min(Review.id).label("company_id"),
+            func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count')
         )
-        .where(func.lower(Review.subject).like(pattern))
+        .where(Review.subject.ilike(pattern))
         .group_by(Review.subject)
         .order_by(Review.subject)
         .limit(50)
     )
-    result = await db.execute(company_query)
-    company_rows = result.all()
+    result = await db.execute(query)
+    rows = result.all()
 
-    reports_data = []
-    if company_rows:
-        count_query = (
-            select(
-                Review.subject,
-                func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count')
-            )
-            .where(Review.subject.in_([row.subject for row in company_rows]))
-            .group_by(Review.subject)
-            .order_by(Review.subject)
-        )
-        count_result = await db.execute(count_query)
-
-        reports_data = [
-            {
-                'company_name': row.subject,
-                'company_slug': quote(row.subject, safe=''),
-                'company_id': next((c.company_id for c in company_rows if c.subject == row.subject), None),
-                'reviews_count': row.reviews_count
-            }
-            for row in count_result.all()
-        ]
+    reports_data = [
+        {
+            'company_name': row.subject,
+            'company_slug': quote(row.subject, safe=''),
+            'company_id': row.company_id,
+            'reviews_count': row.reviews_count
+        }
+        for row in rows
+    ]
 
     base_url = build_base_url(request)
     path_without_lang = extract_path_without_lang(request)

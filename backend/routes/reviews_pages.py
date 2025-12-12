@@ -496,17 +496,33 @@ async def company_reviews_page(
 
     review_items = []
     structured_reviews = []
+    
+    # Получаем минимальные ID для всех reviewer в батче
+    reviewer_names = [r.reviewer for r in reviews if r.reviewer and r.reviewer.strip()]
+    reviewer_id_map = {}
+    if reviewer_names:
+        reviewer_id_query = (
+            select(
+                Review.subject,
+                func.min(Review.id).label("min_id")
+            )
+            .where(Review.subject.in_(reviewer_names))
+            .group_by(Review.subject)
+        )
+        reviewer_id_result = await db.execute(reviewer_id_query)
+        reviewer_id_map = {row.subject: row.min_id for row in reviewer_id_result.all()}
+    
     for review in reviews:
         comment = (review.comment or "").strip()
         if not comment:
             continue  # если нет текста отзыва — не показываем
         reviewer_name = review.reviewer or "—"
-        reviewer_slug = quote(unquote(reviewer_name), safe="") if reviewer_name and reviewer_name != "—" else None
+        reviewer_id = reviewer_id_map.get(reviewer_name) if reviewer_name and reviewer_name != "—" else None
         rating_value = review.rating if review.rating is not None else 5
         review_items.append({
             "comment": comment,
             "reviewer": reviewer_name,
-            "reviewer_slug": reviewer_slug,
+            "reviewer_id": reviewer_id,
             "source": getattr(review, "source", None) or "—",
             "rating": rating_value,
             "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",

@@ -51,7 +51,7 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     count_result = await db.execute(count_query)
     total_companies = count_result.scalar() or 0
     
-    urls_per_sitemap = 10000
+    urls_per_sitemap = 40000
     num_sitemaps = (total_companies + urls_per_sitemap - 1) // urls_per_sitemap
     
     sitemaps = []
@@ -104,19 +104,20 @@ async def sitemap_static(request: Request):
 
 @router.get("/sitemap-{lang}-{page}.xml", response_class=Response)
 async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSession = Depends(get_db)):
-    from urllib.parse import quote
     base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
     lang_code = normalize_lang(lang)
     
-    companies_per_sitemap = 10000
+    companies_per_sitemap = 10000  # ~10k компаний × ~3-4 страницы = ~30-40k URL
     offset = (page - 1) * companies_per_sitemap
     reviews_per_page = 10
 
+    # Получаем компании с их минимальным ID (для URL) и количеством отзывов
     query = (
         select(
             Review.subject.label("subject"),
+            func.min(Review.id).label("company_id"),
             func.count(Review.id).label("reviews_count")
         )
         .group_by(Review.subject)
@@ -128,26 +129,34 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
     companies = result.all()
     
     urls = []
+    max_urls_per_sitemap = 40000
+    
     for row in companies:
-        company_name = row.subject
+        if len(urls) >= max_urls_per_sitemap:
+            break
+            
+        company_id = row.company_id
         reviews_count = row.reviews_count or 0
-        slug = quote(company_name, safe='')
         total_pages = max(1, (reviews_count + reviews_per_page - 1) // reviews_per_page)
 
+        # Первая страница (основная)
         urls.append(f"""  <url>
-    <loc>{base_url}/{lang_code}/reviews/{slug}</loc>
+    <loc>{base_url}/{lang_code}/reviews/item/{company_id}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>""")
 
+        # Все остальные страницы пагинации
         if total_pages > 1:
             for page_num in range(2, total_pages + 1):
+                if len(urls) >= max_urls_per_sitemap:
+                    break
                 urls.append(f"""  <url>
-    <loc>{base_url}/{lang_code}/reviews/{slug}?page={page_num}</loc>
+    <loc>{base_url}/{lang_code}/reviews/item/{company_id}?page={page_num}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>""")
     
     sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>

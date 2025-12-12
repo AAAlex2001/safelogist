@@ -150,8 +150,8 @@
                 <div class="review-from-row">
                     <div class="review-from-label">{{ t.from_label }}</div>
                     <div class="review-author">
-                        {% if review.reviewer_slug %}
-                        <a href="/{{ lang }}/reviews/{{ review.reviewer_slug }}" class="review-author-link">
+                        {% if review.reviewer_id %}
+                        <a href="/{{ lang }}/reviews/item/{{ review.reviewer_id }}" class="review-author-link">
                             {{ review.reviewer }}
                         </a>
                         {% else %}

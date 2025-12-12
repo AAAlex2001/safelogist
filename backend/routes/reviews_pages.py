@@ -245,25 +245,17 @@ async def reviews_list_page(
     per_page = 10
     offset = (page - 1) * per_page
 
-    # Оптимизированный запрос: используем подзапрос для пагинации по уникальным subject
-    subjects_subq = (
-        select(Review.subject)
-        .distinct()
-        .order_by(Review.subject)
-        .limit(per_page + 1)  # +1 для проверки has_next
-        .offset(offset)
-    ).subquery()
-
-    # Затем получаем агрегированные данные только для этих subject
+    # Простой запрос с GROUP BY - PostgreSQL оптимизирует его с индексом на subject
     query = (
         select(
             Review.subject,
             func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
             func.min(Review.id).label('company_id'),
         )
-        .where(Review.subject.in_(select(subjects_subq.c.subject)))
         .group_by(Review.subject)
         .order_by(Review.subject)
+        .limit(per_page + 1)
+        .offset(offset)
     )
 
     result = await db.execute(query)

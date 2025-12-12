@@ -77,50 +77,62 @@
         </div>
 
         {% if company_sections %}
-        <div class="meta-columns">
-            <div class="company-meta-card">
-                {% for section in company_sections[:2] %}
-                <div class="meta-section">
-                    <div class="section-title">{{ section.title }}</div>
-                    <div class="section-line"></div>
-                    {% for item in section.rows %}
-                    <div class="meta-row">
-                        <div class="meta-label">{{ item.label }}:</div>
-                        <div class="meta-value">{{ item.value }}</div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-            </div>
+        <div class="company-accordion">
+            <button class="accordion-header" type="button" id="company-info-toggle">
+                <span>{{ t.company_info_title if t.company_info_title is defined else "Информация о компании" }}</span>
+                <svg class="accordion-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1.5L8 8.5L15 1.5" stroke="#012AF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="accordion-content" id="company-info-content">
+                <div class="company-meta-card">
+                    <div class="meta-columns">
+                        <div class="meta-column">
+                            {% for section in company_sections[:2] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
 
-            <div class="company-meta-card">
-                {% for section in company_sections[2:4] %}
-                <div class="meta-section">
-                    <div class="section-title">{{ section.title }}</div>
-                    <div class="section-line"></div>
-                    {% for item in section.rows %}
-                    <div class="meta-row">
-                        <div class="meta-label">{{ item.label }}:</div>
-                        <div class="meta-value">{{ item.value }}</div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-            </div>
+                        <div class="meta-column">
+                            {% for section in company_sections[2:4] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
 
-            <div class="company-meta-card">
-                {% for section in company_sections[4:] %}
-                <div class="meta-section">
-                    <div class="section-title">{{ section.title }}</div>
-                    <div class="section-line"></div>
-                    {% for item in section.rows %}
-                    <div class="meta-row">
-                        <div class="meta-label">{{ item.label }}:</div>
-                        <div class="meta-value">{{ item.value }}</div>
+                        <div class="meta-column">
+                            {% for section in company_sections[4:] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
         {% endif %}
@@ -211,6 +223,15 @@
             basePath: '/{{ lang }}/reviews',
             emptyText: '{{ t.empty_results }}'
         });
+
+        const accordion = document.querySelector('.company-accordion');
+        const accordionHeader = document.getElementById('company-info-toggle');
+        if (accordion && accordionHeader) {
+            accordion.classList.remove('open'); // старт: свернуто
+            accordionHeader.addEventListener('click', function () {
+                accordion.classList.toggle('open');
+            });
+        }
     });
 </script>
 </html>

@@ -246,7 +246,7 @@ async def reviews_list_page(
     query = (
         select(
             Review.subject,
-            func.count(Review.id).label('reviews_count'),
+            func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
             func.min(Review.id).label('company_id'),
         )
         .group_by(Review.subject)
@@ -363,7 +363,7 @@ async def reviews_search_page(
         count_query = (
             select(
                 Review.subject,
-                func.count(Review.id).label('reviews_count')
+                func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count')
             )
             .where(Review.subject.in_([row.subject for row in company_rows]))
             .group_by(Review.subject)
@@ -462,7 +462,10 @@ async def company_reviews_page(
             status_code=404
         )
 
-    count_query = select(func.count(Review.id)).where(Review.subject == company_name)
+    count_query = select(func.count(Review.id)).where(
+        Review.subject == company_name,
+        Review.comment.isnot(None)  # Считаем только записи с отзывами
+    )
     count_result = await db.execute(count_query)
     total_reviews = count_result.scalar() or 0
     search_condition = Review.subject == company_name

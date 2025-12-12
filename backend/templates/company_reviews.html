@@ -60,7 +60,9 @@
                 </div>
                 <div class="company-info">
                     <div class="company-name">{{ display_name }}</div>
+                    {% if total_reviews > 0 %}
                     <div class="company-meta">{{ t.total_reviews }}: {{ total_reviews }}</div>
+                    {% endif %}
                 </div>
             </div>
 

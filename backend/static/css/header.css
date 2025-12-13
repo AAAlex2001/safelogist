@@ -136,6 +136,63 @@
     color: #012AF9;
 }
 
+.mobile-menu-theme-lang {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-menu-theme-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.mobile-menu-theme-btn:hover {
+    background: #E5E5E5;
+}
+
+.mobile-menu-theme-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.mobile-menu-lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: #0D0D0D;
+    transition: color 0.2s ease;
+}
+
+.mobile-menu-lang-btn:hover {
+    color: #012AF9;
+}
+
+.mobile-menu-lang-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.mobile-menu-lang-btn span {
+    font-size: 16px;
+    font-weight: 400;
+}
+
 .mobile-menu .header-right {
     display: flex;
     flex-direction: column;

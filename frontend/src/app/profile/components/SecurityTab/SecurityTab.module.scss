@@ -1,0 +1,174 @@
+/* Security Tab Styles */
+
+.securityCard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(1, 42, 249, 0.1);
+  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  border-radius: 22px;
+}
+
+.sectionTitle {
+  width: 100%;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 21px;
+  color: #0d0d0d;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.passwordField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.passwordLabel {
+  font-size: 16px;
+  line-height: 125%;
+  color: #0d0d0d;
+}
+
+.passwordInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.passwordInput {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 16px;
+  padding-right: 44px;
+  width: 100%;
+  height: 44px;
+  background: #ffffff;
+  border: 1px solid rgba(1, 42, 249, 0.1);
+  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  border-radius: 10px;
+  font-size: 16px;
+  line-height: 125%;
+  color: #8c8c8c;
+  outline: none;
+}
+
+.passwordInput:focus {
+  border-color: #012af9;
+}
+
+.passwordInputError {
+  border-color: #d34343;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eyeButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.errorText {
+  font-size: 12px;
+  line-height: 16px;
+  color: #d34343;
+  margin-top: 4px;
+}
+
+/* Account actions card */
+.accountCard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(1, 42, 249, 0.1);
+  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  border-radius: 22px;
+}
+
+.accountContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.deleteSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.deleteTitle {
+  font-size: 18px;
+  line-height: 21px;
+  color: #0d0d0d;
+}
+
+.deleteHint {
+  font-size: 16px;
+  line-height: 19px;
+  color: #717182;
+}
+
+.deleteBtn {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 24px;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #d34343;
+  border-radius: 10px;
+  font-size: 18px;
+  line-height: 24px;
+  color: #d34343;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background: rgba(211, 67, 67, 0.05);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

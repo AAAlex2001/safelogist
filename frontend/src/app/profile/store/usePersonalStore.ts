@@ -4,15 +4,11 @@ import { useReducer, useCallback } from "react";
 
 const PROFILE_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL ?? ""}/profile`;
 
-type Tab = "personal" | "security";
-
-type ProfileState = {
-  activeTab: Tab;
+type PersonalState = {
   loading: boolean;
   error: string | null;
   success: string | null;
 
-  // Personal data
   fullName: string;
   industry: string;
   phone: string;
@@ -21,17 +17,9 @@ type ProfileState = {
   position: string;
   address: string;
   photo: string | null;
-
-  // Security data
-  currentPassword: string;
-  newPassword: string;
-  repeatPassword: string;
-  showNew: boolean;
-  showRepeat: boolean;
 };
 
-type ProfileAction =
-  | { type: "SET_TAB"; payload: Tab }
+type PersonalAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_SUCCESS"; payload: string | null }
@@ -43,16 +31,10 @@ type ProfileAction =
   | { type: "SET_POSITION"; payload: string }
   | { type: "SET_ADDRESS"; payload: string }
   | { type: "SET_PHOTO"; payload: string | null }
-  | { type: "SET_CURRENT_PASSWORD"; payload: string }
-  | { type: "SET_NEW_PASSWORD"; payload: string }
-  | { type: "SET_REPEAT_PASSWORD"; payload: string }
-  | { type: "TOGGLE_SHOW_NEW" }
-  | { type: "TOGGLE_SHOW_REPEAT" }
-  | { type: "RESET_SECURITY" }
-  | { type: "LOAD_PROFILE"; payload: Partial<ProfileState> };
+  | { type: "LOAD_DATA"; payload: Partial<PersonalState> }
+  | { type: "RESET" };
 
-const initialState: ProfileState = {
-  activeTab: "personal",
+const initialState: PersonalState = {
   loading: false,
   error: null,
   success: null,
@@ -65,18 +47,10 @@ const initialState: ProfileState = {
   position: "",
   address: "",
   photo: null,
-
-  currentPassword: "",
-  newPassword: "",
-  repeatPassword: "",
-  showNew: false,
-  showRepeat: false,
 };
 
-function reducer(state: ProfileState, action: ProfileAction): ProfileState {
+function reducer(state: PersonalState, action: PersonalAction): PersonalState {
   switch (action.type) {
-    case "SET_TAB":
-      return { ...state, activeTab: action.payload };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
     case "SET_ERROR":
@@ -99,33 +73,16 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
       return { ...state, address: action.payload };
     case "SET_PHOTO":
       return { ...state, photo: action.payload };
-    case "SET_CURRENT_PASSWORD":
-      return { ...state, currentPassword: action.payload };
-    case "SET_NEW_PASSWORD":
-      return { ...state, newPassword: action.payload };
-    case "SET_REPEAT_PASSWORD":
-      return { ...state, repeatPassword: action.payload };
-    case "TOGGLE_SHOW_NEW":
-      return { ...state, showNew: !state.showNew };
-    case "TOGGLE_SHOW_REPEAT":
-      return { ...state, showRepeat: !state.showRepeat };
-    case "RESET_SECURITY":
-      return {
-        ...state,
-        currentPassword: "",
-        newPassword: "",
-        repeatPassword: "",
-        showNew: false,
-        showRepeat: false,
-      };
-    case "LOAD_PROFILE":
+    case "LOAD_DATA":
       return { ...state, ...action.payload };
+    case "RESET":
+      return initialState;
     default:
       return state;
   }
 }
 
-export const useProfileStore = () => {
+export const usePersonalStore = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const loadProfile = useCallback(async () => {
@@ -146,7 +103,7 @@ export const useProfileStore = () => {
       const data = await response.json();
 
       dispatch({
-        type: "LOAD_PROFILE",
+        type: "LOAD_DATA",
         payload: {
           fullName: data.name || "",
           industry: data.role || "",
@@ -168,7 +125,7 @@ export const useProfileStore = () => {
     }
   }, []);
 
-  const savePersonal = useCallback(async () => {
+  const saveProfile = useCallback(async () => {
     const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
     if (!token) return;
 
@@ -196,7 +153,7 @@ export const useProfileStore = () => {
       const data = await response.json();
 
       dispatch({
-        type: "LOAD_PROFILE",
+        type: "LOAD_DATA",
         payload: {
           fullName: data.name || "",
           company: data.company_name || "",
@@ -216,11 +173,15 @@ export const useProfileStore = () => {
     }
   }, [state.fullName, state.company, state.position, state.address]);
 
+  const resetForm = useCallback(() => {
+    dispatch({ type: "RESET" });
+  }, []);
+
   return {
     state,
     loadProfile,
-    savePersonal,
-    setTab: (tab: Tab) => dispatch({ type: "SET_TAB", payload: tab }),
+    saveProfile,
+    resetForm,
     setFullName: (value: string) => dispatch({ type: "SET_FULL_NAME", payload: value }),
     setIndustry: (value: string) => dispatch({ type: "SET_INDUSTRY", payload: value }),
     setPhone: (value: string) => dispatch({ type: "SET_PHONE", payload: value }),
@@ -228,11 +189,8 @@ export const useProfileStore = () => {
     setCompany: (value: string) => dispatch({ type: "SET_COMPANY", payload: value }),
     setPosition: (value: string) => dispatch({ type: "SET_POSITION", payload: value }),
     setAddress: (value: string) => dispatch({ type: "SET_ADDRESS", payload: value }),
-    setCurrentPassword: (value: string) => dispatch({ type: "SET_CURRENT_PASSWORD", payload: value }),
-    setNewPassword: (value: string) => dispatch({ type: "SET_NEW_PASSWORD", payload: value }),
-    setRepeatPassword: (value: string) => dispatch({ type: "SET_REPEAT_PASSWORD", payload: value }),
-    toggleShowNew: () => dispatch({ type: "TOGGLE_SHOW_NEW" }),
-    toggleShowRepeat: () => dispatch({ type: "TOGGLE_SHOW_REPEAT" }),
-    resetSecurity: () => dispatch({ type: "RESET_SECURITY" }),
+    setError: (value: string | null) => dispatch({ type: "SET_ERROR", payload: value }),
+    setSuccess: (value: string | null) => dispatch({ type: "SET_SUCCESS", payload: value }),
   };
 };
+

@@ -245,34 +245,43 @@ async def reviews_list_page(
     per_page = 10
     offset = (page - 1) * per_page
 
-    # Простой запрос с GROUP BY - без сортировки работает намного быстрее
-    query = (
-        select(
-            Review.subject,
-            func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
-            func.min(Review.id).label('company_id'),
-        )
-        .group_by(Review.subject)
+    # Берём названия из таблицы Company (кэш) - быстрая пагинация
+    names_query = (
+        select(Company.name)
         .limit(per_page + 1)
         .offset(offset)
     )
+    names_result = await db.execute(names_query)
+    names = [row[0] for row in names_result.all()]
 
-    result = await db.execute(query)
-    rows = result.all()
-
-    companies_data = [
-        {
-            'company_name': row.subject,
-            'company_slug': quote(row.subject, safe=''),
-            'company_id': row.company_id,
-            'reviews_count': row.reviews_count
-        }
-        for row in rows
-    ]
-
-    has_next = len(companies_data) > per_page
+    has_next = len(names) > per_page
     if has_next:
-        companies_data = companies_data[:per_page]
+        names = names[:per_page]
+
+    # Получаем count и min_id для этих компаний
+    companies_data = []
+    if names:
+        stats_query = (
+            select(
+                Review.subject,
+                func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count'),
+                func.min(Review.id).label('company_id'),
+            )
+            .where(Review.subject.in_(names))
+            .group_by(Review.subject)
+        )
+        stats_result = await db.execute(stats_query)
+        stats_map = {row.subject: (row.reviews_count, row.company_id) for row in stats_result.all()}
+
+        companies_data = [
+            {
+                'company_name': name,
+                'company_slug': quote(name, safe=''),
+                'company_id': stats_map.get(name, (0, None))[1],
+                'reviews_count': stats_map.get(name, (0, None))[0]
+            }
+            for name in names
+        ]
 
     base_url = build_base_url(request)
     path_without_lang = extract_path_without_lang(request)
@@ -310,28 +319,31 @@ async def reviews_search_api(
     if not search_term:
         return JSONResponse(content={"companies": []})
 
-    pattern = f'%{search_term.lower()}%'
+    pattern = f'%{search_term}%'
 
-    # Используем ILIKE - работает с триграммным индексом
+    # Ищем по таблице Company (кэш уникальных названий) - без GROUP BY!
     query = (
-        select(
-            Company.name,
-            subquery.label("company_id")
-        )
-        .where(Review.subject.ilike(pattern))
-        .group_by(Review.subject)
+        select(Company.name)
+        .where(Company.name.ilike(pattern))
         .limit(limit)
     )
 
     result = await db.execute(query)
-    rows = result.all()
+    names = [row[0] for row in result.all()]
 
-    return JSONResponse(content={
-        "companies": [
-            {"name": row.name, "id": row.company_id}
-            for row in rows
-        ]
-    })
+    # Получаем min_id для найденных компаний одним запросом
+    companies = []
+    if names:
+        ids_query = (
+            select(Review.subject, func.min(Review.id).label("min_id"))
+            .where(Review.subject.in_(names))
+            .group_by(Review.subject)
+        )
+        ids_result = await db.execute(ids_query)
+        id_map = {row.subject: row.min_id for row in ids_result.all()}
+        companies = [{"name": name, "id": id_map.get(name)} for name in names]
+
+    return JSONResponse(content={"companies": companies})
 
 
 @router.get("/reviews/search", response_class=RedirectResponse, status_code=302)
@@ -350,29 +362,39 @@ async def reviews_search_page(
     search_term = q.strip()
     pattern = f'%{search_term}%'
 
-    # Один запрос с ILIKE - работает с триграммным индексом
-    query = (
-        select(
-            Review.subject,
-            func.min(Review.id).label("company_id"),
-            func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count')
-        )
-        .where(Review.subject.ilike(pattern))
-        .group_by(Review.subject)
+    # Ищем по таблице Company - без GROUP BY по миллионам записей
+    names_query = (
+        select(Company.name)
+        .where(Company.name.ilike(pattern))
         .limit(50)
     )
-    result = await db.execute(query)
-    rows = result.all()
+    names_result = await db.execute(names_query)
+    names = [row[0] for row in names_result.all()]
 
-    reports_data = [
-        {
-            'company_name': row.subject,
-            'company_slug': quote(row.subject, safe=''),
-            'company_id': row.company_id,
-            'reviews_count': row.reviews_count
-        }
-        for row in rows
-    ]
+    # Получаем stats для найденных компаний
+    reports_data = []
+    if names:
+        stats_query = (
+            select(
+                Review.subject,
+                func.min(Review.id).label("company_id"),
+                func.count(Review.id).filter(Review.comment.isnot(None)).label('reviews_count')
+            )
+            .where(Review.subject.in_(names))
+            .group_by(Review.subject)
+        )
+        stats_result = await db.execute(stats_query)
+        stats_map = {row.subject: (row.company_id, row.reviews_count) for row in stats_result.all()}
+
+        reports_data = [
+            {
+                'company_name': name,
+                'company_slug': quote(name, safe=''),
+                'company_id': stats_map.get(name, (None, 0))[0],
+                'reviews_count': stats_map.get(name, (None, 0))[1]
+            }
+            for name in names
+        ]
 
     base_url = build_base_url(request)
     path_without_lang = extract_path_without_lang(request)

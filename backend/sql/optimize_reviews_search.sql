@@ -4,6 +4,10 @@
 -- 1. Включаем расширение pg_trgm для быстрого ILIKE поиска
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
+-- 2. GIN индекс для ILIKE поиска по таблице companies (САМОЕ ВАЖНОЕ!)
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_companies_name_trgm
+ON companies USING gin (name gin_trgm_ops);
+
 -- 2. GIN индекс для ILIKE '%...%' поиска (КРИТИЧЕСКИ ВАЖНО для поиска)
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_reviews_subject_trgm
 ON reviews USING gin (subject gin_trgm_ops);

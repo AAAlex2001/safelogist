@@ -50,7 +50,7 @@
 
 .footer-links {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 40px;
     width: 100%;
 }
@@ -133,13 +133,21 @@
 }
 
 @media (min-width: 1440px) {
-    .footer-container {
+    .main-footer {
         max-width: 1150px;
     }
 
+    .footer-description {
+        min-width: 350px;
+    }
+
+    .footer-top {
+        flex-direction: row;
+        gap: 50px;
+    }
+
     .footer-links {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 60px;
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 

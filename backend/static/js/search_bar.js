@@ -41,7 +41,7 @@
         } catch (error) {
           console.error("Ошибка поиска:", error);
         }
-      }, 300);
+      }, 500);
     });
 
     function displayAutocompleteResults(companies, query) {

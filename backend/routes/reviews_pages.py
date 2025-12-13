@@ -310,13 +310,13 @@ async def reviews_search_api(
     if not search_term:
         return JSONResponse(content={"companies": []})
 
-    pattern = f'%{search_term}%'
+    pattern = f'%{search_term.lower()}%'
 
     # Используем ILIKE - работает с триграммным индексом
     query = (
         select(
-            Review.subject,
-            func.min(Review.id).label("company_id")
+            Company.name,
+            subquery.label("company_id")
         )
         .where(Review.subject.ilike(pattern))
         .group_by(Review.subject)
@@ -328,7 +328,7 @@ async def reviews_search_api(
 
     return JSONResponse(content={
         "companies": [
-            {"name": row.subject, "id": row.company_id}
+            {"name": row.name, "id": row.company_id}
             for row in rows
         ]
     })

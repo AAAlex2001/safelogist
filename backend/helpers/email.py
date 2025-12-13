@@ -2,6 +2,8 @@ import os
 import aiosmtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения
@@ -15,16 +17,31 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
     raise RuntimeError("EMAIL_HOST_USER or EMAIL_HOST_PASSWORD is not set in environment")
 
-async def send_email_code(to_email: str, code: str) -> None:
-    """Отправляет письмо с кодом восстановления пароля (принудительно IPv4)"""
+# Настройка Jinja2 для email шаблонов
+TEMPLATES_DIR = Path(__file__).parent.parent / "templates" / "emails"
+env = Environment(
+    loader=FileSystemLoader(str(TEMPLATES_DIR)),
+    autoescape=select_autoescape(['html', 'xml'])
+)
 
-    message = MIMEMultipart()
+async def send_email_code(to_email: str, code: str) -> None:
+    """Отправляет письмо с кодом восстановления пароля (HTML + текстовая версия)"""
+
+    message = MIMEMultipart("alternative")
     message["From"] = EMAIL_HOST_USER
     message["To"] = to_email
     message["Subject"] = "Код для восстановления пароля"
 
-    body = f"Ваш код для восстановления пароля: {code}\nОн действует 10 минут."
-    message.attach(MIMEText(body, "plain"))
+    # Рендерим HTML шаблон
+    template = env.get_template("password_reset.html")
+    html_body = template.render(code=code)
+
+    # Текстовая версия (fallback)
+    text_body = f"Ваш код для восстановления пароля: {code}\nОн действует 10 минут."
+
+    # Добавляем обе версии
+    message.attach(MIMEText(text_body, "plain", "utf-8"))
+    message.attach(MIMEText(html_body, "html", "utf-8"))
 
     try:
         await aiosmtplib.send(

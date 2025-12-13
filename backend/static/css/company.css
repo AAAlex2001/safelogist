@@ -57,9 +57,6 @@
 body {
     background: linear-gradient(180deg, rgba(1, 42, 249, 0.09) 0%, rgba(222, 246, 255, 0.039) 100%);
     color: #1a1a1a;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
 }
 
 .company-page {

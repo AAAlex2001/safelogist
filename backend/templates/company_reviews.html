@@ -19,6 +19,7 @@
     <meta property="og:image:height" content="630">
     <link rel="icon" type="image/svg+xml" href="/static/favicon 32x32 main.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/header.css">
     <link rel="stylesheet" href="/static/css/company.css">
     <link rel="stylesheet" href="/static/css/searchbar.css">
     <style>
@@ -33,6 +34,7 @@
     {% endif %}
 </head>
 <body>
+    {% include "partials/header.html" %}
     <div class="company-page">
         <div class="hero">
             <h1 class="hero-title">{{ t.list_title }}</h1>
@@ -221,6 +223,7 @@
         </div>
     </div>
 </body>
+<script src="/static/js/header.js"></script>
 <script src="/static/js/search_bar.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

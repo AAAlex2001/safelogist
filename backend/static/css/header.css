@@ -84,10 +84,11 @@
     background: #0D0D0D;
     border-radius: 2px;
     transition: all 0.3s ease;
+    transform-origin: center;
 }
 
 .burger-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
+    transform: translateY(8px) rotate(45deg);
 }
 
 .burger-menu.active span:nth-child(2) {
@@ -95,7 +96,7 @@
 }
 
 .burger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 .mobile-menu {

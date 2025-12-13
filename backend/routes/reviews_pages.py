@@ -245,7 +245,7 @@ async def reviews_list_page(
     per_page = 10
     offset = (page - 1) * per_page
 
-    # Простой запрос с GROUP BY - PostgreSQL оптимизирует его с индексом на subject
+    # Простой запрос с GROUP BY - без сортировки работает намного быстрее
     query = (
         select(
             Review.subject,
@@ -253,7 +253,6 @@ async def reviews_list_page(
             func.min(Review.id).label('company_id'),
         )
         .group_by(Review.subject)
-        .order_by(Review.subject)
         .limit(per_page + 1)
         .offset(offset)
     )
@@ -313,22 +312,14 @@ async def reviews_search_api(
 
     pattern = f'%{search_term.lower()}%'
 
-    # Ищем только в таблице companies (быстро, использует триграммный индекс)
-    # Получаем минимальный id из reviews через коррелированный подзапрос
-    subquery = (
-        select(func.min(Review.id))
-        .where(Review.subject == Company.name)
-        .correlate(Company)
-        .scalar_subquery()
-    )
-    
+    # Используем ILIKE - работает с триграммным индексом
     query = (
         select(
             Company.name,
             subquery.label("company_id")
         )
-        .where(func.lower(Company.name).ilike(pattern))
-        .order_by(Company.name)
+        .where(Review.subject.ilike(pattern))
+        .group_by(Review.subject)
         .limit(limit)
     )
 
@@ -359,8 +350,7 @@ async def reviews_search_page(
     search_term = q.strip()
     pattern = f'%{search_term}%'
 
-    # Один объединённый запрос вместо двух отдельных
-    # Используем ILIKE для работы с триграммным индексом
+    # Один запрос с ILIKE - работает с триграммным индексом
     query = (
         select(
             Review.subject,
@@ -369,7 +359,6 @@ async def reviews_search_page(
         )
         .where(Review.subject.ilike(pattern))
         .group_by(Review.subject)
-        .order_by(Review.subject)
         .limit(50)
     )
     result = await db.execute(query)

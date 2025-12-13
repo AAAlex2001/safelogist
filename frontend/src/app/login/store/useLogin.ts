@@ -42,7 +42,7 @@ function toErrorMessage(detail: unknown): string {
   if (typeof detail === "string") {
     return detail;
   }
-  return "login.errors.serverError";
+  return "Ошибка сервера. Попробуйте позже";
 }
 
 function loginReducer(state: LoginState, action: LoginAction): LoginState {
@@ -86,18 +86,18 @@ export const useLoginHook = () => {
     if (!state.email || !state.password) {
       dispatch({
         type: "SET_ERROR",
-        payload: "login.errors.allFieldsRequired",
+        payload: "Заполните все поля",
       });
       if (!state.email) {
         dispatch({
           type: "SET_ERROR_EMAIL",
-          payload: "login.errors.emailRequired",
+          payload: "Email обязателен",
         });
       }
       if (!state.password) {
         dispatch({
           type: "SET_ERROR_PASSWORD",
-          payload: "login.errors.passwordRequired",
+          payload: "Пароль обязателен",
         });
       }
       return;
@@ -128,7 +128,7 @@ export const useLoginHook = () => {
           type: "SET_ERROR",
           payload:
             errorMessage === "Неверный email или пароль"
-              ? "login.errors.invalidCredentials"
+              ? "Неверный email или пароль"
               : errorMessage,
         });
         return;
@@ -147,10 +147,10 @@ export const useLoginHook = () => {
 
         router.replace("/profile");
       } else {
-        dispatch({ type: "SET_ERROR", payload: "login.errors.serverError" });
+        dispatch({ type: "SET_ERROR", payload: "Ошибка сервера. Попробуйте позже" });
       }
     } catch {
-      dispatch({ type: "SET_ERROR", payload: "login.errors.networkError" });
+      dispatch({ type: "SET_ERROR", payload: "Ошибка сети. Проверьте соединение" });
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
@@ -168,7 +168,7 @@ export const useLoginHook = () => {
       if (state.errorEmail) {
         dispatch({ type: "SET_ERROR_EMAIL", payload: null });
       }
-      if (state.error === "login.errors.allFieldsRequired") {
+      if (state.error === "Заполните все поля") {
         dispatch({ type: "SET_ERROR", payload: null });
       }
     },
@@ -177,7 +177,7 @@ export const useLoginHook = () => {
       if (state.errorPassword) {
         dispatch({ type: "SET_ERROR_PASSWORD", payload: null });
       }
-      if (state.error === "login.errors.allFieldsRequired") {
+      if (state.error === "Заполните все поля") {
         dispatch({ type: "SET_ERROR", payload: null });
       }
     },

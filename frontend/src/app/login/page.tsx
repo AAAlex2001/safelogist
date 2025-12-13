@@ -5,6 +5,7 @@ import { InputField } from "@/components/input/InputField";
 import { Button } from "@/components/button/Button";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
 import { useLoginHook } from "./store/useLogin";
+import Link from "next/link";
 
 export default function LoginPage() {
   const {
@@ -111,7 +112,9 @@ export default function LoginPage() {
               error={errorPassword}
               disabled={loading}
             />
-            <div className={styles.forgot}>Забыли пароль?</div>
+            <Link href="/forgot-password" className={styles.forgot}>
+              Забыли пароль?
+            </Link>
           </div>
 
           <div className={styles.actions}>

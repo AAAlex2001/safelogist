@@ -85,6 +85,13 @@
   font-size: 14px;
   line-height: 17px;
   color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot:hover {
+  color: var(--primary);
 }
 
 .actions {

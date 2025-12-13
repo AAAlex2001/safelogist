@@ -104,35 +104,32 @@
 .mobile-menu {
     position: fixed;
     top: 64px;
-    left: 0;
-    right: 0;
+    right: 40px;
+    max-width: 360px;
+    width: calc(100% - 60px);
     background: #FFFFFF;
     border-bottom: 1px solid #E5E5E5;
+    border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     display: none;
     flex-direction: column;
-    padding: 16px;
+    padding: 20px;
     gap: 16px;
     z-index: 999;
 }
 
 .mobile-menu.active {
     display: flex;
+    gap: 12px;
 }
 
 .mobile-menu .nav-link {
     display: block;
-    padding: 12px 0;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
     color: #0D0D0D;
     text-decoration: none;
-    border-bottom: 1px solid #F5F5F5;
     transition: color 0.2s ease;
-}
-
-.mobile-menu .nav-link:last-child {
-    border-bottom: none;
 }
 
 .mobile-menu .nav-link:hover {
@@ -143,7 +140,6 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 8px;
 }
 
 .mobile-menu .btn-login,
@@ -151,19 +147,18 @@
     display: block;
     width: 100%;
     text-align: center;
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 7px 24px;
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
-    font-family: 'Inter', sans-serif;
 }
 
 .mobile-menu .btn-login {
     background: #FFFFFF;
     color: #012AF9;
-    border: 2px solid #012AF9;
+    border: 1px solid #012AF9;
 }
 
 .mobile-menu .btn-login:hover {
@@ -223,11 +218,21 @@ body {
     .header-container {
         max-width: 730px;
     }
+
+    .mobile-menu {
+        right: calc((100% - 730px) / 2 + 30px);
+        max-width: 360px;
+    }
 }
 
 @media (min-width: 1440px) {
     .header-container {
         max-width: 1150px;
+    }
+
+    .mobile-menu {
+        right: calc((100% - 1150px) / 2 + 30px);
+        max-width: 360px;
     }
 }
 

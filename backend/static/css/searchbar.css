@@ -1,3 +1,29 @@
+:root {
+  --search-bg: #ffffff;
+  --search-border: #012af9;
+  --search-shadow: 0 0 40px 0 #012af966;
+  --search-input-color: #0d0d0d;
+  --search-placeholder: #6b6b6b;
+  --autocomplete-bg: #ffffff;
+  --autocomplete-item-color: #0d0d0d;
+  --autocomplete-hover-bg: #012af914;
+  --autocomplete-scrollbar: #0d0d0d;
+  --autocomplete-scrollbar-border: #ffffff;
+}
+
+[data-theme="dark"] {
+  --search-bg: #161920;
+  --search-border: #012AF9;
+  --search-shadow: 0 0 40px 0 rgba(1, 42, 249, 0.4);
+  --search-input-color: #f5f7ff;
+  --search-placeholder: #8b8fa3;
+  --autocomplete-bg: #161920;
+  --autocomplete-item-color: #f5f7ff;
+  --autocomplete-hover-bg: rgba(1, 42, 249, 0.2);
+  --autocomplete-scrollbar: #8b8fa3;
+  --autocomplete-scrollbar-border: #2b3040;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -13,10 +39,10 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #ffffff;
-  border: 1px solid #012af9;
+  background: var(--search-bg);
+  border: 1px solid var(--search-border);
   border-radius: 20px;
-  box-shadow: 0 0 40px 0 #012af966;
+  box-shadow: var(--search-shadow);
   z-index: 100;
   overflow: hidden;
 }
@@ -44,6 +70,11 @@
   border: none;
   outline: none;
   background: transparent;
+  color: var(--search-input-color);
+}
+
+.search-input::placeholder {
+  color: var(--search-placeholder);
 }
 
 .search-button {
@@ -70,7 +101,7 @@
 
 .autocomplete-results {
   position: relative;
-  background: #ffffff;
+  background: var(--autocomplete-bg);
   border: none;
   border-radius: 0 0 20px 20px;
   max-height: 0;
@@ -89,7 +120,7 @@
   scrollbar-gutter: stable;
   opacity: 1;
   scrollbar-width: auto;
-  scrollbar-color: #0d0d0d transparent;
+  scrollbar-color: var(--autocomplete-scrollbar) transparent;
 }
 
 .autocomplete-results::-webkit-scrollbar {
@@ -101,9 +132,9 @@
 }
 
 .autocomplete-results::-webkit-scrollbar-thumb {
-  background: #0d0d0d;
+  background: var(--autocomplete-scrollbar);
   border-radius: 3px;
-  border: 1px solid #ffffff;
+  border: 1px solid var(--autocomplete-scrollbar-border);
 }
 
 .autocomplete-item {
@@ -113,7 +144,7 @@
   font-size: 12px;
   line-height: 28px;
   font-weight: 400;
-  color: #0d0d0d;
+  color: var(--autocomplete-item-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -124,13 +155,13 @@
 }
 
 .autocomplete-item:hover {
-  background-color: #012af914;
+  background-color: var(--autocomplete-hover-bg);
   color: #012af9;
 }
 
 .autocomplete-item strong {
   font-weight: 700;
-  color: #0d0d0d;
+  color: var(--autocomplete-item-color);
 }
 
 .autocomplete-item:hover strong {

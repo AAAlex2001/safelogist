@@ -39,6 +39,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             `;
             
+        // === Тема: применение и переключение ===
+        const getInitialTheme = () => {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light' || saved === 'dark') return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        applyTheme(getInitialTheme());
+
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        });
+
             // Контейнер для языка (кнопка + флаги в одном боксе)
             const langContainer = document.createElement('div');
             langContainer.className = 'lang-container';

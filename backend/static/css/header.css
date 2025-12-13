@@ -1,15 +1,39 @@
+:root {
+    --header-bg: rgba(255, 255, 255, 0.3);
+    --header-border: rgba(229, 229, 229, 0.5);
+    --header-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --header-text: #0D0D0D;
+    --mobile-menu-bg: #FFFFFF;
+    --mobile-menu-border: #E5E5E5;
+    --mobile-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --theme-btn-bg: #F5F5F5;
+    --theme-btn-hover: #E5E5E5;
+}
+
+[data-theme="dark"] {
+    --header-bg: rgba(22, 25, 32, 0.7);
+    --header-border: rgba(43, 48, 64, 0.5);
+    --header-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --header-text: #f5f7ff;
+    --mobile-menu-bg: #161920;
+    --mobile-menu-border: #2b3040;
+    --mobile-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --theme-btn-bg: #1e2230;
+    --theme-btn-hover: #2b3040;
+}
+
 .main-header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 64px;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--header-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+    border-bottom: 1px solid var(--header-border);
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--header-shadow);
 }
 
 .header-container {
@@ -49,10 +73,14 @@
     height: 100%;
 }
 
+[data-theme="dark"] .logo svg g path:not([fill^="url"]) {
+    fill: #ffffff !important;
+}
+
 .logo-text {
     font-size: 18px;
     font-weight: 700;
-    color: #0D0D0D;
+    color: var(--header-text);
     font-family: 'Inter', sans-serif;
 }
 
@@ -83,7 +111,7 @@
     display: block;
     width: 100%;
     height: 2px;
-    background: #0D0D0D;
+    background: var(--header-text);
     border-radius: 2px;
     transition: all 0.3s ease;
     transform-origin: center;
@@ -107,10 +135,10 @@
     right: 40px;
     max-width: 360px;
     width: calc(100% - 60px);
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E5E5;
+    background: var(--mobile-menu-bg);
+    border-bottom: 1px solid var(--mobile-menu-border);
     border-radius: 0 0 20px 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--mobile-menu-shadow);
     display: none;
     flex-direction: column;
     padding: 20px;
@@ -127,7 +155,7 @@
     display: block;
     font-size: 16px;
     font-weight: 400;
-    color: #0D0D0D;
+    color: var(--header-text);
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -148,7 +176,7 @@
     height: 40px;
     border-radius: 50%;
     border: none;
-    background: #F5F5F5;
+    background: var(--theme-btn-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,12 +186,20 @@
 }
 
 .mobile-menu-theme-btn:hover {
-    background: #E5E5E5;
+    background: var(--theme-btn-hover);
 }
 
 .mobile-menu-theme-btn svg {
     width: 22px;
     height: 22px;
+}
+
+.mobile-menu-theme-btn svg path {
+    stroke: #1A1A1A;
+}
+
+[data-theme="dark"] .mobile-menu-theme-btn svg path {
+    stroke: #F0F0F0;
 }
 
 .mobile-menu-lang-btn {
@@ -176,7 +212,7 @@
     padding: 0;
     font-size: 16px;
     font-weight: 400;
-    color: #0D0D0D;
+    color: var(--header-text);
     transition: opacity 0.2s ease;
 }
 
@@ -200,6 +236,14 @@
 .mobile-menu-lang-btn svg {
     width: 22px;
     height: 22px;
+}
+
+.mobile-menu-lang-btn svg path {
+    stroke: #1A1A1A;
+}
+
+[data-theme="dark"] .mobile-menu-lang-btn svg path {
+    stroke: #F0F0F0;
 }
 
 .mobile-menu-lang-btn span {
@@ -267,7 +311,7 @@
 .lang-option span {
     font-size: 12px;
     font-weight: 400;
-    color: #0D0D0D;
+    color: var(--header-text);
     line-height: 1;
 }
 
@@ -291,13 +335,15 @@
 }
 
 .mobile-menu .btn-login {
-    background: #FFFFFF;
+    background: var(--mobile-menu-bg);
     color: #012AF9;
     border: 1px solid #012AF9;
 }
 
 .mobile-menu .btn-login:hover {
-    background: #F5F7FF;
+    background: #0020CC;
+    border-color: #0020CC;
+    color: #ffffff;
 }
 
 .mobile-menu .btn-register {
@@ -307,7 +353,13 @@
 }
 
 .mobile-menu .btn-register:hover {
-    background: #0120E0;
+    background: #0020CC;
+    border-color: #0020CC;
+}
+
+.mobile-menu .btn-register:active {
+    background: #0019A3;
+    border-color: #0019A3;
 }
 
 .btn-login,
@@ -328,7 +380,9 @@
 }
 
 .btn-login:hover {
-    background: #F5F7FF;
+    background: #0020CC;
+    border-color: #0020CC;
+    color: #ffffff;
 }
 
 .btn-register {
@@ -338,7 +392,13 @@
 }
 
 .btn-register:hover {
-    background: #0120E0;
+    background: #0020CC;
+    border-color: #0020CC;
+}
+
+.btn-register:active {
+    background: #0019A3;
+    border-color: #0019A3;
 }
 
 body {

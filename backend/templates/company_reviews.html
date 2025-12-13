@@ -23,6 +23,14 @@
     <link rel="stylesheet" href="/static/css/company.css">
     <link rel="stylesheet" href="/static/css/searchbar.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const theme = (saved === 'light' || saved === 'dark') ? saved : 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
         @keyframes spin {
             to { transform: rotate(360deg); }

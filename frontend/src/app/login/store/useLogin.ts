@@ -115,7 +115,7 @@ export const useLoginHook = () => {
         }),
       });
 
-      let data: any = {};
+      let data;
       try {
         data = await response.json();
       } catch {

@@ -4,8 +4,10 @@
     left: 0;
     right: 0;
     height: 64px;
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E5E5;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(229, 229, 229, 0.5);
     z-index: 1000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }

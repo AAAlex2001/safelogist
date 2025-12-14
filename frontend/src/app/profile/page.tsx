@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./profile.module.scss";
 import { PersonalTab } from "./components/PersonalTab/PersonalTab";
 import { SecurityTab } from "./components/SecurityTab/SecurityTab";
+import Footer from "@/components/footer/Footer";
 
 type Tab = "personal" | "security";
 
@@ -57,6 +58,7 @@ export default function ProfilePage() {
         {activeTab === "personal" && <PersonalTab />}
         {activeTab === "security" && <SecurityTab />}
       </div>
+      <Footer />
     </div>
   );
 }

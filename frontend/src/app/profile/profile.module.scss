@@ -5,7 +5,7 @@
   align-items: center;
   background: linear-gradient(0deg, rgba(222, 246, 255, 0.039) 0%, rgba(1, 42, 249, 0.09) 100%);
   color: #0d0d0d;
-  padding: 160px 20px;
+  padding: 160px 20px 0;
 }
 
 .container {
@@ -128,7 +128,7 @@
 @media (min-width: 768px) {
 
   .page {
-    padding: 160px 20px;
+    padding: 160px 20px 0;
   }
 
   .container {

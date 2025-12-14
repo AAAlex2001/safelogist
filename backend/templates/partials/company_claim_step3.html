@@ -1,0 +1,63 @@
+<!-- Шаг 3: Подтверждение -->
+<div class="company-claim-step" data-step="3" style="display: none;">
+    <div class="company-claim-modal-header">
+        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
+        <p class="company-claim-modal-step">Шаг 3 из 3. Подтверждение</p>
+    </div>
+
+    <form class="company-claim-form" id="companyClaimFormStep3">
+        <div class="company-claim-form-group">
+            <label class="company-claim-label">Прикрепите документ <span class="required">*</span></label>
+
+            <label for="claimFileInput" class="claim-upload-btn">
+                Загрузить документ
+                <input
+                    type="file"
+                    id="claimFileInput"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    class="claim-file-input"
+                    hidden
+                >
+            </label>
+            <div class="claim-hint">Поддерживаемые форматы: PDF, JPG, PNG (до 10 МБ)</div>
+            <div id="claim-file-error" class="company-claim-msg company-claim-msg-error hide"></div>
+
+            <div id="claim-file-pill" class="claim-file-pill hide">
+                <div class="claim-file-icon">
+                    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.25 1.75V5.5C9.25 5.91421 9.58579 6.25 10 6.25H13.75" stroke="#012AF9" stroke-width="1.5"/>
+                        <path d="M3.25 18.25H12.75C13.5784 18.25 14.25 17.5784 14.25 16.75V6.41421C14.25 6.01639 14.092 5.63486 13.8107 5.35355L9.14645 0.68934C8.86514 0.408035 8.48361 0.25 8.08579 0.25H3.25C2.42157 0.25 1.75 0.921573 1.75 1.75V16.75C1.75 17.5784 2.42157 18.25 3.25 18.25Z" stroke="#012AF9" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <span id="claim-file-name" class="claim-file-name"></span>
+                <button type="button" id="claim-file-remove" class="claim-file-remove" aria-label="Удалить файл">
+                    <svg width="17" height="19" viewBox="0 0 17 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 4.08333H2.41667M2.41667 4.08333H15.75M2.41667 4.08333V15.75C2.41667 16.192 2.59226 16.616 2.90482 16.9285C3.21738 17.2411 3.64131 17.4167 4.08333 17.4167H12.4167C12.8587 17.4167 13.2826 17.2411 13.5952 16.9285C13.9077 16.616 14.0833 16.192 14.0833 15.75V4.08333H2.41667ZM4.91667 4.08333V2.41667C4.91667 1.97464 5.09226 1.55072 5.40482 1.23816C5.71738 0.925595 6.14131 0.75 6.58333 0.75H9.91667C10.3587 0.75 10.7826 0.925595 11.0952 1.23816C11.4077 1.55072 11.5833 1.97464 11.5833 2.41667V4.08333M6.58333 8.25V13.25M9.91667 8.25V13.25" stroke="#E33326" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="claim-examples">
+            <div class="claim-examples-title">Примеры подтверждающих документов:</div>
+            <ul class="claim-examples-list">
+                <li>Сертификат компании</li>
+                <li>Регистрационный документ, где указан представитель</li>
+                <li>Доверенность на представителя</li>
+                <li>Приказ о назначении / распоряжение</li>
+                <li>Выписка из реестра</li>
+            </ul>
+        </div>
+
+        <div class="company-claim-buttons company-claim-buttons-dual">
+            <button type="button" class="company-claim-btn company-claim-btn-secondary" data-action="back-step2">
+                Назад
+            </button>
+            <button type="submit" class="company-claim-btn company-claim-btn-primary">
+                Отправить запрос
+            </button>
+        </div>
+        <div class="claim-review-time">Заявка будет рассмотрена в течение 48 часов</div>
+    </form>
+</div>
+

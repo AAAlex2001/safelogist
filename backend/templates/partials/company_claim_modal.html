@@ -8,65 +8,9 @@
             </svg>
         </button>
         
-        <div class="company-claim-modal-header">
-            <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
-            <p class="company-claim-modal-step">Шаг 1 из 3: Контактное лицо</p>
-        </div>
-
-        <form class="company-claim-form" id="companyClaimForm">
-            <div class="company-claim-form-group">
-                <label for="lastName" class="company-claim-label">Фамилия</label>
-                <input 
-                    type="text" 
-                    id="lastName" 
-                    name="lastName" 
-                    class="company-claim-input" 
-                    placeholder="Введите фамилию"
-                    required
-                >
-            </div>
-
-            <div class="company-claim-form-group">
-                <label for="firstName" class="company-claim-label">Имя</label>
-                <input 
-                    type="text" 
-                    id="firstName" 
-                    name="firstName" 
-                    class="company-claim-input" 
-                    placeholder="Введите имя"
-                    required
-                >
-            </div>
-
-            <div class="company-claim-form-group">
-                <label for="middleName" class="company-claim-label">Отчество</label>
-                <input 
-                    type="text" 
-                    id="middleName" 
-                    name="middleName" 
-                    class="company-claim-input" 
-                    placeholder="Введите отчество"
-                >
-            </div>
-
-            <div class="company-claim-form-group">
-                <label for="phone" class="company-claim-label">Номер телефона</label>
-                <input 
-                    type="tel" 
-                    id="phone" 
-                    name="phone" 
-                    class="company-claim-input" 
-                    placeholder="Введите номер телефона"
-                    required
-                >
-                <span id="phone-valid-msg" class="company-claim-phone-msg company-claim-phone-msg-valid hide">✓ Номер валиден</span>
-                <span id="phone-error-msg" class="company-claim-phone-msg company-claim-phone-msg-error hide"></span>
-            </div>
-
-            <button type="submit" class="company-claim-submit-btn">
-                Далее
-            </button>
-        </form>
+        <!-- Шаги модалки -->
+        {% include "partials/company_claim_step1.html" %}
+        {% include "partials/company_claim_step2.html" %}
+        {% include "partials/company_claim_step3.html" %}
     </div>
 </div>
-

@@ -1,0 +1,64 @@
+<!-- Шаг 1: Контактное лицо -->
+<div class="company-claim-step" data-step="1">
+    <div class="company-claim-modal-header">
+        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
+        <p class="company-claim-modal-step">Шаг 1 из 3. Контактное лицо</p>
+    </div>
+
+    <form class="company-claim-form" id="companyClaimFormStep1">
+        <div class="company-claim-form-group">
+            <label for="lastName" class="company-claim-label">Фамилия</label>
+            <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                class="company-claim-input" 
+                placeholder="Введите фамилию"
+                required
+            >
+        </div>
+
+        <div class="company-claim-form-group">
+            <label for="firstName" class="company-claim-label">Имя</label>
+            <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                class="company-claim-input" 
+                placeholder="Введите имя"
+                required
+            >
+        </div>
+
+        <div class="company-claim-form-group">
+            <label for="middleName" class="company-claim-label">Отчество</label>
+            <input 
+                type="text" 
+                id="middleName" 
+                name="middleName" 
+                class="company-claim-input" 
+                placeholder="Введите отчество"
+            >
+        </div>
+
+        <div class="company-claim-form-group">
+            <label for="phone" class="company-claim-label">Номер телефона</label>
+            <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                class="company-claim-input" 
+                placeholder="Введите номер телефона"
+                required
+            >
+            <span id="phone-error-msg" class="company-claim-msg company-claim-msg-error hide"></span>
+        </div>
+
+        <div class="company-claim-buttons">
+            <button type="submit" class="company-claim-btn company-claim-btn-primary">
+                Далее
+            </button>
+        </div>
+    </form>
+</div>
+

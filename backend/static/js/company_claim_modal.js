@@ -18,61 +18,6 @@
         setupModal();
     }
 
-    function createModalProgrammatically() {
-        // Модалка уже должна быть в HTML, но на случай если её нет
-        const modalHTML = `
-            <div id="companyClaimModal" class="company-claim-modal">
-                <div class="company-claim-modal-overlay"></div>
-                <div class="company-claim-modal-content">
-                    <button class="company-claim-modal-close" aria-label="Закрыть">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="company-claim-modal-header">
-                        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
-                        <p class="company-claim-modal-step">Шаг 1 из 3: Контактное лицо</p>
-                    </div>
-                    <form class="company-claim-form" id="companyClaimForm">
-                        <div class="company-claim-form-group">
-                            <label for="lastName" class="company-claim-label">Фамилия</label>
-                            <input type="text" id="lastName" name="lastName" class="company-claim-input" placeholder="Введите фамилию" required>
-                        </div>
-                        <div class="company-claim-form-group">
-                            <label for="firstName" class="company-claim-label">Имя</label>
-                            <input type="text" id="firstName" name="firstName" class="company-claim-input" placeholder="Введите имя" required>
-                        </div>
-                        <div class="company-claim-form-group">
-                            <label for="middleName" class="company-claim-label">Отчество</label>
-                            <input type="text" id="middleName" name="middleName" class="company-claim-input" placeholder="Введите отчество">
-                        </div>
-                        <div class="company-claim-form-group">
-                            <label for="phone" class="company-claim-label">Номер телефона</label>
-                            <div class="company-claim-phone-wrapper">
-                                <div class="company-claim-phone-flag">
-                                    <svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/>
-                                        <mask id="mask0_phone" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20">
-                                            <rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/>
-                                        </mask>
-                                        <g mask="url(#mask0_phone)">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 13.3346H28V6.66797H0V13.3346Z" fill="#0C47B7"/>
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 19.9987H28V13.332H0V19.9987Z" fill="#E53B35"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <span class="company-claim-phone-code">+7</span>
-                                <input type="tel" id="phone" name="phone" class="company-claim-input company-claim-phone-input" placeholder="Введите номер телефона" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="company-claim-submit-btn">Далее</button>
-                    </form>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
     function setupModal() {
         modal = document.getElementById('companyClaimModal');
         if (!modal) return;
@@ -103,30 +48,126 @@
             form.addEventListener('submit', handleSubmit);
         }
 
-        // Маска для телефона
+        // Инициализация intl-tel-input
         const phoneInput = document.getElementById('phone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 10) {
-                    value = value.slice(0, 10);
-                }
-                // Форматируем: XXX XXX XX XX
-                let formatted = '';
-                if (value.length > 0) {
-                    formatted = value.slice(0, 3);
-                    if (value.length > 3) {
-                        formatted += ' ' + value.slice(3, 6);
-                    }
-                    if (value.length > 6) {
-                        formatted += ' ' + value.slice(6, 8);
-                    }
-                    if (value.length > 8) {
-                        formatted += ' ' + value.slice(8, 10);
-                    }
-                }
-                e.target.value = formatted;
+        const errorMsg = document.getElementById('phone-error-msg');
+        const validMsg = document.getElementById('phone-valid-msg');
+        const submitBtn = form ? form.querySelector('.company-claim-submit-btn') : null;
+        const requiredInputs = form ? form.querySelectorAll('.company-claim-input[required]') : [];
+        
+        if (phoneInput && window.intlTelInput) {
+            const iti = window.intlTelInput(phoneInput, {
+                initialCountry: "ru",
+                preferredCountries: ["ru", "kz", "by", "ua"],
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/js/utils.js",
+                separateDialCode: false,
+                nationalMode: false,
+                autoFormat: true,
+                autoPlaceholder: "aggressive"
             });
+            
+            phoneInput.intlTelInputInstance = iti;
+            
+            // Карта ошибок валидации
+            const errorMap = [
+                "Неверный номер",
+                "Неверный код страны",
+                "Слишком короткий номер",
+                "Слишком длинный номер",
+                "Неверный номер"
+            ];
+            
+            // Функция сброса ошибок
+            const resetPhoneValidation = () => {
+                phoneInput.classList.remove("error");
+                if (errorMsg) {
+                    errorMsg.innerHTML = "";
+                    errorMsg.classList.add("hide");
+                }
+                if (validMsg) {
+                    validMsg.classList.add("hide");
+                }
+            };
+            
+            // Функция показа ошибки
+            const showPhoneError = (msg) => {
+                phoneInput.classList.add("error");
+                if (errorMsg) {
+                    errorMsg.innerHTML = msg;
+                    errorMsg.classList.remove("hide");
+                }
+                if (validMsg) {
+                    validMsg.classList.add("hide");
+                }
+            };
+            
+            // Функция показа валидного номера (не показываем сообщение, только скрываем ошибки)
+            const showPhoneValid = () => {
+                phoneInput.classList.remove("error");
+                if (errorMsg) {
+                    errorMsg.classList.add("hide");
+                }
+                // Валидное сообщение не показываем - только скрываем его
+                if (validMsg) {
+                    validMsg.classList.add("hide");
+                }
+            };
+            
+            // Сброс при изменении
+            phoneInput.addEventListener('change', resetPhoneValidation);
+            phoneInput.addEventListener('keyup', resetPhoneValidation);
+            
+            // Сохраняем функции для использования в handleSubmit
+            phoneInput.resetPhoneValidation = resetPhoneValidation;
+            phoneInput.showPhoneError = showPhoneError;
+            phoneInput.showPhoneValid = showPhoneValid;
+            phoneInput.errorMap = errorMap;
+        }
+        
+        // Функция проверки валидности формы и изменения стиля кнопки
+        function checkFormValidity() {
+            if (!submitBtn) return;
+            
+            let allFilled = true;
+            
+            // Проверяем обязательные поля
+            requiredInputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    allFilled = false;
+                }
+            });
+            
+            // Проверяем валидность телефона
+            if (phoneInput && phoneInput.intlTelInputInstance) {
+                const iti = phoneInput.intlTelInputInstance;
+                if (!phoneInput.value.trim() || !iti.isValidNumber()) {
+                    allFilled = false;
+                }
+            } else if (phoneInput) {
+                // Fallback проверка
+                const digits = phoneInput.value.replace(/\D/g, '');
+                if (digits.length < 10) {
+                    allFilled = false;
+                }
+            }
+            
+            // Меняем стиль кнопки
+            if (allFilled) {
+                submitBtn.classList.add('active');
+            } else {
+                submitBtn.classList.remove('active');
+            }
+        }
+        
+        // Отслеживаем изменения во всех полях
+        if (form) {
+            requiredInputs.forEach(input => {
+                input.addEventListener('input', checkFormValidity);
+                input.addEventListener('change', checkFormValidity);
+            });
+            
+            // Также проверяем при инициализации
+            setTimeout(checkFormValidity, 100);
         }
     }
 
@@ -151,18 +192,64 @@
     function handleSubmit(e) {
         e.preventDefault();
         
-        const formData = {
-            lastName: document.getElementById('lastName').value.trim(),
-            firstName: document.getElementById('firstName').value.trim(),
-            middleName: document.getElementById('middleName').value.trim(),
-            phone: '+7' + document.getElementById('phone').value.replace(/\D/g, '')
-        };
-
-        // Валидация
-        if (!formData.lastName || !formData.firstName || !formData.phone || formData.phone.length < 12) {
+        const phoneInput = document.getElementById('phone');
+        const lastName = document.getElementById('lastName').value.trim();
+        const firstName = document.getElementById('firstName').value.trim();
+        const middleName = document.getElementById('middleName').value.trim();
+        
+        // Валидация обязательных полей
+        if (!lastName || !firstName) {
             alert('Пожалуйста, заполните все обязательные поля');
             return;
         }
+        
+        // Валидация телефона
+        let phoneNumber = '';
+        if (phoneInput && phoneInput.intlTelInputInstance) {
+            const iti = phoneInput.intlTelInputInstance;
+            
+            // Сбрасываем предыдущие ошибки
+            if (phoneInput.resetPhoneValidation) {
+                phoneInput.resetPhoneValidation();
+            }
+            
+            // Проверяем валидность
+            if (!phoneInput.value.trim()) {
+                if (phoneInput.showPhoneError) {
+                    phoneInput.showPhoneError("Обязательное поле");
+                }
+                return;
+            } else if (iti.isValidNumber()) {
+                phoneNumber = iti.getNumber();
+                // Скрываем ошибки, но не показываем валидное сообщение
+                if (phoneInput.resetPhoneValidation) {
+                    phoneInput.resetPhoneValidation();
+                }
+            } else {
+                // Показываем ошибку валидации
+                if (phoneInput.showPhoneError && phoneInput.errorMap) {
+                    const errorCode = iti.getValidationError();
+                    const msg = phoneInput.errorMap[errorCode] || "Неверный номер";
+                    phoneInput.showPhoneError(msg);
+                }
+                return;
+            }
+        } else {
+            // Fallback если библиотека не загрузилась
+            const digits = phoneInput.value.replace(/\D/g, '');
+            if (digits.length < 10) {
+                alert('Пожалуйста, введите полный номер телефона');
+                return;
+            }
+            phoneNumber = '+7' + digits;
+        }
+        
+        const formData = {
+            lastName: lastName,
+            firstName: firstName,
+            middleName: middleName,
+            phone: phoneNumber
+        };
 
         console.log('Отправка данных:', formData);
         // TODO: Отправить данные на сервер

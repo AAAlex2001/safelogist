@@ -32,6 +32,27 @@
     background: var(--surface-muted, #1e2230);
 }
 
+[data-theme="dark"] .iti__selected-flag {
+    background: transparent;
+}
+
+[data-theme="dark"] .iti__arrow {
+    border-top-color: var(--text-color, #f5f7ff);
+}
+
+[data-theme="dark"] .iti__country {
+    color: var(--text-color, #f5f7ff);
+}
+
+[data-theme="dark"] .iti__country:hover,
+[data-theme="dark"] .iti__country.iti__highlight {
+    background: var(--accent-lightest, rgba(77, 123, 255, 0.05));
+}
+
+[data-theme="dark"] .iti__dial-code {
+    color: var(--muted-color, #c8cfde);
+}
+
 
 [data-theme="dark"] .company-claim-phone-wrapper {
     background: var(--surface-muted, #1e2230);
@@ -179,56 +200,108 @@
 .company-claim-input::placeholder {
     color: var(--muted-color, #6b6b6b);
 }
-/* Поле телефона */
-.company-claim-phone-wrapper {
+
+/* Стили для intl-tel-input */
+.iti {
+    width: 100%;
+}
+
+.iti__flag-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-left: 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    height: 56px;
-    padding: 0 16px;
+    z-index: 1;
+}
+
+.iti__selected-flag {
+    padding: 0 8px 0 0;
+    outline: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.iti__selected-flag:hover {
+    background: transparent;
+}
+
+.iti__arrow {
+    margin-left: 4px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--text-color, #0d0d0d);
+}
+
+.iti__country-list {
+    background: var(--bg-color, #ffffff);
     border: 1px solid var(--input-border, #012AF91A);
     border-radius: 12px;
-    background: var(--bg-color, #ffffff);
-    transition: all 0.2s ease;
     box-shadow: var(--input-shadow, 0px 2px 12px 0px #012AF90D);
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-.company-claim-phone-wrapper:focus-within {
-    border-color: var(--accent, #012AF9);
-    background: var(--surface, #ffffff);
+[data-theme="dark"] .iti__country-list {
+    background: var(--surface-muted, #1e2230);
 }
 
-.company-claim-phone-flag {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
+.iti__country {
+    padding: 8px 16px;
+    color: var(--text-color, #0d0d0d);
 }
 
-.company-claim-phone-flag svg {
-    width: 28px;
-    height: 20px;
+.iti__country:hover,
+.iti__country.iti__highlight {
+    background: var(--accent-lightest, rgba(1, 42, 249, 0.05));
+}
+
+.iti__dial-code {
+    color: var(--muted-color, #6b6b6b);
+}
+
+/* Поле телефона с intl-tel-input */
+#phone {
+    padding-left: 80px;
+}
+
+#phone.error {
+    border-color: #EB1F1F;
+    background: rgba(235, 31, 31, 0.05);
+}
+
+/* Сообщения валидации телефона */
+.company-claim-phone-msg {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 4px;
     display: block;
 }
 
-.company-claim-phone-code {
-    font-size: 16px;
-    line-height: 24px;
-    color: var(--text-color, #0d0d0d);
-    font-weight: 500;
-    flex-shrink: 0;
+.company-claim-phone-msg.hide {
+    display: none;
 }
 
-.company-claim-phone-input {
-    flex: 1;
-    border: none;
-    padding: 0;
-    height: auto;
-    background: transparent;
+.company-claim-phone-msg-valid {
+    color: #10B981;
 }
 
-.company-claim-phone-input:focus {
-    border: none;
-    background: transparent;
+.company-claim-phone-msg-error {
+    color: #EB1F1F;
+}
+
+[data-theme="dark"] .company-claim-phone-msg-valid {
+    color: #34D399;
+}
+
+[data-theme="dark"] .company-claim-phone-msg-error {
+    color: #F87171;
 }
 
 /* Кнопка отправки */
@@ -236,7 +309,7 @@
     width: 100%;
     height: 56px;
     background: #E5E5E5;
-    border: none;
+    border: 2px solid #E5E5E5;
     border-radius: 12px;
     color: #0D0D0D;
     font-size: 16px;
@@ -250,10 +323,29 @@
 
 .company-claim-submit-btn:hover {
     background: #D5D5D5;
+    border-color: #D5D5D5;
 }
 
 .company-claim-submit-btn:active {
     background: #C5C5C5;
+    border-color: #C5C5C5;
+}
+
+/* Активное состояние кнопки (когда все поля заполнены) */
+.company-claim-submit-btn.active {
+    background: #012AF9;
+    border-color: #012AF9;
+    color: #FFFFFF;
+}
+
+.company-claim-submit-btn.active:hover {
+    background: #0020CC;
+    border-color: #0020CC;
+}
+
+.company-claim-submit-btn.active:active {
+    background: #0019A3;
+    border-color: #0019A3;
 }
 
 

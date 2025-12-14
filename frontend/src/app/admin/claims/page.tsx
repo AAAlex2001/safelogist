@@ -5,7 +5,6 @@ import styles from "../admin.module.scss";
 
 type Claim = {
   id: number;
-  user_id: number;
   company_name: string;
   last_name: string;
   first_name: string;
@@ -14,10 +13,11 @@ type Claim = {
   email: string;
   position: string;
   document_path: string;
-  status: "pending" | "approved" | "rejected";
-  reject_reason: string | null;
+  document_name: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  admin_comment: string | null;
   created_at: string;
-  reviewed_at: string | null;
+  updated_at: string;
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -32,13 +32,23 @@ export default function ClaimsPage() {
   const fetchClaims = () => {
     setLoading(true);
     const url = filter
-      ? `${API_URL}/api/claims?status=${filter}`
-      : `${API_URL}/api/claims`;
+      ? `${API_URL}/api/company-claim?status=${filter}`
+      : `${API_URL}/api/company-claim`;
 
     fetch(url)
-      .then((res) => res.json())
-      .then(setClaims)
-      .catch(console.error)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setClaims(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching claims:", err);
+        setClaims([]);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -48,10 +58,10 @@ export default function ClaimsPage() {
 
   const approveClaim = async (id: number) => {
     try {
-      await fetch(`${API_URL}/api/claims/${id}`, {
+      await fetch(`${API_URL}/api/company-claim/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "approved" }),
+        body: JSON.stringify({ status: "APPROVED" }),
       });
       fetchClaims();
     } catch (err) {
@@ -62,10 +72,10 @@ export default function ClaimsPage() {
   const rejectClaim = async () => {
     if (!rejectModal) return;
     try {
-      await fetch(`${API_URL}/api/claims/${rejectModal}`, {
+      await fetch(`${API_URL}/api/company-claim/${rejectModal}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected", reject_reason: rejectReason }),
+        body: JSON.stringify({ status: "REJECTED", admin_comment: rejectReason }),
       });
       setRejectModal(null);
       setRejectReason("");
@@ -85,6 +95,15 @@ export default function ClaimsPage() {
       .join(" ");
   };
 
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      PENDING: "Pending",
+      APPROVED: "Approved",
+      REJECTED: "Rejected",
+    };
+    return labels[status] || status;
+  };
+
   return (
     <div>
       <h1 className={styles.pageTitle}>Company Claims</h1>
@@ -96,9 +115,9 @@ export default function ClaimsPage() {
           style={{ padding: "10px 14px", borderRadius: "6px", border: "1px solid #ddd" }}
         >
           <option value="">All</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
         </select>
       </div>
 
@@ -139,17 +158,17 @@ export default function ClaimsPage() {
                     rel="noopener noreferrer"
                     style={{ color: "#012af9" }}
                   >
-                    View
+                    {claim.document_name || "View"}
                   </a>
                 </td>
                 <td>
-                  <span className={`${styles.badge} ${styles[claim.status]}`}>
-                    {claim.status}
+                  <span className={`${styles.badge} ${styles[claim.status.toLowerCase()]}`}>
+                    {getStatusLabel(claim.status)}
                   </span>
                 </td>
                 <td>{formatDate(claim.created_at)}</td>
                 <td>
-                  {claim.status === "pending" && (
+                  {claim.status === "PENDING" && (
                     <div className={styles.actions}>
                       <button
                         className={`${styles.actionBtn} ${styles.approve}`}

@@ -2,7 +2,7 @@
 
 import { useReducer, useCallback } from "react";
 
-const PROFILE_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL ?? ""}/profile`;
+const PROFILE_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL ?? ""}/company-profile/my`;
 
 type PersonalState = {
   loading: boolean;

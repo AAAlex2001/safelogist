@@ -14,7 +14,7 @@ from schemas.company_profile import CompanyProfileResponse, CompanyProfileUpdate
 from dependencies.auth import get_current_user
 
 
-router = APIRouter(prefix="/api/company-profile", tags=["company_profile"])
+router = APIRouter(prefix="/company-profile", tags=["company_profile"])
 
 
 @router.get("/my", response_model=CompanyProfileResponse)

@@ -88,7 +88,7 @@
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -219,7 +219,7 @@
   padding: 10px 8px;
   gap: 10px;
   width: 100%;
-  min-height: 60px;
+  max-height: 44px;
   background: #ffffff;
   border: 1px solid rgba(1, 42, 249, 0.1);
   box-shadow: 0 2px 12px rgba(1, 42, 249, 0.05);
@@ -251,4 +251,12 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .card:last-child .fieldGroup {
+    flex-direction: row;
+  }
 
+  .card:last-child .fieldGroup .fieldWrapper {
+    flex: 1;
+  }
+}

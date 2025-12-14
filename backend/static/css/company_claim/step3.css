@@ -1,0 +1,115 @@
+/* Шаг 3: загрузка документа */
+.claim-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 56px;
+    border: 2px solid #012AF9;
+    border-radius: 12px;
+    color: #012AF9;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+.claim-upload-btn:hover { background: rgba(1, 42, 249, 0.05); }
+.claim-upload-btn:active { background: rgba(1, 42, 249, 0.1); }
+.claim-file-input { display: none; }
+
+.claim-hint {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #8A8A8A;
+}
+
+.claim-file-pill {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #F6F7FF;
+    border-radius: 12px;
+}
+.claim-file-pill.hide { display: none; }
+
+.claim-file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.claim-file-name {
+    flex: 1;
+    font-size: 14px;
+    color: #0d0d0d;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.claim-file-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #FFE8E5;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.claim-file-remove:hover { background: #FFD5CF; }
+.claim-file-remove:active { background: #FFBFB5; }
+
+.claim-examples {
+    margin-top: 16px;
+}
+.claim-examples-title {
+    font-weight: 600;
+    color: #012AF9;
+    margin-bottom: 8px;
+}
+.claim-examples-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #0d0d0d;
+}
+.claim-examples-list li::before {
+    content: '✓';
+    color: #012AF9;
+    margin-right: 8px;
+}
+
+.claim-review-time {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #6b6b6b;
+    text-align: center;
+}
+
+[data-theme="dark"] .claim-upload-btn {
+    background: #1e2230;
+    border-color: #4d7bff;
+    color: #4d7bff;
+}
+[data-theme="dark"] .claim-upload-btn:hover { background: rgba(77, 123, 255, 0.1); }
+[data-theme="dark"] .claim-file-pill { background: rgba(77, 123, 255, 0.1); }
+[data-theme="dark"] .claim-file-name { color: #f5f7ff; }
+[data-theme="dark"] .claim-file-remove { background: rgba(227, 51, 38, 0.15); }
+[data-theme="dark"] .claim-file-remove:hover { background: rgba(227, 51, 38, 0.22); }
+[data-theme="dark"] .claim-examples-list { color: #f5f7ff; }
+[data-theme="dark"] .claim-hint,
+[data-theme="dark"] .claim-review-time { color: #c8cfde; }
+

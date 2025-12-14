@@ -1,16 +1,16 @@
 <!-- Шаг 3: Подтверждение -->
 <div class="company-claim-step" data-step="3" style="display: none;">
     <div class="company-claim-modal-header">
-        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
-        <p class="company-claim-modal-step">Шаг 3 из 3. Подтверждение</p>
+        <h2 class="company-claim-modal-title">{{ t.claim_modal_title }}</h2>
+        <p class="company-claim-modal-step">{{ t.claim_step3_title }}</p>
     </div>
 
     <form class="company-claim-form" id="companyClaimFormStep3">
         <div class="company-claim-form-group">
-            <label class="company-claim-label">Прикрепите документ <span class="required">*</span></label>
+            <label class="company-claim-label">{{ t.claim_label_document }}</label>
 
             <label for="claimFileInput" class="claim-upload-btn">
-                Загрузить документ
+                {{ t.claim_button_upload }}
                 <input
                     type="file"
                     id="claimFileInput"
@@ -19,7 +19,7 @@
                     hidden
                 >
             </label>
-            <div class="claim-hint">Поддерживаемые форматы: PDF, JPG, PNG (до 10 МБ)</div>
+            <div class="claim-hint">{{ t.claim_hint_formats }}</div>
             <div id="claim-file-error" class="company-claim-msg company-claim-msg-error hide"></div>
 
             <div id="claim-file-pill" class="claim-file-pill hide">
@@ -30,7 +30,7 @@
                     </svg>
                 </div>
                 <span id="claim-file-name" class="claim-file-name"></span>
-                <button type="button" id="claim-file-remove" class="claim-file-remove" aria-label="Удалить файл">
+                <button type="button" id="claim-file-remove" class="claim-file-remove" aria-label="{{ t.claim_aria_remove_file }}">
                     <svg width="17" height="19" viewBox="0 0 17 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.75 4.08333H2.41667M2.41667 4.08333H15.75M2.41667 4.08333V15.75C2.41667 16.192 2.59226 16.616 2.90482 16.9285C3.21738 17.2411 3.64131 17.4167 4.08333 17.4167H12.4167C12.8587 17.4167 13.2826 17.2411 13.5952 16.9285C13.9077 16.616 14.0833 16.192 14.0833 15.75V4.08333H2.41667ZM4.91667 4.08333V2.41667C4.91667 1.97464 5.09226 1.55072 5.40482 1.23816C5.71738 0.925595 6.14131 0.75 6.58333 0.75H9.91667C10.3587 0.75 10.7826 0.925595 11.0952 1.23816C11.4077 1.55072 11.5833 1.97464 11.5833 2.41667V4.08333M6.58333 8.25V13.25M9.91667 8.25V13.25" stroke="#E33326" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -39,22 +39,47 @@
         </div>
 
         <div class="claim-examples">
-            <div class="claim-examples-title">Примеры подтверждающих документов:</div>
+            <div class="claim-examples-title">{{ t.claim_examples_title }}</div>
             <ul class="claim-examples-list">
-                <li>Сертификат компании</li>
-                <li>Регистрационный документ, где указан представитель</li>
-                <li>Доверенность на представителя</li>
-                <li>Приказ о назначении / распоряжение</li>
-                <li>Выписка из реестра</li>
+                <li>
+                    <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.75 0.75L4.08333 7.41667L0.75 4.08333" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ t.claim_example_1 }}
+                </li>
+                <li>
+                    <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.75 0.75L4.08333 7.41667L0.75 4.08333" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ t.claim_example_2 }}
+                </li>
+                <li>
+                    <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.75 0.75L4.08333 7.41667L0.75 4.08333" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ t.claim_example_3 }}
+                </li>
+                <li>
+                    <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.75 0.75L4.08333 7.41667L0.75 4.08333" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ t.claim_example_4 }}
+                </li>
+                <li>
+                    <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.75 0.75L4.08333 7.41667L0.75 4.08333" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ t.claim_example_5 }}
+                </li>
             </ul>
         </div>
 
         <div class="company-claim-buttons">
             <button type="submit" class="company-claim-btn company-claim-btn-primary">
-                Отправить запрос
+                {{ t.claim_button_submit }}
             </button>
         </div>
-        <div class="claim-review-time">Заявка будет рассмотрена в течение 48 часов</div>
+        <div class="claim-review-time">{{ t.claim_review_time }}</div>
     </form>
 </div>
 

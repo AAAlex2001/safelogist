@@ -1,54 +1,54 @@
 <!-- Шаг 1: Контактное лицо -->
 <div class="company-claim-step" data-step="1">
     <div class="company-claim-modal-header">
-        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
-        <p class="company-claim-modal-step">Шаг 1 из 3. Контактное лицо</p>
+        <h2 class="company-claim-modal-title">{{ t.claim_modal_title }}</h2>
+        <p class="company-claim-modal-step">{{ t.claim_step1_title }}</p>
     </div>
 
     <form class="company-claim-form" id="companyClaimFormStep1">
         <div class="company-claim-form-group">
-            <label for="lastName" class="company-claim-label">Фамилия</label>
+            <label for="lastName" class="company-claim-label">{{ t.claim_label_last_name }}</label>
             <input 
                 type="text" 
                 id="lastName" 
                 name="lastName" 
                 class="company-claim-input" 
-                placeholder="Введите фамилию"
+                placeholder="{{ t.claim_placeholder_last_name }}"
                 required
             >
         </div>
 
         <div class="company-claim-form-group">
-            <label for="firstName" class="company-claim-label">Имя</label>
+            <label for="firstName" class="company-claim-label">{{ t.claim_label_first_name }}</label>
             <input 
                 type="text" 
                 id="firstName" 
                 name="firstName" 
                 class="company-claim-input" 
-                placeholder="Введите имя"
+                placeholder="{{ t.claim_placeholder_first_name }}"
                 required
             >
         </div>
 
         <div class="company-claim-form-group">
-            <label for="middleName" class="company-claim-label">Отчество</label>
+            <label for="middleName" class="company-claim-label">{{ t.claim_label_middle_name }}</label>
             <input 
                 type="text" 
                 id="middleName" 
                 name="middleName" 
                 class="company-claim-input" 
-                placeholder="Введите отчество"
+                placeholder="{{ t.claim_placeholder_middle_name }}"
             >
         </div>
 
         <div class="company-claim-form-group">
-            <label for="phone" class="company-claim-label">Номер телефона</label>
+            <label for="phone" class="company-claim-label">{{ t.claim_label_phone }}</label>
             <input 
                 type="tel" 
                 id="phone" 
                 name="phone" 
                 class="company-claim-input" 
-                placeholder="Введите номер телефона"
+                placeholder="{{ t.claim_placeholder_phone }}"
                 required
             >
             <span id="phone-error-msg" class="company-claim-msg company-claim-msg-error hide"></span>
@@ -56,7 +56,7 @@
 
         <div class="company-claim-buttons">
             <button type="submit" class="company-claim-btn company-claim-btn-primary">
-                Далее
+                {{ t.claim_button_next }}
             </button>
         </div>
     </form>

@@ -1,43 +1,43 @@
 <!-- Шаг 2: Данные о компании -->
 <div class="company-claim-step" data-step="2" style="display: none;">
     <div class="company-claim-modal-header">
-        <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
-        <p class="company-claim-modal-step">Шаг 2 из 3. Данные о компании</p>
+        <h2 class="company-claim-modal-title">{{ t.claim_modal_title }}</h2>
+        <p class="company-claim-modal-step">{{ t.claim_step2_title }}</p>
     </div>
 
     <form class="company-claim-form" id="companyClaimFormStep2">
         <div class="company-claim-form-group">
-            <label for="companyName" class="company-claim-label">Название компании</label>
+            <label for="companyName" class="company-claim-label">{{ t.claim_label_company_name }}</label>
             <input 
                 type="text" 
                 id="companyName" 
                 name="companyName" 
                 class="company-claim-input" 
-                placeholder="Введите название компании"
+                placeholder="{{ t.claim_placeholder_company_name }}"
                 required
             >
         </div>
 
         <div class="company-claim-form-group">
-            <label for="position" class="company-claim-label">Должность</label>
+            <label for="position" class="company-claim-label">{{ t.claim_label_position }}</label>
             <input 
                 type="text" 
                 id="position" 
                 name="position" 
                 class="company-claim-input" 
-                placeholder="Укажите вашу должность"
+                placeholder="{{ t.claim_placeholder_position }}"
                 required
             >
         </div>
 
         <div class="company-claim-form-group">
-            <label for="email" class="company-claim-label">Электронная почта</label>
+            <label for="email" class="company-claim-label">{{ t.claim_label_email }}</label>
             <input 
                 type="email" 
                 id="email" 
                 name="email" 
                 class="company-claim-input" 
-                placeholder="name@company.com"
+                placeholder="{{ t.claim_placeholder_email }}"
                 required
             >
             <span id="email-error-msg" class="company-claim-msg company-claim-msg-error hide"></span>
@@ -45,10 +45,10 @@
 
         <div class="company-claim-buttons company-claim-buttons-dual">
             <button type="button" class="company-claim-btn company-claim-btn-secondary" data-action="back">
-                Назад
+                {{ t.claim_button_back }}
             </button>
             <button type="submit" class="company-claim-btn company-claim-btn-primary">
-                Далее
+                {{ t.claim_button_next }}
             </button>
         </div>
     </form>

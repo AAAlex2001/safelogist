@@ -80,10 +80,14 @@
     gap: 6px;
     color: #0d0d0d;
 }
-.claim-examples-list li::before {
-    content: '✓';
-    color: #012AF9;
-    margin-right: 8px;
+.claim-examples-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.claim-examples-list li svg {
+    flex-shrink: 0;
+    margin-top: 8px;
 }
 
 .claim-review-time {

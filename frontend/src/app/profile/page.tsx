@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./profile.module.scss";
 import { PersonalTab } from "./components/PersonalTab/PersonalTab";
 import { SecurityTab } from "./components/SecurityTab/SecurityTab";
 import Footer from "@/components/footer/Footer";
+import { usePersonalStore } from "./store/usePersonalStore";
+import { SuccessNotification } from "@/components/notifications/SuccessNotification";
 
 type Tab = "personal" | "security";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>("personal");
+  const { saveProfile, state, setSuccess } = usePersonalStore();
 
   return (
     <div className={styles.page}>
@@ -32,9 +35,11 @@ export default function ProfilePage() {
           <button
             className={`${styles.actionBtn} ${styles.saveBtn}`}
             type="button"
+            onClick={saveProfile}
+            disabled={state.loading}
           >
             <SaveIcon />
-            Сохранить
+            {state.loading ? "Сохранение..." : "Сохранить"}
           </button>
         </div>
 
@@ -59,6 +64,14 @@ export default function ProfilePage() {
         {activeTab === "security" && <SecurityTab />}
       </div>
       <Footer />
+      
+      {/* Success notification */}
+      {state.success && (
+        <SuccessNotification
+          message={state.success}
+          onClose={() => setSuccess(null)}
+        />
+      )}
     </div>
   );
 }

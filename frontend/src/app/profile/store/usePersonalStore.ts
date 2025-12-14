@@ -152,13 +152,18 @@ export const usePersonalStore = () => {
 
       const data = await response.json();
 
+      // Обновляем состояние из ответа сервера
       dispatch({
         type: "LOAD_DATA",
         payload: {
           fullName: data.name || "",
+          industry: data.role || "",
+          phone: data.phone || "",
+          email: data.email || "",
           company: data.company_name || "",
           position: data.position || "",
           address: data.location || "",
+          photo: data.photo || null,
         },
       });
 

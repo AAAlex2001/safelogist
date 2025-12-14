@@ -5,6 +5,8 @@ import styles from "../admin.module.scss";
 
 type Claim = {
   id: number;
+  target_company_id: number | null;
+  target_company_name: string | null;
   company_name: string;
   last_name: string;
   first_name: string;
@@ -130,7 +132,8 @@ export default function ClaimsPage() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Company</th>
+              <th>Target Company</th>
+              <th>Applicant Company</th>
               <th>Name</th>
               <th>Position</th>
               <th>Contact</th>
@@ -144,7 +147,23 @@ export default function ClaimsPage() {
             {claims.map((claim) => (
               <tr key={claim.id}>
                 <td>{claim.id}</td>
-                <td>{claim.company_name}</td>
+                <td>
+                  {claim.target_company_id && claim.target_company_name ? (
+                    <a
+                      href={`/ru/reviews/item/${claim.target_company_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#012af9", textDecoration: "none" }}
+                    >
+                      <strong>{claim.target_company_name}</strong>
+                    </a>
+                  ) : (
+                    <span style={{ color: "#999" }}>—</span>
+                  )}
+                </td>
+                <td>
+                  <strong>{claim.company_name}</strong>
+                </td>
                 <td>{getFullName(claim)}</td>
                 <td>{claim.position}</td>
                 <td>

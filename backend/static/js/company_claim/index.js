@@ -18,7 +18,8 @@
             companyName: '',
             position: '',
             email: '',
-            documentName: ''
+            documentName: '',
+            targetCompanyId: null
         },
         selectedFile: null,
         goToStep,
@@ -85,6 +86,13 @@
             initModal();
             setTimeout(openModal, 50);
             return;
+        }
+        
+        // Получаем company_id со страницы
+        const companyData = document.getElementById('companyClaimData');
+        if (companyData) {
+            const companyId = companyData.getAttribute('data-company-id');
+            ctx.formData.targetCompanyId = companyId ? parseInt(companyId) : null;
         }
         
         goToStep(1);

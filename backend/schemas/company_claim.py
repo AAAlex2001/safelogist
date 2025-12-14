@@ -37,6 +37,8 @@ class CompanyClaimResponse(BaseModel):
 class ClaimListItem(BaseModel):
     """Элемент списка заявок для админки"""
     id: int
+    target_company_id: Optional[int]
+    target_company_name: Optional[str] = None
     company_name: str
     last_name: str
     first_name: str

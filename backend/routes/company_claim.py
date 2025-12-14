@@ -10,6 +10,7 @@ from sqlalchemy import select
 
 from database import get_db
 from models.company_claim import CompanyClaim, ClaimStatus
+from models.review import Review
 from schemas.company_claim import (
     CompanyClaimRequest, 
     CompanyClaimResponse, 
@@ -31,6 +32,7 @@ async def create_company_claim(
     company_name: str = Form(..., description="Название компании"),
     position: str = Form(..., description="Должность"),
     email: str = Form(..., description="Электронная почта"),
+    target_company_id: Optional[int] = Form(None, description="ID компании из отзывов"),
     document: UploadFile = File(..., description="Подтверждающий документ"),
     db: AsyncSession = Depends(get_db)
 ):
@@ -59,7 +61,7 @@ async def create_company_claim(
     service = CompanyClaimService(db)
     
     try:
-        claim = await service.create_claim(claim_data, document)
+        claim = await service.create_claim(claim_data, document, target_company_id)
     except HTTPException:
         raise
     except Exception as e:
@@ -96,7 +98,40 @@ async def list_claims(
     
     result = await db.execute(query)
     claims = result.scalars().all()
-    return list(claims) if claims else []
+    
+    # Получаем названия компаний из reviews для target_company_id
+    claims_list = []
+    for claim in claims:
+        claim_dict = {
+            "id": claim.id,
+            "target_company_id": claim.target_company_id,
+            "company_name": claim.company_name,
+            "last_name": claim.last_name,
+            "first_name": claim.first_name,
+            "middle_name": claim.middle_name,
+            "phone": claim.phone,
+            "email": claim.email,
+            "position": claim.position,
+            "document_path": claim.document_path,
+            "document_name": claim.document_name,
+            "status": claim.status,
+            "admin_comment": claim.admin_comment,
+            "created_at": claim.created_at,
+            "updated_at": claim.updated_at,
+        }
+        
+        # Если есть target_company_id, получаем название компании
+        if claim.target_company_id:
+            review_result = await db.execute(
+                select(Review.subject).where(Review.id == claim.target_company_id).limit(1)
+            )
+            target_company = review_result.scalar()
+            if target_company:
+                claim_dict["target_company_name"] = target_company
+        
+        claims_list.append(ClaimListItem(**claim_dict))
+    
+    return claims_list if claims_list else []
 
 
 @router.get("/{claim_id}", response_model=ClaimListItem)

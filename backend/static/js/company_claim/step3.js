@@ -133,6 +133,9 @@
                 formData.append('company_name', ctx.formData.companyName);
                 formData.append('position', ctx.formData.position);
                 formData.append('email', ctx.formData.email);
+                if (ctx.formData.targetCompanyId) {
+                    formData.append('target_company_id', ctx.formData.targetCompanyId);
+                }
                 formData.append('document', ctx.selectedFile);
 
                 // Отправляем на сервер

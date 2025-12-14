@@ -3,6 +3,7 @@
 """
 import os
 import uuid
+from typing import Optional
 from pathlib import Path
 from fastapi import UploadFile, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,7 +66,8 @@ class CompanyClaimService:
     async def create_claim(
         self,
         data: CompanyClaimRequest,
-        document: UploadFile
+        document: UploadFile,
+        target_company_id: Optional[int] = None
     ) -> CompanyClaim:
         """
         Создание новой заявки на подтверждение компании
@@ -73,12 +75,14 @@ class CompanyClaimService:
         Args:
             data: Данные формы
             document: Загруженный документ
+            target_company_id: ID компании из отзывов (опционально)
             
         Returns:
             CompanyClaim: Созданная заявка
         """
         document_path, document_name = await self.save_file(document)
         claim = CompanyClaim(
+            target_company_id=target_company_id,
             last_name=data.last_name,
             first_name=data.first_name,
             middle_name=data.middle_name,

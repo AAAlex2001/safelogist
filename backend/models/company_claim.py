@@ -21,6 +21,9 @@ class CompanyClaim(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     
+    # ID компании, на которую откликается пользователь (со страницы отзывов)
+    target_company_id = Column(Integer, nullable=True, index=True)
+    
     # Шаг 1: Контактное лицо
     last_name = Column(String, nullable=False)
     first_name = Column(String, nullable=False)

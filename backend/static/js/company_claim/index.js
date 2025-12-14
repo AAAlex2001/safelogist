@@ -112,7 +112,10 @@
         });
         
         const buttons = modal.querySelectorAll('.company-claim-btn-primary');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.disabled = true;
+        });
         
         const errors = modal.querySelectorAll('.company-claim-msg');
         errors.forEach(err => err.classList.add('hide'));

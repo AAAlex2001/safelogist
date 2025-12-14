@@ -154,6 +154,7 @@
 
 .company-claim-input {
     width: 100%;
+    height: 44px;
     border: 1px solid var(--input-border, #012AF91A);
     border-radius: 12px;
     background: var(--bg-color, #ffffff);
@@ -163,7 +164,7 @@
     font-family: inherit;
     transition: all 0.2s ease;
     box-sizing: border-box;
-    padding: 13px 16px;
+    padding: 0 16px;
     box-shadow: var(--input-shadow, 0px 2px 12px 0px #012AF90D);
 }
 
@@ -224,7 +225,7 @@
     background: var(--accent-lightest, rgba(1, 42, 249, 0.05));
 }
 .iti__dial-code { color: var(--muted-color, #6b6b6b); }
-#phone { padding-top: 11px; }
+#phone { padding-top: 0; padding-bottom: 2px}
 #phone.error { border-color: #EB1F1F; background: rgba(235, 31, 31, 0.05); }
 
 /* Сообщения валидации */
@@ -248,7 +249,8 @@
 .company-claim-buttons-dual .company-claim-btn { flex: 1; }
 
 .company-claim-btn {
-    padding: 8px 0;
+    height: 40px;
+    padding: 0;
     border-radius: 10px;
     font-size: 18px;
     font-weight: 400;
@@ -256,6 +258,18 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.company-claim-btn:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.company-claim-btn:disabled:hover {
+    background: inherit !important;
+    border-color: inherit !important;
+    color: inherit !important;
 }
 
 .company-claim-btn-primary {
@@ -264,8 +278,8 @@
     border: 2px solid #E5E5E5;
     color: #0D0D0D;
 }
-.company-claim-btn-primary:hover { background: #D5D5D5; border-color: #D5D5D5; }
-.company-claim-btn-primary:active { background: #C5C5C5; border-color: #C5C5C5; }
+.company-claim-btn-primary:not(.active):hover { background: #E5E5E5; border-color: #E5E5E5; }
+.company-claim-btn-primary:not(.active):active { background: #E5E5E5; border-color: #E5E5E5; }
 .company-claim-btn-primary.active {
     background: #012AF9;
     border-color: #012AF9;
@@ -287,8 +301,8 @@
     border-color: #2b3040;
     color: #f5f7ff;
 }
-[data-theme="dark"] .company-claim-btn-primary:hover { background: #353a4a; border-color: #353a4a; }
-[data-theme="dark"] .company-claim-btn-primary:active { background: #1e2230; border-color: #1e2230; }
+[data-theme="dark"] .company-claim-btn-primary:not(.active):hover { background: #2b3040; border-color: #2b3040; }
+[data-theme="dark"] .company-claim-btn-primary:not(.active):active { background: #2b3040; border-color: #2b3040; }
 [data-theme="dark"] .company-claim-btn-primary.active {
     background: #4d7bff;
     border-color: #4d7bff;

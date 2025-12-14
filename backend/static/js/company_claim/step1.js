@@ -90,8 +90,10 @@
             
             if (allFilled) {
                 submitBtn.classList.add('active');
+                submitBtn.disabled = false;
             } else {
                 submitBtn.classList.remove('active');
+                submitBtn.disabled = true;
             }
         }
         

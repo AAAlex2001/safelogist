@@ -87,6 +87,24 @@ export default function ClaimsPage() {
     }
   };
 
+  const deleteClaim = async (id: number) => {
+    if (!confirm("Вы уверены, что хотите удалить эту заявку? Файл и все данные будут удалены безвозвратно.")) {
+      return;
+    }
+    try {
+      const response = await fetch(`${API_URL}/api/company-claim/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Ошибка при удалении заявки");
+      }
+      fetchClaims();
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при удалении заявки");
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("ru-RU");
   };
@@ -187,22 +205,35 @@ export default function ClaimsPage() {
                 </td>
                 <td>{formatDate(claim.created_at)}</td>
                 <td>
-                  {claim.status === "PENDING" && (
-                    <div className={styles.actions}>
-                      <button
-                        className={`${styles.actionBtn} ${styles.approve}`}
-                        onClick={() => approveClaim(claim.id)}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className={`${styles.actionBtn} ${styles.reject}`}
-                        onClick={() => setRejectModal(claim.id)}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
+                  <div className={styles.actions}>
+                    {claim.status === "PENDING" && (
+                      <>
+                        <button
+                          className={`${styles.actionBtn} ${styles.approve}`}
+                          onClick={() => approveClaim(claim.id)}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className={`${styles.actionBtn} ${styles.reject}`}
+                          onClick={() => setRejectModal(claim.id)}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    <button
+                      className={`${styles.actionBtn}`}
+                      onClick={() => deleteClaim(claim.id)}
+                      style={{ 
+                        backgroundColor: "#dc3545", 
+                        color: "white",
+                        marginLeft: claim.status === "PENDING" ? "8px" : "0"
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

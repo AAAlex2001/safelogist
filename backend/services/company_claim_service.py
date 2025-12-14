@@ -122,3 +122,31 @@ class CompanyClaimService:
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
+    async def delete_claim(self, claim_id: int) -> bool:
+        """
+        Удаление заявки и связанного файла
+        
+        Args:
+            claim_id: ID заявки для удаления
+            
+        Returns:
+            bool: True если удалено успешно, False если заявка не найдена
+        """
+        claim = await self.get_claim_by_id(claim_id)
+        if not claim:
+            return False
+        
+        # Удаляем файл, если он существует
+        if claim.document_path and os.path.exists(claim.document_path):
+            try:
+                os.remove(claim.document_path)
+            except OSError as e:
+                # Логируем ошибку, но продолжаем удаление записи из БД
+                print(f"Ошибка при удалении файла {claim.document_path}: {e}")
+        
+        # Удаляем запись из БД
+        await self.db.delete(claim)
+        await self.db.commit()
+        
+        return True
+

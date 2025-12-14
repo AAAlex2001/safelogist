@@ -185,3 +185,24 @@ async def review_claim(
     
     return claim
 
+
+@router.delete("/{claim_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_claim(
+    claim_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Удалить заявку (для админки)
+    Удаляет запись из БД и связанный файл
+    """
+    service = CompanyClaimService(db)
+    
+    deleted = await service.delete_claim(claim_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Заявка не найдена"
+        )
+    
+    return None
+

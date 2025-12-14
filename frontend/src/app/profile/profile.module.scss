@@ -5,7 +5,7 @@
   align-items: center;
   background: linear-gradient(0deg, rgba(222, 246, 255, 0.039) 0%, rgba(1, 42, 249, 0.09) 100%);
   color: #0d0d0d;
-  padding: 20px;
+  padding: 160px 20px;
 }
 
 .container {
@@ -123,4 +123,25 @@
 
 .tabActive {
   background: rgba(1, 42, 249, 0.08);
+}
+
+@media (min-width: 768px) {
+
+  .page {
+    padding: 160px 20px;
+  }
+
+  .container {
+    max-width: 730px;
+  }
+
+}
+
+
+@media (min-width: 1440px) {
+
+  .container {
+    max-width: 1150px;
+  }
+
 }

@@ -114,8 +114,8 @@ export default function ClaimsPage() {
               <th>Company</th>
               <th>Name</th>
               <th>Position</th>
-              <th>Phone</th>
-              <th>Email</th>
+              <th>Contact</th>
+              <th>Document</th>
               <th>Status</th>
               <th>Created</th>
               <th>Actions</th>
@@ -128,8 +128,20 @@ export default function ClaimsPage() {
                 <td>{claim.company_name}</td>
                 <td>{getFullName(claim)}</td>
                 <td>{claim.position}</td>
-                <td>{claim.phone}</td>
-                <td>{claim.email}</td>
+                <td>
+                  <div>{claim.phone}</div>
+                  <div style={{ fontSize: "12px", color: "#666" }}>{claim.email}</div>
+                </td>
+                <td>
+                  <a
+                    href={`${API_URL}/${claim.document_path}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#012af9" }}
+                  >
+                    View
+                  </a>
+                </td>
                 <td>
                   <span className={`${styles.badge} ${styles[claim.status]}`}>
                     {claim.status}

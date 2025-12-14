@@ -34,6 +34,7 @@ app.add_middleware(
 
 # Подключение статических файлов
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Подключение роутеров
 app.include_router(registration.router)

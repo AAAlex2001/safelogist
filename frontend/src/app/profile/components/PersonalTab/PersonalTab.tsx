@@ -63,10 +63,10 @@ export function PersonalTab() {
             <div className={styles.selectWrapper}>
               <select
                 className={styles.selectField}
-                value={state.industry}
+                value={state.industry || ""}
                 onChange={(e) => setIndustry(e.target.value)}
               >
-                <option value="">Транспортная компания</option>
+                <option value="">Выберите род деятельности</option>
                 <option value="TRANSPORT_COMPANY">Транспортная компания</option>
                 <option value="CARGO_OWNER">Грузовладелец</option>
                 <option value="FORWARDER">Экспедитор</option>

@@ -135,10 +135,10 @@ export const usePersonalStore = () => {
 
     try {
       const formData = new FormData();
-      if (state.fullName) formData.append("name", state.fullName);
-      if (state.company) formData.append("company_name", state.company);
-      if (state.position) formData.append("position", state.position);
-      if (state.address) formData.append("location", state.address);
+      formData.append("name", state.fullName || "");
+      formData.append("company_name", state.company || "");
+      formData.append("position", state.position || "");
+      formData.append("location", state.address || "");
 
       const response = await fetch(PROFILE_ENDPOINT, {
         method: "PATCH",
@@ -193,5 +193,6 @@ export const usePersonalStore = () => {
     setSuccess: (value: string | null) => dispatch({ type: "SET_SUCCESS", payload: value }),
   };
 };
+
 
 

@@ -13,7 +13,6 @@
   justify-content: center;
   background: var(--bg);
   color: var(--text-main);
-  font-family: "BlinkMacSystemFont", -apple-system, "Segoe UI", Roboto, sans-serif;
   padding: 20px;
   position: relative;
   overflow: hidden;
@@ -85,6 +84,13 @@
   font-size: 14px;
   line-height: 17px;
   color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot:hover {
+  color: var(--primary);
 }
 
 .actions {

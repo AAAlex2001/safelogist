@@ -152,3 +152,10 @@ sudo tail -f /var/log/nginx/safelogist_error.log
 sudo journalctl -u safelogist -f
 ```
 
+
+
+
+
+
+
+

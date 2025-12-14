@@ -363,7 +363,7 @@ async def company_reviews_page(
             "meta_title": meta_title,
             "meta_desc": meta_desc,
             "og_url": seo['canonical'],
-            "og_image": f"{seo['base_url']}/static/safelogist.jpg",
+            "og_image": f"{seo['base_url']}/static/safelogist_1.png",
             **seo,
         }
     )

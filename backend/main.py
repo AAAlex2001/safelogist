@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo, company_claims, admin
+from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo, company_claim
 from admin import init_admin
 
 # Создание приложения FastAPI
@@ -48,6 +49,7 @@ app.include_router(reviews_pages.router)
 app.include_router(seo.router)
 app.include_router(company_claims.router)
 app.include_router(admin.router)
+app.include_router(company_claim.router)
 
 # Подключение админ панели
 init_admin(app)

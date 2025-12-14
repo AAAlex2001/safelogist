@@ -17,9 +17,29 @@
     <meta property="og:image:alt" content="{{ meta_title }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon 32x32 main.svg">
+    {% include "partials/analytics.html" %}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/header.css">
     <link rel="stylesheet" href="/static/css/company.css">
     <link rel="stylesheet" href="/static/css/searchbar.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+<link rel="stylesheet" href="/static/css/company_claim/base.css">
+<link rel="stylesheet" href="/static/css/company_claim/step3.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/css/intlTelInput.css">
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const theme = (saved === 'light' || saved === 'dark') ? saved : 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
     {% if company_jsonld %}
     <script type="application/ld+json">
     {{ company_jsonld | tojson }}
@@ -27,6 +47,7 @@
     {% endif %}
 </head>
 <body>
+    {% include "partials/header.html" %}
     <div class="company-page">
         <div class="hero">
             <h1 class="hero-title">{{ t.list_title }}</h1>
@@ -67,9 +88,9 @@
             </div>
 
             <div class="actions dual">
-                <a class="btn ghost" href="#">
+                <button class="btn ghost" id="myCompanyBtn" type="button">
                     {{ t.my_company_button }}
-                </a>
+                </button>
                 <a class="btn solid" href="/{{ lang }}/reviews/item/{{ company_id }}?page=1#add-review">
                     {{ t.add_review_button }}
                 </a>
@@ -79,7 +100,7 @@
         {% if company_sections %}
         <div class="company-accordion">
             <button class="accordion-header" type="button" id="company-info-toggle">
-                <span>{{ t.company_info_title if t.company_info_title is defined else "Информация о компании" }}</span>
+                <span>{{ t.company_info_title }}</span>
                 <svg class="accordion-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1.5L8 8.5L15 1.5" stroke="#012AF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -167,6 +188,7 @@
                         {% if review.reviewer_id %}
                         <a href="/{{ lang }}/reviews/item/{{ review.reviewer_id }}" class="review-author-link">
                             {{ review.reviewer }}
+                            <span class="link-loader" style="display: none; margin-left: 8px; width: 16px; height: 16px; border: 2px solid #012AF9; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle;"></span>
                         </a>
                         {% else %}
                         {{ review.reviewer }}
@@ -213,8 +235,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно для подтверждения компании -->
+    {% include "partials/company_claim_modal.html" %}
 </body>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/js/intlTelInput.min.js"></script>
+<script src="/static/js/header.js"></script>
 <script src="/static/js/search_bar.js"></script>
+<script src="/static/js/company_claim/step1.js"></script>
+<script src="/static/js/company_claim/step2.js"></script>
+<script src="/static/js/company_claim/step3.js"></script>
+<script src="/static/js/company_claim/index.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.initSearchBar({
@@ -232,7 +263,25 @@
                 accordion.classList.toggle('open');
             });
         }
+
+        // Показываем лоадер при клике на ссылку компании
+        document.querySelectorAll('.review-author-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                const loader = this.querySelector('.link-loader');
+                if (loader) {
+                    e.preventDefault(); // Предотвращаем переход
+                    loader.style.display = 'inline-block';
+                    const href = this.href;
+                    // Даём время на отрисовку лоадера, потом переходим
+                    setTimeout(function() {
+                        window.location.href = href;
+                    }, 50);
+                }
+            });
+        });
     });
 </script>
+{% include "partials/footer.html" %}
+</body>
 </html>
 

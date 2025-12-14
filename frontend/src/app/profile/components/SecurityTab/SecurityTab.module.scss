@@ -172,4 +172,14 @@
   cursor: not-allowed;
 }
 
+@media (min-width: 768px) {
+
+  .fieldGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+}
+
 

@@ -26,12 +26,11 @@
 }
 
 .claim-file-pill {
-    margin-top: 12px;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 14px;
-    background: #F6F7FF;
+    background: #012AF91A;
     border-radius: 12px;
 }
 .claim-file-pill.hide { display: none; }
@@ -60,17 +59,13 @@
     width: 36px;
     height: 36px;
     border: none;
-    background: #FFE8E5;
+    background: transparent;
     border-radius: 10px;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 .claim-file-remove:hover { background: #FFD5CF; }
 .claim-file-remove:active { background: #FFBFB5; }
-
-.claim-examples {
-    margin-top: 16px;
-}
 .claim-examples-title {
     font-weight: 600;
     color: #012AF9;
@@ -92,10 +87,9 @@
 }
 
 .claim-review-time {
-    margin-top: 12px;
     font-size: 14px;
-    line-height: 20px;
-    color: #6b6b6b;
+    line-height: 19px;
+    color: #4D4D4D;
     text-align: center;
 }
 

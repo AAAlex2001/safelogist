@@ -16,14 +16,20 @@
 
         // Инициализация intl-tel-input
         if (phoneInput && window.intlTelInput) {
+            // Находим модальное окно для правильного позиционирования dropdown
+            const modal = document.getElementById('companyClaimModal');
+            const dropdownContainer = modal ? modal.querySelector('.company-claim-modal-content') : document.body;
+            
             const iti = window.intlTelInput(phoneInput, {
                 initialCountry: "ru",
                 preferredCountries: ["ru", "kz", "by", "ua"],
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.0/build/js/utils.js",
-                separateDialCode: false,
                 nationalMode: false,
                 autoFormat: true,
-                autoPlaceholder: "aggressive"
+                autoPlaceholder: "aggressive",
+                allowDropdown: true,
+                dropdownContainer: dropdownContainer,
+                separateDialCode: true
             });
             
             phoneInput.intlTelInputInstance = iti;

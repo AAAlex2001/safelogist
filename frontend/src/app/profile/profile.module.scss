@@ -79,6 +79,7 @@
   background: #012af9;
   color: #f9fafb;
   border-color: #012af9;
+  font-family: var(--font-base);
 }
 
 .saveBtn:hover {
@@ -110,6 +111,7 @@
   border: none;
   font-size: 18px;
   line-height: 28px;
+  font-family: var(--font-base);
   color: #0d0d0d;
   cursor: pointer;
   transition: background 0.2s ease;

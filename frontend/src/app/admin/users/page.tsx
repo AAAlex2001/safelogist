@@ -28,9 +28,20 @@ export default function UsersPage() {
       : `${API_URL}/api/admin/users`;
 
     fetch(url)
-      .then((res) => res.json())
-      .then(setUsers)
-      .catch(console.error)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // Убеждаемся, что это массив
+        setUsers(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+        setUsers([]);
+      })
       .finally(() => setLoading(false));
   };
 

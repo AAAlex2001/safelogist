@@ -62,6 +62,7 @@
 .title {
   font-size: 18px;
   line-height: 21px;
+  font-family: var(--font-base);
   color: var(--primary);
   text-align: center;
 }
@@ -110,6 +111,7 @@
   color: #f9fafb;
   font-size: 18px;
   line-height: 24px;
+  font-family: var(--font-base);
   cursor: pointer;
 }
 

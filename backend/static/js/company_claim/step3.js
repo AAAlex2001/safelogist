@@ -104,7 +104,7 @@
         }
 
         // Сабмит шага 3
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             clearFileError();
 
@@ -113,11 +113,51 @@
                 return;
             }
 
-            // TODO: отправка данных на сервер вместе с файлом
-            console.log('Данные формы:', ctx.formData);
-            console.log('Файл:', ctx.selectedFile);
+            // Блокируем кнопку отправки
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Отправка...';
+            }
 
-            ctx.closeModal();
+            try {
+                // Формируем FormData для отправки
+                const formData = new FormData();
+                formData.append('last_name', ctx.formData.lastName);
+                formData.append('first_name', ctx.formData.firstName);
+                if (ctx.formData.middleName) {
+                    formData.append('middle_name', ctx.formData.middleName);
+                }
+                formData.append('phone', ctx.formData.phone);
+                formData.append('company_name', ctx.formData.companyName);
+                formData.append('position', ctx.formData.position);
+                formData.append('email', ctx.formData.email);
+                formData.append('document', ctx.selectedFile);
+
+                // Отправляем на сервер
+                const response = await fetch('/api/company-claim', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.detail || 'Ошибка при отправке заявки');
+                }
+
+                // Успешно отправлено
+                alert(result.message || 'Заявка успешно отправлена. Мы рассмотрим её в течение 48 часов.');
+                ctx.closeModal();
+            } catch (error) {
+                console.error('Ошибка отправки заявки:', error);
+                showFileError(error.message || 'Ошибка при отправке заявки. Попробуйте позже.');
+            } finally {
+                // Разблокируем кнопку
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить запрос';
+                }
+            }
         });
 
         checkStep3Validity();

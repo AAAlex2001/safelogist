@@ -136,6 +136,8 @@ export const usePersonalStore = () => {
     try {
       const formData = new FormData();
       formData.append("name", state.fullName || "");
+      formData.append("role", state.industry || "");
+      formData.append("phone", state.phone || "");
       formData.append("company_name", state.company || "");
       formData.append("position", state.position || "");
       formData.append("location", state.address || "");
@@ -176,7 +178,7 @@ export const usePersonalStore = () => {
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
-  }, [state.fullName, state.company, state.position, state.address]);
+  }, [state.fullName, state.industry, state.phone, state.company, state.position, state.address]);
 
   const resetForm = useCallback(() => {
     dispatch({ type: "RESET" });

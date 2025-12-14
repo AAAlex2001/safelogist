@@ -32,6 +32,8 @@ async def get_profile(
 @router.patch("", response_model=ProfileUpdateResponse)
 async def update_profile(
     name: str | None = Form(None),
+    role: str | None = Form(None),
+    phone: str | None = Form(None),
     company_name: str | None = Form(None),
     position: str | None = Form(None),
     location: str | None = Form(None),
@@ -43,6 +45,8 @@ async def update_profile(
 
     data = {
         "name": name,
+        "role": role,
+        "phone": phone,
         "company_name": company_name,
         "position": position,
         "location": location,

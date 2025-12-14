@@ -164,25 +164,38 @@ async def review_claim(
 ):
     """
     Рассмотреть заявку (одобрить/отклонить)
+
+    При одобрении автоматически создается профиль компании и связывается с пользователем
     """
+    service = CompanyClaimService(db)
+
     result = await db.execute(
         select(CompanyClaim).where(CompanyClaim.id == claim_id)
     )
     claim = result.scalar()
-    
+
     if not claim:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Заявка не найдена"
         )
-    
-    claim.status = review.status
-    claim.admin_comment = review.admin_comment
-    claim.updated_at = datetime.now(timezone.utc)
-    
-    await db.commit()
+
+    # Если одобряем заявку, используем специальный метод
+    if review.status == ClaimStatus.APPROVED:
+        await service.approve_claim(claim_id)
+        # Обновляем комментарий администратора, если есть
+        if review.admin_comment:
+            claim.admin_comment = review.admin_comment
+            claim.updated_at = datetime.now(timezone.utc)
+            await db.commit()
+    else:
+        # Для отклонения просто обновляем статус
+        claim.status = review.status
+        claim.admin_comment = review.admin_comment
+        claim.updated_at = datetime.now(timezone.utc)
+        await db.commit()
+
     await db.refresh(claim)
-    
     return claim
 
 

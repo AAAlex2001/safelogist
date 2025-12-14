@@ -35,11 +35,20 @@ class ProfileService:
     # 2. Обновление профиля + фото
     # -------------------------------------------------------------
     async def update_profile(self, user: User, data: dict, photo: UploadFile | None) -> User:
+        from models.user import UserRole
 
         # обновление текстовых полей
         for key, value in data.items():
             if value is not None:
-                setattr(user, key, value)
+                # Конвертируем role в enum если это поле role
+                if key == "role":
+                    try:
+                        user.role = UserRole(value)
+                    except ValueError:
+                        # Если невалидное значение, игнорируем
+                        pass
+                else:
+                    setattr(user, key, value)
 
         # обновление фото
         if photo:

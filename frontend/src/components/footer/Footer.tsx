@@ -65,7 +65,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className={styles.footerDescription}>
-              Проверенная информация о логистических компаниях для ваших уверенных решений.
+              SafeLogist — это платформа для поиска и анализа информации о компаниях, судах и лицах в Молдове.
             </p>
           </div>
 
@@ -206,7 +206,7 @@ export default function Footer() {
 
         <div className={styles.footerBottom}>
           <p className={styles.footerCopyright}>
-            © 2025 SafeLogist. Все права защищены.
+            © 2024 SafeLogist. Все права защищены.
           </p>
         </div>
       </div>

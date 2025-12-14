@@ -214,17 +214,15 @@
 
 /* Location input */
 .locationInput {
-  box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
   padding: 10px 8px;
   gap: 10px;
   width: 100%;
   min-height: 60px;
   background: #ffffff;
   border: 1px solid rgba(1, 42, 249, 0.1);
-  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  box-shadow: 0 2px 12px rgba(1, 42, 249, 0.05);
   border-radius: 10px;
 }
 
@@ -238,7 +236,18 @@
   color: #8c8c8c;
   background: transparent;
   resize: none;
-  min-height: 40px;
 }
 
+
+@media (min-width: 768px) {
+
+  .fieldGroup {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .fieldWrapper {
+    flex: 0 0 calc((100% - 24px) / 2);
+  }
+}
 

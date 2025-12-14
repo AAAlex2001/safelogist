@@ -40,3 +40,11 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    # Связь с профилем компании (если пользователь - владелец)
+    owned_company_profile = relationship(
+        "CompanyProfile",
+        back_populates="owner",
+        uselist=False,
+        foreign_keys="CompanyProfile.owner_user_id"
+    )

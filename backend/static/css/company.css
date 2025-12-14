@@ -16,6 +16,8 @@
     --gradient-bottom: rgba(222, 246, 255, 0.039);
     --avatar-bg: #E5E5EA;
     --review-bubble-bg: rgba(1, 42, 249, 0.05);
+    --input-border: #012AF91A;
+    --input-shadow: 0px 2px 12px 0px #012AF90D;
 }
 
 [data-theme="dark"] {
@@ -36,6 +38,8 @@
     --gradient-bottom: rgba(22, 30, 48, 0.35);
     --avatar-bg: #2b3040;
     --review-bubble-bg: rgba(77, 123, 255, 0.1);
+    --input-border: #012AF91A;
+    --input-shadow: 0px 2px 12px 0px #012AF90D;
 }
 
 .pagination {
@@ -195,6 +199,11 @@ body::before {
     color: var(--accent);
     background: var(--surface);
     height: 40px;
+    cursor: pointer;
+}
+
+.btn.ghost[type="button"] {
+    border: 2px solid var(--accent);
 }
 
 .btn.solid {

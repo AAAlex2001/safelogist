@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/static/css/company.css">
     <link rel="stylesheet" href="/static/css/searchbar.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/company_claim_modal.css">
     <script>
         (function() {
             const saved = localStorage.getItem('theme');
@@ -85,9 +86,9 @@
             </div>
 
             <div class="actions dual">
-                <a class="btn ghost" href="#">
+                <button class="btn ghost" id="myCompanyBtn" type="button">
                     {{ t.my_company_button }}
-                </a>
+                </button>
                 <a class="btn solid" href="/{{ lang }}/reviews/item/{{ company_id }}?page=1#add-review">
                     {{ t.add_review_button }}
                 </a>
@@ -232,9 +233,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно для подтверждения компании -->
+    {% include "partials/company_claim_modal.html" %}
 </body>
 <script src="/static/js/header.js"></script>
 <script src="/static/js/search_bar.js"></script>
+<script src="/static/js/company_claim_modal.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.initSearchBar({

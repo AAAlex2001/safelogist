@@ -1,0 +1,85 @@
+<!-- Модальное окно для подтверждения компании -->
+<div id="companyClaimModal" class="company-claim-modal">
+    <div class="company-claim-modal-overlay"></div>
+    <div class="company-claim-modal-content">
+        <button class="company-claim-modal-close" aria-label="Закрыть">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        
+        <div class="company-claim-modal-header">
+            <h2 class="company-claim-modal-title">Подтвердите, что вы представляете компанию</h2>
+            <p class="company-claim-modal-step">Шаг 1 из 3: Контактное лицо</p>
+        </div>
+
+        <form class="company-claim-form" id="companyClaimForm">
+            <div class="company-claim-form-group">
+                <label for="lastName" class="company-claim-label">Фамилия</label>
+                <input 
+                    type="text" 
+                    id="lastName" 
+                    name="lastName" 
+                    class="company-claim-input" 
+                    placeholder="Введите фамилию"
+                    required
+                >
+            </div>
+
+            <div class="company-claim-form-group">
+                <label for="firstName" class="company-claim-label">Имя</label>
+                <input 
+                    type="text" 
+                    id="firstName" 
+                    name="firstName" 
+                    class="company-claim-input" 
+                    placeholder="Введите имя"
+                    required
+                >
+            </div>
+
+            <div class="company-claim-form-group">
+                <label for="middleName" class="company-claim-label">Отчество</label>
+                <input 
+                    type="text" 
+                    id="middleName" 
+                    name="middleName" 
+                    class="company-claim-input" 
+                    placeholder="Введите отчество"
+                >
+            </div>
+
+            <div class="company-claim-form-group">
+                <label for="phone" class="company-claim-label">Номер телефона</label>
+                <div class="company-claim-phone-wrapper">
+                    <div class="company-claim-phone-flag">
+                        <svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/>
+                            <mask id="mask0_phone" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20">
+                                <rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/>
+                            </mask>
+                            <g mask="url(#mask0_phone)">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 13.3346H28V6.66797H0V13.3346Z" fill="#0C47B7"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 19.9987H28V13.332H0V19.9987Z" fill="#E53B35"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <span class="company-claim-phone-code">+7</span>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        class="company-claim-input company-claim-phone-input" 
+                        placeholder="Введите номер телефона"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="company-claim-submit-btn">
+                Далее
+            </button>
+        </form>
+    </div>
+</div>
+

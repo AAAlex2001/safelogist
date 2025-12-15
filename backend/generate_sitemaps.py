@@ -82,14 +82,13 @@ async def generate_sitemap_pages(db: AsyncSession, lang: str, page_num: int, tot
     return True
 
 
-async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
-    """Генерация sitemap для компаний"""
+async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int, last_subject: str = None):
+    """Генерация sitemap для компаний с лимитом 45,000 URL, но включая ВСЕ страницы каждой компании"""
     lang_code = normalize_lang(lang)
-    companies_per_sitemap = 3000  # Уменьшено с 10000 до 3000
-    offset = (page - 1) * companies_per_sitemap
+    max_urls_per_sitemap = 45000  # Жесткий лимит
     reviews_per_page = 10
     
-    # Получаем компании
+    # Получаем компании (берем с запасом, чтобы точно хватило)
     query = (
         select(
             Review.subject.label("subject"),
@@ -98,23 +97,38 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
         )
         .group_by(Review.subject)
         .order_by(Review.subject)
-        .limit(companies_per_sitemap)
-        .offset(offset)
     )
+    
+    # Если есть last_subject, начинаем с него (для продолжения после предыдущего файла)
+    if last_subject:
+        query = query.where(Review.subject > last_subject)
+    
+    query = query.limit(10000)  # Берем с большим запасом
     result = await db.execute(query)
     companies = result.all()
     
     if not companies:
-        return False  # Нет компаний для этой страницы
+        return None, False  # Нет компаний для этой страницы
     
     urls = []
-    # Убираем лимит - добавляем ВСЕ страницы всех компаний
+    current_url_count = 0
+    last_processed_subject = None
     
     for row in companies:
         company_id = row.company_id
+        subject = row.subject
         reviews_count = row.reviews_count or 0
         total_pages = max(1, (reviews_count + reviews_per_page - 1) // reviews_per_page)
-
+        
+        # Рассчитываем количество URL для этой компании
+        company_urls_count = total_pages  # 1 главная + (total_pages - 1) пагинации
+        
+        # Проверяем, не превысим ли лимит, добавив ВСЕ страницы этой компании
+        if current_url_count + company_urls_count > max_urls_per_sitemap and current_url_count > 0:
+            # Останавливаемся, не добавляя эту компанию
+            break
+        
+        # Добавляем ВСЕ страницы этой компании
         # Первая страница (основная)
         urls.append(f"""  <url>
     <loc>{BASE_URL}/{lang_code}/reviews/item/{company_id}</loc>
@@ -123,7 +137,7 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
     <priority>0.8</priority>
   </url>""")
 
-        # Все остальные страницы пагинации (БЕЗ лимита)
+        # Все остальные страницы пагинации
         if total_pages > 1:
             for page_num in range(2, total_pages + 1):
                 urls.append(f"""  <url>
@@ -132,6 +146,12 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>""")
+        
+        current_url_count += company_urls_count
+        last_processed_subject = subject
+    
+    if not urls:
+        return None, False
     
     sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -141,39 +161,19 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
 
     filename = f"sitemap-{lang_code}-{page}.xml"
     save_sitemap(sitemap, filename)
-    return True
+    print(f"   → {filename}: {current_url_count} URLs")
+    return last_processed_subject, True
 
 
-async def generate_sitemap_index(db: AsyncSession):
-    """Генерация главного sitemap index"""
-    count_query = select(func.count(func.distinct(Review.subject)))
-    count_result = await db.execute(count_query)
-    total_companies = count_result.scalar() or 0
-    
-    companies_per_sitemap = 3000  # Должно совпадать с generate_sitemap_companies
-    num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap if total_companies > 0 else 1
-    
+async def generate_sitemap_index():
+    """Генерация главного sitemap index на основе существующих файлов"""
     sitemaps = []
     
-    # Sitemap для страниц пагинации списка отзывов
-    companies_per_page = 10
-    total_pages = max(1, (total_companies + companies_per_page - 1) // companies_per_page)
-    max_urls_per_sitemap = 40000
-    pages_per_sitemap = max_urls_per_sitemap - 1
-    num_pages_sitemaps = max(1, (total_pages + pages_per_sitemap - 1) // pages_per_sitemap)
-    
-    for lang in SUPPORTED_LANGS:
-        for i in range(num_pages_sitemaps):
+    # Ищем все сгенерированные sitemap файлы
+    for filename in sorted(os.listdir(SITEMAP_DIR)):
+        if filename.startswith("sitemap-") and filename.endswith(".xml"):
             sitemaps.append(f"""  <sitemap>
-    <loc>{BASE_URL}/sitemap-pages-{lang}-{i + 1}.xml</loc>
-    <lastmod>{datetime.now().date().isoformat()}</lastmod>
-  </sitemap>""")
-    
-    # Sitemap для компаний (отзывы компаний с пагинацией)
-    for lang in SUPPORTED_LANGS:
-        for i in range(num_sitemaps):
-            sitemaps.append(f"""  <sitemap>
-    <loc>{BASE_URL}/sitemap-{lang}-{i + 1}.xml</loc>
+    <loc>{BASE_URL}/{filename}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
   </sitemap>""")
     
@@ -219,27 +219,26 @@ async def main():
             for page_num in range(1, num_pages_sitemaps + 1):
                 await generate_sitemap_pages(db, lang, page_num, total_companies)
 
-        # 3. Подготовка для генерации sitemap компаний
-        companies_per_sitemap = 3000  # Должно совпадать с generate_sitemap_companies
-        num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap if total_companies > 0 else 1
-
-        print(f"\n3. Количество sitemap файлов для компаний: {num_sitemaps}\n")
-
-        # 4. Генерируем sitemap для компаний
-        print("4. Генерация sitemap для компаний...")
-        generated_count = 0
+        # 3. Генерируем sitemap для компаний
+        print("\n3. Генерация sitemap для компаний...")
+        generated_files = []
+        
         for lang in SUPPORTED_LANGS:
-            for page in range(1, num_sitemaps + 1):
-                if await generate_sitemap_companies(db, lang, page):
-                    generated_count += 1
-                else:
-                    break  # Если нет компаний для этой страницы, останавливаемся
+            page = 1
+            last_subject = None
+            
+            while True:
+                last_subject, success = await generate_sitemap_companies(db, lang, page, last_subject)
+                if not success:
+                    break  # Нет больше компаний
+                generated_files.append(f"sitemap-{lang}-{page}.xml")
+                page += 1
+        
+        print(f"\n   Сгенерировано файлов: {len(generated_files)}")
 
-        print(f"\n   Сгенерировано файлов: {generated_count}")
-
-        # 5. Генерируем главный sitemap index
-        print("\n5. Генерация sitemap.xml (index)...")
-        await generate_sitemap_index(db)
+        # 4. Генерируем главный sitemap index
+        print("\n4. Генерация sitemap.xml (index)...")
+        await generate_sitemap_index()
 
         print(f"\n✅ Генерация завершена! Все файлы сохранены в {SITEMAP_DIR}/")
 

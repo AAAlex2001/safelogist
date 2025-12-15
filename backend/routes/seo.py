@@ -24,6 +24,16 @@ def normalize_lang(lang: str) -> str:
     return lang_code if lang_code in SUPPORTED_LANGS else DEFAULT_LANG
 
 
+def save_sitemap(content: str, filename: str) -> None:
+    """Сохранить sitemap в статическую директорию"""
+    try:
+        filepath = os.path.join(SITEMAP_DIR, filename)
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+    except IOError as e:
+        print(f"Error saving sitemap {filename}: {e}")
+
+
 @router.get("/robots.txt", response_class=Response)
 async def robots_txt():
     """
@@ -59,35 +69,12 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
     
-    count_query = select(func.count(func.distinct(Review.subject)))
-    count_result = await db.execute(count_query)
-    total_companies = count_result.scalar() or 0
-    
-    # Расчёт количества sitemap файлов на основе companies_per_sitemap (из sitemap_companies)
-    companies_per_sitemap = 3000  # должно совпадать с companies_per_sitemap в sitemap_companies
-    num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap
-    
+    # Ищем все сгенерированные sitemap файлы
     sitemaps = []
-    
-    # Sitemap для страниц пагинации списка отзывов
-    companies_per_page = 10
-    total_pages = max(1, (total_companies + companies_per_page - 1) // companies_per_page)
-    max_urls_per_sitemap = 40000
-    pages_per_sitemap = max_urls_per_sitemap - 1
-    num_pages_sitemaps = max(1, (total_pages + pages_per_sitemap - 1) // pages_per_sitemap)
-    
-    for lang in SUPPORTED_LANGS:
-        for i in range(num_pages_sitemaps):
+    for filename in sorted(os.listdir(SITEMAP_DIR)):
+        if filename.startswith("sitemap-") and filename.endswith(".xml"):
             sitemaps.append(f"""  <sitemap>
-    <loc>{base_url}/sitemap-pages-{lang}-{i + 1}.xml</loc>
-    <lastmod>{datetime.now().date().isoformat()}</lastmod>
-  </sitemap>""")
-    
-    # Sitemap для компаний (отзывы компаний с пагинацией)
-    for lang in SUPPORTED_LANGS:
-        for i in range(num_sitemaps):
-            sitemaps.append(f"""  <sitemap>
-    <loc>{base_url}/sitemap-{lang}-{i + 1}.xml</loc>
+    <loc>{base_url}/{filename}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
   </sitemap>""")
     
@@ -97,6 +84,7 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
 </sitemapindex>
 """
     
+    save_sitemap(sitemap_index, filename)
     return Response(content=sitemap_index, media_type="application/xml")
 
 
@@ -162,6 +150,7 @@ async def sitemap_pages(lang: str, page_num: int, request: Request, db: AsyncSes
 </urlset>
 """
     
+    save_sitemap(sitemap, filename)
     return Response(content=sitemap, media_type="application/xml")
 
 
@@ -182,9 +171,10 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
     
-    companies_per_sitemap = 3000  # Уменьшено для добавления всех страниц пагинации
-    offset = (page - 1) * companies_per_sitemap
+    max_urls_per_sitemap = 45000  # Жесткий лимит
     reviews_per_page = 10
+    batch_size = 5000  # Берем с запасом для фильтрации
+    offset = (page - 1) * batch_size
 
     # Получаем компании с их минимальным ID (для URL) и количеством отзывов
     query = (
@@ -195,19 +185,27 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
         )
         .group_by(Review.subject)
         .order_by(Review.subject)
-        .limit(companies_per_sitemap)
+        .limit(batch_size)
         .offset(offset)
     )
     result = await db.execute(query)
     companies = result.all()
     
     urls = []
-    # Убираем лимит - добавляем ВСЕ страницы всех компаний
+    current_url_count = 0
     
     for row in companies:
         company_id = row.company_id
         reviews_count = row.reviews_count or 0
         total_pages = max(1, (reviews_count + reviews_per_page - 1) // reviews_per_page)
+        
+        # Рассчитываем количество URL для этой компании
+        company_urls_count = total_pages
+        
+        # Проверяем, не превысим ли лимит, добавив ВСЕ страницы этой компании
+        if current_url_count + company_urls_count > max_urls_per_sitemap and current_url_count > 0:
+            # Останавливаемся, не добавляя эту компанию
+            break
 
         # Первая страница (основная)
         urls.append(f"""  <url>
@@ -217,7 +215,7 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
     <priority>0.8</priority>
   </url>""")
 
-        # Все остальные страницы пагинации (БЕЗ лимита)
+        # Все остальные страницы пагинации
         if total_pages > 1:
             for page_num in range(2, total_pages + 1):
                 urls.append(f"""  <url>
@@ -226,6 +224,8 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>""")
+        
+        current_url_count += company_urls_count
     
     sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -233,5 +233,6 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
 </urlset>
 """
     
+    save_sitemap(sitemap, filename)
     return Response(content=sitemap, media_type="application/xml")
 

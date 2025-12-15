@@ -71,11 +71,21 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     
     sitemaps = []
     
-    sitemaps.append(f"""  <sitemap>
-    <loc>{base_url}/sitemap-static.xml</loc>
+    # Sitemap для страниц пагинации списка отзывов
+    companies_per_page = 10
+    total_pages = max(1, (total_companies + companies_per_page - 1) // companies_per_page)
+    max_urls_per_sitemap = 40000
+    pages_per_sitemap = max_urls_per_sitemap - 1
+    num_pages_sitemaps = max(1, (total_pages + pages_per_sitemap - 1) // pages_per_sitemap)
+    
+    for lang in SUPPORTED_LANGS:
+        for i in range(num_pages_sitemaps):
+            sitemaps.append(f"""  <sitemap>
+    <loc>{base_url}/sitemap-pages-{lang}-{i + 1}.xml</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
   </sitemap>""")
     
+    # Sitemap для компаний (отзывы компаний с пагинацией)
     for lang in SUPPORTED_LANGS:
         for i in range(num_sitemaps):
             sitemaps.append(f"""  <sitemap>
@@ -96,12 +106,13 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     return Response(content=sitemap_index, media_type="application/xml")
 
 
-@router.api_route("/sitemap-static.xml", methods=["GET", "HEAD"], response_class=Response)
-async def sitemap_static(request: Request):
+@router.api_route("/sitemap-pages-{lang}-{page_num}.xml", methods=["GET", "HEAD"], response_class=Response)
+async def sitemap_pages(lang: str, page_num: int, request: Request, db: AsyncSession = Depends(get_db)):
     """
-    Статический sitemap для главных страниц
+    Sitemap для пагинации списка отзывов (по языкам)
     """
-    filename = "sitemap-static.xml"
+    lang_code = normalize_lang(lang)
+    filename = f"sitemap-pages-{lang_code}-{page_num}.xml"
     filepath = os.path.join(SITEMAP_DIR, filename)
     
     # Если файл существует, отдаём его
@@ -117,13 +128,40 @@ async def sitemap_static(request: Request):
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
     
+    # Получаем количество компаний для расчета пагинации
+    count_query = select(func.count(func.distinct(Review.subject)))
+    count_result = await db.execute(count_query)
+    total_companies = count_result.scalar() or 0
+    
+    companies_per_page = 10
+    total_pages = max(1, (total_companies + companies_per_page - 1) // companies_per_page)
+    
+    # Максимум 40,000 URL на файл (главная + пагинация)
+    max_urls_per_sitemap = 40000
+    pages_per_sitemap = max_urls_per_sitemap - 1  # -1 для главной страницы
+    
+    start_page = (page_num - 1) * pages_per_sitemap + 1
+    end_page = min(start_page + pages_per_sitemap - 1, total_pages)
+    
     urls = []
-    for lang in SUPPORTED_LANGS:
+    
+    # Первая страница только в первом sitemap
+    if page_num == 1:
         urls.append(f"""  <url>
-    <loc>{base_url}/{lang}/reviews</loc>
+    <loc>{base_url}/{lang_code}/reviews</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>""")
+        start_page = 2
+    
+    # Страницы пагинации
+    for page in range(start_page, end_page + 1):
+        urls.append(f"""  <url>
+    <loc>{base_url}/{lang_code}/reviews?page={page}</loc>
+    <lastmod>{datetime.now().date().isoformat()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>""")
     
     sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>

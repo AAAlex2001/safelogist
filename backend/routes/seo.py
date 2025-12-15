@@ -13,6 +13,8 @@ from models.review import Review
 
 SUPPORTED_LANGS = ["ru", "en", "uk", "ro"]
 DEFAULT_LANG = "ru"
+SITEMAP_DIR = "static/sitemaps"
+os.makedirs(SITEMAP_DIR, exist_ok=True)
 
 router = APIRouter(tags=["seo"])
 
@@ -38,11 +40,23 @@ Sitemap: https://safelogist.net/sitemap.xml
     return Response(content=content, media_type="text/plain")
 
 
-@router.get("/sitemap.xml", response_class=Response)
+@router.api_route("/sitemap.xml", methods=["GET", "HEAD"], response_class=Response)
 async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     """
     Sitemap Index - главный файл со ссылками на все sitemap
     """
+    filename = "sitemap.xml"
+    filepath = os.path.join(SITEMAP_DIR, filename)
+    
+    # Если файл существует, отдаём его
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        if request.method == "HEAD":
+            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
+        return Response(content=content, media_type="application/xml")
+    
+    # Если файла нет, генерируем
     base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
@@ -75,14 +89,30 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
 </sitemapindex>
 """
     
+    # Для HEAD возвращаем только заголовки без тела
+    if request.method == "HEAD":
+        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap_index.encode('utf-8')))})
+    
     return Response(content=sitemap_index, media_type="application/xml")
 
 
-@router.get("/sitemap-static.xml", response_class=Response)
+@router.api_route("/sitemap-static.xml", methods=["GET", "HEAD"], response_class=Response)
 async def sitemap_static(request: Request):
     """
     Статический sitemap для главных страниц
     """
+    filename = "sitemap-static.xml"
+    filepath = os.path.join(SITEMAP_DIR, filename)
+    
+    # Если файл существует, отдаём его
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        if request.method == "HEAD":
+            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
+        return Response(content=content, media_type="application/xml")
+    
+    # Если файла нет, генерируем
     base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
@@ -102,15 +132,31 @@ async def sitemap_static(request: Request):
 </urlset>
 """
     
+    # Для HEAD возвращаем только заголовки без тела
+    if request.method == "HEAD":
+        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap.encode('utf-8')))})
+    
     return Response(content=sitemap, media_type="application/xml")
 
 
-@router.get("/sitemap-{lang}-{page}.xml", response_class=Response)
+@router.api_route("/sitemap-{lang}-{page}.xml", methods=["GET", "HEAD"], response_class=Response)
 async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSession = Depends(get_db)):
+    lang_code = normalize_lang(lang)
+    filename = f"sitemap-{lang_code}-{page}.xml"
+    filepath = os.path.join(SITEMAP_DIR, filename)
+    
+    # Если файл существует, отдаём его
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        if request.method == "HEAD":
+            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
+        return Response(content=content, media_type="application/xml")
+    
+    # Если файла нет, генерируем
     base_url = os.getenv("BASE_URL", str(request.base_url)).rstrip('/')
     if base_url.startswith("http://"):
         base_url = "https://" + base_url.removeprefix("http://")
-    lang_code = normalize_lang(lang)
     
     companies_per_sitemap = 10000  # ~10k компаний × ~3-4 страницы = ~30-40k URL
     offset = (page - 1) * companies_per_sitemap
@@ -167,6 +213,10 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
 {chr(10).join(urls)}
 </urlset>
 """
+    
+    # Для HEAD возвращаем только заголовки без тела
+    if request.method == "HEAD":
+        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap.encode('utf-8')))})
     
     return Response(content=sitemap, media_type="application/xml")
 

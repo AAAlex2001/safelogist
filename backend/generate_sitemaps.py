@@ -85,7 +85,7 @@ async def generate_sitemap_pages(db: AsyncSession, lang: str, page_num: int, tot
 async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
     """Генерация sitemap для компаний"""
     lang_code = normalize_lang(lang)
-    companies_per_sitemap = 10000
+    companies_per_sitemap = 3000  # Уменьшено с 10000 до 3000
     offset = (page - 1) * companies_per_sitemap
     reviews_per_page = 10
     
@@ -108,12 +108,9 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
         return False  # Нет компаний для этой страницы
     
     urls = []
-    max_urls_per_sitemap = 40000
+    # Убираем лимит - добавляем ВСЕ страницы всех компаний
     
     for row in companies:
-        if len(urls) >= max_urls_per_sitemap:
-            break
-            
         company_id = row.company_id
         reviews_count = row.reviews_count or 0
         total_pages = max(1, (reviews_count + reviews_per_page - 1) // reviews_per_page)
@@ -126,11 +123,9 @@ async def generate_sitemap_companies(db: AsyncSession, lang: str, page: int):
     <priority>0.8</priority>
   </url>""")
 
-        # Все остальные страницы пагинации
+        # Все остальные страницы пагинации (БЕЗ лимита)
         if total_pages > 1:
             for page_num in range(2, total_pages + 1):
-                if len(urls) >= max_urls_per_sitemap:
-                    break
                 urls.append(f"""  <url>
     <loc>{BASE_URL}/{lang_code}/reviews/item/{company_id}?page={page_num}</loc>
     <lastmod>{datetime.now().date().isoformat()}</lastmod>

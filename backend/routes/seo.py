@@ -40,7 +40,7 @@ Sitemap: https://safelogist.net/sitemap.xml
     return Response(content=content, media_type="text/plain")
 
 
-@router.api_route("/sitemap.xml", methods=["GET", "HEAD"], response_class=Response)
+@router.get("/sitemap.xml", response_class=Response)
 async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     """
     Sitemap Index - главный файл со ссылками на все sitemap
@@ -52,8 +52,6 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
     if os.path.exists(filepath):
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-        if request.method == "HEAD":
-            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
         return Response(content=content, media_type="application/xml")
     
     # Если файла нет, генерируем
@@ -99,14 +97,10 @@ async def sitemap_index(request: Request, db: AsyncSession = Depends(get_db)):
 </sitemapindex>
 """
     
-    # Для HEAD возвращаем только заголовки без тела
-    if request.method == "HEAD":
-        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap_index.encode('utf-8')))})
-    
     return Response(content=sitemap_index, media_type="application/xml")
 
 
-@router.api_route("/sitemap-pages-{lang}-{page_num}.xml", methods=["GET", "HEAD"], response_class=Response)
+@router.get("/sitemap-pages-{lang}-{page_num}.xml", response_class=Response)
 async def sitemap_pages(lang: str, page_num: int, request: Request, db: AsyncSession = Depends(get_db)):
     """
     Sitemap для пагинации списка отзывов (по языкам)
@@ -119,8 +113,6 @@ async def sitemap_pages(lang: str, page_num: int, request: Request, db: AsyncSes
     if os.path.exists(filepath):
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-        if request.method == "HEAD":
-            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
         return Response(content=content, media_type="application/xml")
     
     # Если файла нет, генерируем
@@ -170,14 +162,10 @@ async def sitemap_pages(lang: str, page_num: int, request: Request, db: AsyncSes
 </urlset>
 """
     
-    # Для HEAD возвращаем только заголовки без тела
-    if request.method == "HEAD":
-        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap.encode('utf-8')))})
-    
     return Response(content=sitemap, media_type="application/xml")
 
 
-@router.api_route("/sitemap-{lang}-{page}.xml", methods=["GET", "HEAD"], response_class=Response)
+@router.get("/sitemap-{lang}-{page}.xml", response_class=Response)
 async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSession = Depends(get_db)):
     lang_code = normalize_lang(lang)
     filename = f"sitemap-{lang_code}-{page}.xml"
@@ -187,8 +175,6 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
     if os.path.exists(filepath):
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-        if request.method == "HEAD":
-            return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(content.encode('utf-8')))})
         return Response(content=content, media_type="application/xml")
     
     # Если файла нет, генерируем
@@ -251,10 +237,6 @@ async def sitemap_companies(lang: str, page: int, request: Request, db: AsyncSes
 {chr(10).join(urls)}
 </urlset>
 """
-    
-    # Для HEAD возвращаем только заголовки без тела
-    if request.method == "HEAD":
-        return Response(content="", media_type="application/xml", headers={"Content-Length": str(len(sitemap.encode('utf-8')))})
     
     return Response(content=sitemap, media_type="application/xml")
 

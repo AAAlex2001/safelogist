@@ -38,6 +38,7 @@ services:
         condition: service_healthy
     volumes:
       - ./uploads:/app/uploads  # Для хранения загруженных файлов
+      - ./backend/static/sitemaps:/app/static/sitemaps  # Для хранения sitemap файлов
     networks:
       - safelogist_network
     restart: unless-stopped

@@ -150,7 +150,7 @@ async def generate_sitemap_index(db: AsyncSession):
     count_result = await db.execute(count_query)
     total_companies = count_result.scalar() or 0
     
-    companies_per_sitemap = 10000
+    companies_per_sitemap = 3000  # Должно совпадать с generate_sitemap_companies
     num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap if total_companies > 0 else 1
     
     sitemaps = []
@@ -220,7 +220,7 @@ async def main():
                 await generate_sitemap_pages(db, lang, page_num, total_companies)
 
         # 3. Подготовка для генерации sitemap компаний
-        companies_per_sitemap = 10000
+        companies_per_sitemap = 3000  # Должно совпадать с generate_sitemap_companies
         num_sitemaps = (total_companies + companies_per_sitemap - 1) // companies_per_sitemap if total_companies > 0 else 1
 
         print(f"\n3. Количество sitemap файлов для компаний: {num_sitemaps}\n")

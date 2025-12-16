@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./SecurityTab.module.scss";
-import { useSecurityStore } from "../../store/useSecurityStore";
+import { useProfile } from "../../store";
 
 export function SecurityTab() {
   const {
@@ -12,7 +12,9 @@ export function SecurityTab() {
     toggleShowNew,
     toggleShowRepeat,
     deleteAccount,
-  } = useSecurityStore();
+  } = useProfile();
+
+  const { security, saving } = state;
 
   return (
     <>
@@ -26,13 +28,15 @@ export function SecurityTab() {
             <div className={styles.passwordInputWrapper}>
               <input
                 type="password"
-                className={`${styles.passwordInput} ${state.errorCurrent ? styles.passwordInputError : ""}`}
+                className={`${styles.passwordInput} ${security.errors.current ? styles.passwordInputError : ""}`}
                 placeholder="****************"
-                value={state.currentPassword}
+                value={security.currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
             </div>
-            {state.errorCurrent && <span className={styles.errorText}>{state.errorCurrent}</span>}
+            {security.errors.current && (
+              <span className={styles.errorText}>{security.errors.current}</span>
+            )}
           </div>
 
           {/* New password */}
@@ -40,22 +44,24 @@ export function SecurityTab() {
             <label className={styles.passwordLabel}>Новый пароль</label>
             <div className={styles.passwordInputWrapper}>
               <input
-                type={state.showNew ? "text" : "password"}
-                className={`${styles.passwordInput} ${state.errorNew ? styles.passwordInputError : ""}`}
+                type={security.showNew ? "text" : "password"}
+                className={`${styles.passwordInput} ${security.errors.new ? styles.passwordInputError : ""}`}
                 placeholder="****************"
-                value={state.newPassword}
+                value={security.newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
               <button
                 type="button"
                 className={styles.eyeButton}
                 onClick={toggleShowNew}
-                aria-label={state.showNew ? "Скрыть пароль" : "Показать пароль"}
+                aria-label={security.showNew ? "Скрыть пароль" : "Показать пароль"}
               >
-                {state.showNew ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                {security.showNew ? <EyeClosedIcon /> : <EyeOpenIcon />}
               </button>
             </div>
-            {state.errorNew && <span className={styles.errorText}>{state.errorNew}</span>}
+            {security.errors.new && (
+              <span className={styles.errorText}>{security.errors.new}</span>
+            )}
           </div>
 
           {/* Repeat password */}
@@ -63,22 +69,24 @@ export function SecurityTab() {
             <label className={styles.passwordLabel}>Повторите новый пароль</label>
             <div className={styles.passwordInputWrapper}>
               <input
-                type={state.showRepeat ? "text" : "password"}
-                className={`${styles.passwordInput} ${state.errorRepeat ? styles.passwordInputError : ""}`}
+                type={security.showRepeat ? "text" : "password"}
+                className={`${styles.passwordInput} ${security.errors.repeat ? styles.passwordInputError : ""}`}
                 placeholder="****************"
-                value={state.repeatPassword}
+                value={security.repeatPassword}
                 onChange={(e) => setRepeatPassword(e.target.value)}
               />
               <button
                 type="button"
                 className={styles.eyeButton}
                 onClick={toggleShowRepeat}
-                aria-label={state.showRepeat ? "Скрыть пароль" : "Показать пароль"}
+                aria-label={security.showRepeat ? "Скрыть пароль" : "Показать пароль"}
               >
-                {state.showRepeat ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                {security.showRepeat ? <EyeClosedIcon /> : <EyeOpenIcon />}
               </button>
             </div>
-            {state.errorRepeat && <span className={styles.errorText}>{state.errorRepeat}</span>}
+            {security.errors.repeat && (
+              <span className={styles.errorText}>{security.errors.repeat}</span>
+            )}
           </div>
         </div>
       </div>
@@ -96,7 +104,7 @@ export function SecurityTab() {
             type="button"
             className={styles.deleteBtn}
             onClick={deleteAccount}
-            disabled={state.loading}
+            disabled={saving}
           >
             Удалить аккаунт
           </button>
@@ -122,5 +130,3 @@ function EyeClosedIcon() {
     </svg>
   );
 }
-
-

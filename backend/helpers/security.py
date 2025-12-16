@@ -2,10 +2,26 @@ from datetime import datetime, timedelta
 from typing import Optional
 from pydantic import BaseModel, ValidationError
 from jose import jwt, JWTError
+from passlib.context import CryptContext
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# ---------------------------------------------------------------
+# Password hashing
+# ---------------------------------------------------------------
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def hash_password(password: str) -> str:
+    """Хеширует пароль"""
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Проверяет пароль"""
+    return pwd_context.verify(plain_password, hashed_password)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:

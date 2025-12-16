@@ -5,13 +5,10 @@ from fastapi import HTTPException
 from datetime import datetime, timedelta
 import random
 
-from passlib.context import CryptContext
-
 from models.user import User
 from models.forgot_password import PasswordResetCode
 from helpers.email import send_email_code
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from helpers.security import hash_password
 
 
 class PasswordResetService:
@@ -74,7 +71,7 @@ class PasswordResetService:
         if not user:
             raise HTTPException(404, "Пользователь не найден")
 
-        user.password = pwd_context.hash(new_password)
+        user.password = hash_password(new_password)
 
         # чистим одноразовые коды
         await self.db.execute(

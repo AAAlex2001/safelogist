@@ -80,10 +80,32 @@
   color: #f9fafb;
   border-color: #012af9;
   font-family: var(--font-base);
+  min-width: 160px;
 }
 
 .saveBtn:hover {
   background: #011fcf;
+}
+
+.saveBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Button spinner */
+.btnSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Tabs */

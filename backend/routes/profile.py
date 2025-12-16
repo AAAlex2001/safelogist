@@ -6,6 +6,8 @@ from models.user import User
 from schemas.profile import (
     ProfileGetResponse,
     ProfileUpdateResponse,
+    ChangePasswordRequest,
+    ChangePasswordResponse,
 )
 from services.profile import ProfileService
 from dependencies.auth import get_current_user
@@ -54,3 +56,17 @@ async def update_profile(
 
     updated = await service.update_profile(current_user, data, photo)
     return updated
+
+
+# ================================================================
+# POST /profile/change-password — смена пароля
+# ================================================================
+@router.post("/change-password", response_model=ChangePasswordResponse)
+async def change_password(
+    data: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    service = ProfileService(db)
+    await service.change_password(current_user, data.current_password, data.new_password)
+    return ChangePasswordResponse(message="Пароль успешно изменён")

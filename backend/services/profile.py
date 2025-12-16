@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from models.user import User
+from helpers.security import verify_password, hash_password
 
 
 UPLOAD_DIR = "static/user_photos"
@@ -64,3 +65,25 @@ class ProfileService:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    # -------------------------------------------------------------
+    # 3. Смена пароля
+    # -------------------------------------------------------------
+    async def change_password(self, user: User, current_password: str, new_password: str) -> None:
+        # Проверяем текущий пароль
+        if not verify_password(current_password, user.password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Неверный текущий пароль"
+            )
+
+        # Проверяем длину нового пароля
+        if len(new_password) < 8:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пароль должен быть минимум 8 символов"
+            )
+
+        # Хэшируем и сохраняем новый пароль
+        user.password = hash_password(new_password)
+        await self.db.commit()

@@ -1,12 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from passlib.context import CryptContext
 from fastapi import HTTPException, status
 
 from models.user import User
 from schemas.login import LoginRequest
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from helpers.security import verify_password
 
 
 class LoginService:
@@ -22,12 +20,6 @@ class LoginService:
         return result.scalars().first()
 
     # ---------------------------------------------------------
-    # Проверить пароль
-    # ---------------------------------------------------------
-    def verify_password(self, plain: str, hashed: str) -> bool:
-        return pwd_context.verify(plain, hashed)
-
-    # ---------------------------------------------------------
     # Логин
     # ---------------------------------------------------------
     async def login(self, data: LoginRequest) -> User:
@@ -40,7 +32,7 @@ class LoginService:
             )
 
         # проверяем пароль
-        if not self.verify_password(data.password, user.password):
+        if not verify_password(data.password, user.password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Неверный email или пароль"

@@ -50,3 +50,18 @@ class ProfileUpdateRequest(BaseModel):
 class ProfileUpdateResponse(ProfileGetResponse):
     """Ответ после обновления — тот же профиль"""
     pass
+
+
+# ============================================================
+# 3. POST /profile/change-password — смена пароля
+# ============================================================
+
+class ChangePasswordRequest(BaseModel):
+    """Запрос на смену пароля"""
+    current_password: str
+    new_password: str
+
+
+class ChangePasswordResponse(BaseModel):
+    """Ответ после смены пароля"""
+    message: str

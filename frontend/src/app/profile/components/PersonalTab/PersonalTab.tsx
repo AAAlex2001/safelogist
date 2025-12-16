@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useRef } from "react";
 import styles from "./PersonalTab.module.scss";
-import { usePersonalStore } from "../../store/usePersonalStore";
+import { useProfile, type UserRole } from "../../store";
 
 export function PersonalTab() {
   const {
     state,
-    loadProfile,
     setFullName,
     setIndustry,
     setPhone,
@@ -15,12 +14,37 @@ export function PersonalTab() {
     setCompany,
     setPosition,
     setAddress,
-  } = usePersonalStore();
+    setPhoto,
+    setPhotoFile,
+  } = useProfile();
 
-  useEffect(() => {
-    loadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      return;
+    }
+
+    setPhotoFile(file);
+    setPhoto(URL.createObjectURL(file));
+  };
+
+  const { personal, loading } = state;
+
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner} />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -29,10 +53,25 @@ export function PersonalTab() {
         <div className={styles.sectionTitle}>Фотография профиля</div>
         <div className={styles.photoSection}>
           <div className={styles.avatar}>
-            <IdCardIcon />
+            {personal.photo ? (
+              <img src={personal.photo} alt="Фото профиля" className={styles.avatarImage} />
+            ) : (
+              <IdCardIcon />
+            )}
           </div>
           <div className={styles.photoActions}>
-            <button className={styles.uploadBtn} type="button">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png"
+              onChange={handlePhotoUpload}
+              style={{ display: "none" }}
+            />
+            <button
+              className={styles.uploadBtn}
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            >
               <PictureIcon />
               Загрузить фото
             </button>
@@ -52,7 +91,7 @@ export function PersonalTab() {
               type="text"
               className={styles.fieldInput}
               placeholder="Ваше имя"
-              value={state.fullName}
+              value={personal.fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
@@ -63,8 +102,8 @@ export function PersonalTab() {
             <div className={styles.selectWrapper}>
               <select
                 className={styles.selectField}
-                value={state.industry || ""}
-                onChange={(e) => setIndustry(e.target.value)}
+                value={personal.industry}
+                onChange={(e) => setIndustry(e.target.value as UserRole | "")}
               >
                 <option value="">Выберите род деятельности</option>
                 <option value="TRANSPORT_COMPANY">Транспортная компания</option>
@@ -86,7 +125,7 @@ export function PersonalTab() {
                 type="tel"
                 className={styles.phoneNumber}
                 placeholder="Введите номер телефона"
-                value={state.phone}
+                value={personal.phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
@@ -105,8 +144,9 @@ export function PersonalTab() {
               type="email"
               className={styles.fieldInput}
               placeholder="username@example.com"
-              value={state.email}
+              value={personal.email}
               onChange={(e) => setEmail(e.target.value)}
+              readOnly
             />
           </div>
         </div>
@@ -123,7 +163,7 @@ export function PersonalTab() {
               type="text"
               className={styles.fieldInput}
               placeholder="Введите название"
-              value={state.company}
+              value={personal.company}
               onChange={(e) => setCompany(e.target.value)}
             />
           </div>
@@ -135,7 +175,7 @@ export function PersonalTab() {
               type="text"
               className={styles.fieldInput}
               placeholder="Финансовый директор"
-              value={state.position}
+              value={personal.position}
               onChange={(e) => setPosition(e.target.value)}
             />
           </div>
@@ -148,7 +188,7 @@ export function PersonalTab() {
               <textarea
                 className={styles.locationText}
                 placeholder="г. Москва, Новокузнецкая, 1, стр. 112"
-                value={state.address}
+                value={personal.address}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
@@ -218,5 +258,3 @@ function LocationIcon() {
     </svg>
   );
 }
-
-

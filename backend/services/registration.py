@@ -1,12 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.user import User
-from schemas.registration import UserRegistration
-from passlib.context import CryptContext
 from fastapi import HTTPException, status
 
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from models.user import User
+from schemas.registration import UserRegistration
+from helpers.security import hash_password
 
 
 class RegistrationService:
@@ -14,13 +12,7 @@ class RegistrationService:
         self.db = db
 
     # ---------------------------------------------------------
-    # 1. Хеширование пароля
-    # ---------------------------------------------------------
-    def hash_password(self, password: str) -> str:
-        return pwd_context.hash(password)
-
-    # ---------------------------------------------------------
-    # 2. Проверка email
+    # 1. Проверка email
     # ---------------------------------------------------------
     async def get_user_by_email(self, email: str) -> User | None:
         query = select(User).where(User.email == email)
@@ -59,7 +51,7 @@ class RegistrationService:
             role=data.role,
             phone=data.phone,
             email=data.email,
-            password=self.hash_password(data.password),
+            password=hash_password(data.password),
         )
 
         self.db.add(new_user)

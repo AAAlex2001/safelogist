@@ -37,8 +37,25 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./uploads:/app/uploads  # Для хранения загруженных файлов
+      - ./backend/uploads:/app/uploads  # Для хранения загруженных файлов
       - ./backend/static/sitemaps:/app/static/sitemaps  # Для хранения sitemap файлов
+    networks:
+      - safelogist_network
+    restart: unless-stopped
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: safelogist_frontend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:8000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
     networks:
       - safelogist_network
     restart: unless-stopped

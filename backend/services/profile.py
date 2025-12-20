@@ -36,7 +36,8 @@ class ProfileService:
     # 2. Обновление профиля + фото
     # -------------------------------------------------------------
     async def update_profile(self, user: User, data: dict, photo: UploadFile | None) -> User:
-
+        old_company_name = user.company_name
+        
         # обновление текстовых полей
         for key, value in data.items():
             if value is not None:
@@ -63,6 +64,40 @@ class ProfileService:
 
         await self.db.commit()
         await self.db.refresh(user)
+        
+        # Синхронизация с таблицей companies (если company_name изменилось)
+        if old_company_name != user.company_name and user.company_name:
+            from models.company import Company
+            
+            # Удаляем владельца у старой компании (если была)
+            if old_company_name:
+                old_company_query = select(Company).where(Company.name == old_company_name)
+                old_company_result = await self.db.execute(old_company_query)
+                old_company = old_company_result.scalars().first()
+                if old_company and old_company.owner_user_id == user.id:
+                    old_company.owner_user_id = None
+                    self.db.add(old_company)
+            
+            # Устанавливаем владельца у новой компании
+            new_company_query = select(Company).where(Company.name == user.company_name)
+            new_company_result = await self.db.execute(new_company_query)
+            new_company = new_company_result.scalars().first()
+            
+            if new_company:
+                new_company.owner_user_id = user.id
+                self.db.add(new_company)
+            else:
+                # Создаем новую компанию, если её нет
+                new_company = Company(
+                    name=user.company_name,
+                    owner_user_id=user.id,
+                    reviews_count=0
+                )
+                self.db.add(new_company)
+            
+            await self.db.commit()
+            print(f"✅ Синхронизация: владелец компании '{user.company_name}' обновлен (user_id={user.id})")
+        
         return user
 
     # -------------------------------------------------------------

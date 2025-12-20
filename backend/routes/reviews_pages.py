@@ -205,6 +205,14 @@ async def company_reviews_page(
     # Получаем данные
     total_reviews = await service.get_company_reviews_count(company_name)
     reviews = await service.get_company_reviews(company_name, page, per_page)
+    
+    # Проверяем, занята ли компания (есть ли владелец)
+    from models.company import Company
+    from sqlalchemy import select as sql_select
+    company_query = sql_select(Company).where(Company.name == company_name)
+    company_result = await db.execute(company_query)
+    company = company_result.scalars().first()
+    is_claimed = company and company.owner_user_id is not None
 
     total_pages = (total_reviews + per_page - 1) // per_page
     display_name = reviews[0].subject if reviews else company_name
@@ -364,6 +372,7 @@ async def company_reviews_page(
             "meta_desc": meta_desc,
             "og_url": seo['canonical'],
             "og_image": f"{seo['base_url']}/static/safelogist_1.png",
+            "is_claimed": is_claimed,  # Новый флаг для скрытия кнопки
             **seo,
         }
     )

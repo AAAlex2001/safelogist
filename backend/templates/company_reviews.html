@@ -88,9 +88,11 @@
             </div>
 
             <div class="actions dual">
+                {% if not is_claimed %}
                 <button class="btn ghost" id="myCompanyBtn" type="button">
                     {{ t.my_company_button }}
                 </button>
+                {% endif %}
                 <a class="btn solid" href="/{{ lang }}/reviews/item/{{ company_id }}?page=1#add-review">
                     {{ t.add_review_button }}
                 </a>

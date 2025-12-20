@@ -4,15 +4,12 @@
 import os
 import uuid
 from typing import Optional
-from pathlib import Path
 from fastapi import UploadFile, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
+from sqlalchemy import select
 
 from models.company_claim import CompanyClaim, ClaimStatus
-from models.company_profile import CompanyProfile
 from models.user import User
-from models.review import Review
 from schemas.company_claim import CompanyClaimRequest
 
 
@@ -153,21 +150,19 @@ class CompanyClaimService:
 
         return True
 
-    async def approve_claim(self, claim_id: int) -> CompanyProfile:
+    async def approve_claim(self, claim_id: int) -> CompanyClaim:
         """
-        Одобрить заявку и создать профиль компании
+        Одобрить заявку
 
         При одобрении:
         1. Ищем или создаем пользователя по email из заявки
-        2. Создаем профиль компании (CompanyProfile)
-        3. Связываем пользователя с профилем
-        4. Синхронизируем данные из reviews (если есть target_company_id)
+        2. Обновляем статус заявки на APPROVED
 
         Args:
             claim_id: ID заявки для одобрения
 
         Returns:
-            CompanyProfile: Созданный профиль компании
+            CompanyClaim: Обновленная заявка
         """
         claim = await self.get_claim_by_id(claim_id)
         if not claim:
@@ -183,7 +178,7 @@ class CompanyClaimService:
                 detail="Заявка уже одобрена"
             )
 
-        # 1. Ищем или создаем пользователя
+        # Ищем или создаем пользователя
         user_query = select(User).where(User.email == claim.email)
         user_result = await self.db.execute(user_query)
         user = user_result.scalars().first()
@@ -208,54 +203,11 @@ class CompanyClaimService:
 
             # TODO: Отправить email с временным паролем
 
-        # 2. Проверяем, существует ли уже профиль компании
-        profile_query = select(CompanyProfile).where(
-            CompanyProfile.company_name == claim.company_name
-        )
-        profile_result = await self.db.execute(profile_query)
-        company_profile = profile_result.scalars().first()
-
-        if company_profile:
-            # Если профиль уже существует, обновляем владельца
-            if company_profile.owner_user_id and company_profile.owner_user_id != user.id:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="У этой компании уже есть владелец"
-                )
-            company_profile.owner_user_id = user.id
-        else:
-            # 3. Создаем новый профиль компании
-            company_profile = CompanyProfile(
-                company_name=claim.company_name,
-                owner_user_id=user.id,
-                email=claim.email,
-                phone=claim.phone,
-                is_verified=True
-            )
-
-            # 4. Синхронизируем данные из reviews (если есть target_company_id)
-            if claim.target_company_id:
-                review_query = select(Review).where(Review.id == claim.target_company_id)
-                review_result = await self.db.execute(review_query)
-                review = review_result.scalars().first()
-
-                if review:
-                    # Копируем данные из отзыва в профиль компании
-                    company_profile.legal_form = review.legal_form
-                    company_profile.inn = review.inn
-                    company_profile.ogrn = review.ogrn
-                    company_profile.registration_number = review.registration_number
-                    company_profile.country = review.country
-                    company_profile.jurisdiction = review.jurisdiction
-                    company_profile.address = review.legal_address
-
-            self.db.add(company_profile)
-
-        # 5. Обновляем статус заявки
+        # Обновляем статус заявки
         claim.status = ClaimStatus.APPROVED
 
         await self.db.commit()
-        await self.db.refresh(company_profile)
+        await self.db.refresh(claim)
 
-        return company_profile
+        return claim
 

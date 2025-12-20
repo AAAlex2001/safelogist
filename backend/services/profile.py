@@ -3,9 +3,9 @@ import os
 from fastapi import UploadFile, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-
-from models.user import User
+from models.user import User, UserRole
 from helpers.security import verify_password, hash_password
+
 
 
 UPLOAD_DIR = "static/user_photos"
@@ -36,7 +36,6 @@ class ProfileService:
     # 2. Обновление профиля + фото
     # -------------------------------------------------------------
     async def update_profile(self, user: User, data: dict, photo: UploadFile | None) -> User:
-        from models.user import UserRole
 
         # обновление текстовых полей
         for key, value in data.items():

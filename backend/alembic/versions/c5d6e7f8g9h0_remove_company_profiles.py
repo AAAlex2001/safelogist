@@ -1,8 +1,8 @@
-"""add company_profiles table and update company_claims
+"""remove company_profiles table
 
-Revision ID: b1c2d3e4f5a6
-Revises: ee4dd88217e3
-Create Date: 2025-12-14 15:00:00.000000
+Revision ID: c5d6e7f8g9h0
+Revises: b1c2d3e4f5a6
+Create Date: 2025-12-20 12:00:00.000000
 
 """
 from typing import Sequence, Union
@@ -11,17 +11,30 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision: str = 'b1c2d3e4f5a6'
-down_revision: Union[str, None] = 'ee4dd88217e3'
+revision: str = 'c5d6e7f8g9h0'
+down_revision: Union[str, None] = 'b1c2d3e4f5a6'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-def upgrade() -> None:
-    # 1. Добавляем target_company_id в company_claims
-    op.add_column('company_claims', sa.Column('target_company_id', sa.Integer(), nullable=True))
-    op.create_index(op.f('ix_company_claims_target_company_id'), 'company_claims', ['target_company_id'], unique=False)
 
-    # 2. Создаем таблицу company_profiles
+def upgrade() -> None:
+    """
+    Удаляем таблицу company_profiles, т.к. профили компаний теперь 
+    управляются через модель User (поле company_name)
+    """
+    # Удаляем индексы
+    op.drop_index(op.f('ix_company_profiles_owner_user_id'), table_name='company_profiles', if_exists=True)
+    op.drop_index(op.f('ix_company_profiles_company_name'), table_name='company_profiles', if_exists=True)
+    op.drop_index(op.f('ix_company_profiles_id'), table_name='company_profiles', if_exists=True)
+    
+    # Удаляем таблицу (CASCADE автоматически удалит все зависимости)
+    op.drop_table('company_profiles', if_exists=True)
+
+
+def downgrade() -> None:
+    """
+    Восстанавливаем таблицу company_profiles (на случай отката)
+    """
     op.create_table(
         'company_profiles',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -48,13 +61,3 @@ def upgrade() -> None:
     op.create_index(op.f('ix_company_profiles_id'), 'company_profiles', ['id'], unique=False)
     op.create_index(op.f('ix_company_profiles_company_name'), 'company_profiles', ['company_name'], unique=True)
     op.create_index(op.f('ix_company_profiles_owner_user_id'), 'company_profiles', ['owner_user_id'], unique=False)
-
-def downgrade() -> None:
-    # Откат в обратном порядке
-    op.drop_index(op.f('ix_company_profiles_owner_user_id'), table_name='company_profiles')
-    op.drop_index(op.f('ix_company_profiles_company_name'), table_name='company_profiles')
-    op.drop_index(op.f('ix_company_profiles_id'), table_name='company_profiles')
-    op.drop_table('company_profiles')
-
-    op.drop_index(op.f('ix_company_claims_target_company_id'), table_name='company_claims')
-    op.drop_column('company_claims', 'target_company_id')

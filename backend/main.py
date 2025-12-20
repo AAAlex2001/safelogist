@@ -2,12 +2,13 @@
 Главный файл FastAPI приложения
 """
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo, admin, company_claim
 from admin import init_admin
+import time
 
 # Создание приложения FastAPI
 app = FastAPI(
@@ -21,6 +22,21 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SECRET_KEY")
 )
+
+# Middleware для логирования реальных IP
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Получаем реальный IP из заголовков (если есть прокси)
+    real_ip = request.headers.get("X-Forwarded-For", request.client.host if request.client else "unknown")
+    if "," in real_ip:  # Если несколько IP через запятую
+        real_ip = real_ip.split(",")[0].strip()
+    
+    # Логируем только не-статические запросы
+    if not request.url.path.startswith("/static") and not request.url.path.startswith("/uploads"):
+        print(f"[{real_ip}] {request.method} {request.url.path}")
+    
+    response = await call_next(request)
+    return response
 
 # Настройка CORS (разрешить запросы с фронтенда)
 app.add_middleware(

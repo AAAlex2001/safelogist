@@ -7,9 +7,9 @@ import { useReducer, useCallback, useMemo } from "react";
 // ============================================================
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const ENDPOINTS = {
-  profile: `${API_URL}/profile`,
-  changePassword: `${API_URL}/profile/change-password`,
-  deleteAccount: `${API_URL}/profile/delete`,
+  profile: `${API_URL}/api/profile`,
+  changePassword: `${API_URL}/api/profile/change-password`,
+  deleteAccount: `${API_URL}/api/profile/delete`,
 } as const;
 
 // ============================================================

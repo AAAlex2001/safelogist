@@ -17,7 +17,7 @@ from services.profile import ProfileService
 from dependencies.auth import get_current_user
 
 
-router = APIRouter(prefix="/profile", tags=["profile"])
+router = APIRouter(prefix="/api/profile", tags=["profile"])
 
 
 # ================================================================

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учетная запись создана</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style type="text/css">
+        /* Базовые стили для 360px (mobile-first) */
+        .email-container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .email-padding {
+            padding: 24px 16px !important;
+        }
+        .email-header {
+            padding: 32px 24px 24px !important;
+        }
+        .credentials-box {
+            padding: 20px 16px !important;
+        }
+        h1 {
+            font-size: 22px !important;
+            line-height: 28px !important;
+        }
+        
+        /* Планшеты от 768px */
+        @media only screen and (min-width: 768px) {
+            .email-container {
+                width: 600px !important;
+                max-width: 600px !important;
+            }
+            .email-padding {
+                padding: 40px 48px !important;
+            }
+            .email-header {
+                padding: 48px 48px 32px !important;
+            }
+            .credentials-box {
+                padding: 24px !important;
+            }
+            h1 {
+                font-size: 28px !important;
+                line-height: 36px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #fafafa;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #fafafa;">
+        <tr>
+            <td align="center" style="padding: 60px 20px;">
+                <!-- Контейнер письма -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e5e7eb;">
+                    <!-- Шапка -->
+                    <tr>
+                        <td class="email-header" style="padding: 48px 48px 32px; border-bottom: 2px solid #012af9;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td>
+                                        <!-- Логотип SafeLogist -->
+                                        <img src="https://safelogist.net/static/safelogist_1.png" alt="SafeLogist" width="180" height="32" style="display: block; max-width: 180px; height: auto;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 32px;">
+                                        <h1 style="margin: 0; font-size: 28px; font-weight: 600; line-height: 36px; color: #111827; letter-spacing: -0.5px;">
+                                            Ваша учетная запись создана
+                                        </h1>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Контент -->
+                    <tr>
+                        <td class="email-padding" style="padding: 40px 48px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="padding-bottom: 8px;">
+                                        <p style="margin: 0; font-size: 15px; line-height: 24px; color: #374151;">
+                                            Здравствуйте, {{ name }}!
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 24px;">
+                                        <p style="margin: 0; font-size: 15px; line-height: 24px; color: #374151;">
+                                            Ваша заявка на подтверждение компании <strong style="color: #111827;">{{ company_name }}</strong> была одобрена. Для вас была создана учетная запись в системе SafeLogist.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <!-- Данные для входа -->
+                                <tr>
+                                    <td style="padding: 24px 0;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td class="credentials-box" style="padding: 24px; background-color: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px;">
+                                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                        <tr>
+                                                            <td style="padding-bottom: 16px;">
+                                                                <p style="margin: 0; font-size: 13px; font-weight: 600; line-height: 20px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                    Данные для входа
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 12px;">
+                                                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                                    <tr>
+                                                                        <td style="padding-bottom: 4px;">
+                                                                            <p style="margin: 0; font-size: 13px; line-height: 20px; color: #6b7280;">
+                                                                                Логин (Email):
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <p style="margin: 0; font-size: 16px; font-weight: 600; line-height: 24px; color: #111827; font-family: 'Courier New', monospace;">
+                                                                                {{ email }}
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                                    <tr>
+                                                                        <td style="padding-bottom: 4px;">
+                                                                            <p style="margin: 0; font-size: 13px; line-height: 20px; color: #6b7280;">
+                                                                                Временный пароль:
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <p style="margin: 0; font-size: 16px; font-weight: 600; line-height: 24px; color: #012af9; font-family: 'Courier New', monospace;">
+                                                                                {{ password }}
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 24px;">
+                                        <p style="margin: 0; font-size: 14px; line-height: 22px; color: #6b7280;">
+                                            После первого входа мы <strong style="color: #111827;">настоятельно рекомендуем</strong> изменить пароль в настройках профиля.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <!-- Кнопка входа -->
+                                <tr>
+                                    <td align="center" style="padding: 24px 0;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="border-radius: 6px; background-color: #012af9;">
+                                                    <a href="https://safelogist.net/login" target="_blank" style="display: inline-block; padding: 14px 32px; font-size: 15px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 6px;">
+                                                        Войти в систему
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Разделитель -->
+                                <tr>
+                                    <td style="padding: 24px 0;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="height: 1px; background-color: #e5e7eb;"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Безопасность -->
+                                <tr>
+                                    <td style="padding-bottom: 8px;">
+                                        <p style="margin: 0; font-size: 13px; font-weight: 600; line-height: 20px; color: #111827; text-transform: uppercase; letter-spacing: 0.5px;">
+                                            Важная информация
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 24px;">
+                                        <p style="margin: 0; font-size: 14px; line-height: 22px; color: #6b7280;">
+                                            Никогда не передавайте данные доступа третьим лицам. Команда SafeLogist никогда не запрашивает пароли по электронной почте или телефону.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <!-- Контакты -->
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0; font-size: 14px; line-height: 22px; color: #6b7280;">
+                                            Если у вас возникли вопросы, свяжитесь с нами: <a href="mailto:info@safelogist.net" style="color: #012af9; text-decoration: none; font-weight: 500;">info@safelogist.net</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Футер -->
+                    <tr>
+                        <td class="email-padding" style="padding: 32px 48px; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="padding-bottom: 8px;">
+                                        <p style="margin: 0; font-size: 13px; line-height: 20px; color: #6b7280; text-align: center;">
+                                            © 2025 SafeLogist. Все права защищены.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <p style="margin: 0; font-size: 13px; line-height: 20px; color: #6b7280;">
+                                            <a href="https://safelogist.net" style="color: #012af9; text-decoration: none; font-weight: 500;">safelogist.net</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

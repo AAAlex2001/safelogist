@@ -156,7 +156,8 @@ class CompanyClaimService:
 
         При одобрении:
         1. Ищем или создаем пользователя по email из заявки
-        2. Обновляем статус заявки на APPROVED
+        2. Отправляем email с учетными данными (если пользователь новый)
+        3. Обновляем статус заявки на APPROVED
 
         Args:
             claim_id: ID заявки для одобрения
@@ -183,9 +184,13 @@ class CompanyClaimService:
         user_result = await self.db.execute(user_query)
         user = user_result.scalars().first()
 
+        is_new_user = False
+        temp_password = None
+
         if not user:
             # Создаем нового пользователя (пароль будет отправлен по email)
             from helpers.security import hash_password
+            from helpers.email import send_account_credentials
             import secrets
 
             temp_password = secrets.token_urlsafe(16)
@@ -200,14 +205,27 @@ class CompanyClaimService:
             )
             self.db.add(user)
             await self.db.flush()  # Получаем ID пользователя
-
-            # TODO: Отправить email с временным паролем
+            is_new_user = True
 
         # Обновляем статус заявки
         claim.status = ClaimStatus.APPROVED
 
         await self.db.commit()
         await self.db.refresh(claim)
+
+        # Отправляем email с учетными данными (только для новых пользователей)
+        if is_new_user and temp_password:
+            try:
+                from helpers.email import send_account_credentials
+                await send_account_credentials(
+                    to_email=claim.email,
+                    name=f"{claim.first_name} {claim.last_name}",
+                    company_name=claim.company_name,
+                    password=temp_password
+                )
+            except Exception as e:
+                print(f"❌ Ошибка при отправке email с учетными данными: {str(e)}")
+                # Не прерываем процесс одобрения, если email не отправился
 
         return claim
 

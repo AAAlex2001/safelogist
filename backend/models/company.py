@@ -1,7 +1,7 @@
 """
 Модель для таблицы companies (кэш уникальных названий компаний)
 """
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, Text
 from sqlalchemy.orm import relationship
 
 from models.base import Base
@@ -22,6 +22,14 @@ class Company(Base):
     
     # Владелец компании (если заявка одобрена)
     owner_user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    
+    # Редактируемые данные от владельца
+    logo = Column(String, nullable=True)  # Путь к логотипу
+    description = Column(Text, nullable=True)  # Описание компании
+    website = Column(String, nullable=True)  # Сайт
+    contact_phone = Column(String, nullable=True)  # Контактный телефон
+    contact_email = Column(String, nullable=True)  # Контактный email
+    contact_person = Column(String, nullable=True)  # Контактное лицо
     
     # Связь с пользователем-владельцем
     owner = relationship("User", foreign_keys=[owner_user_id])

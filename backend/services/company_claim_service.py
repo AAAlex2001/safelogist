@@ -155,10 +155,11 @@ class CompanyClaimService:
         Одобрить заявку
 
         При одобрении:
-        1. Ищем или создаем пользователя по email из заявки
-        2. Устанавливаем владельца компании в таблице companies
-        3. Отправляем email с учетными данными (если пользователь новый)
-        4. Обновляем статус заявки на APPROVED
+        1. Получаем реальное название компании из target_company_id (если есть)
+        2. Ищем или создаем пользователя по email из заявки
+        3. Устанавливаем владельца компании в таблице companies
+        4. Отправляем email с учетными данными (если пользователь новый)
+        5. Обновляем статус заявки на APPROVED
 
         Args:
             claim_id: ID заявки для одобрения
@@ -180,6 +181,19 @@ class CompanyClaimService:
                 detail="Заявка уже одобрена"
             )
 
+        # Определяем реальное название компании
+        company_name = claim.company_name
+        
+        # Если заявка подана через кнопку "Это моя компания", получаем название из отзыва
+        if claim.target_company_id:
+            from models.review import Review
+            review_query = select(Review).where(Review.id == claim.target_company_id)
+            review_result = await self.db.execute(review_query)
+            review = review_result.scalars().first()
+            if review and review.subject:
+                company_name = review.subject
+                print(f"📌 Используем название из отзыва: '{company_name}' (вместо '{claim.company_name}')")
+
         # Ищем или создаем пользователя
         user_query = select(User).where(User.email == claim.email)
         user_result = await self.db.execute(user_query)
@@ -200,7 +214,7 @@ class CompanyClaimService:
                 phone=claim.phone,
                 password=hash_password(temp_password),
                 name=f"{claim.first_name} {claim.last_name}",
-                company_name=claim.company_name,
+                company_name=company_name,  # Используем реальное название
                 position=claim.position,
                 is_active=True
             )
@@ -210,35 +224,40 @@ class CompanyClaimService:
             print(f"✅ Создан новый пользователь с ID: {user.id}")
         else:
             print(f"ℹ️ Пользователь с email {claim.email} уже существует (ID: {user.id})")
-            # Обновляем company_name у существующего пользователя, если он другой
-            if user.company_name != claim.company_name:
-                print(f"📝 Обновляем company_name: '{user.company_name}' -> '{claim.company_name}'")
-                user.company_name = claim.company_name
+            # Обновляем company_name у существующего пользователя
+            if user.company_name != company_name:
+                print(f"📝 Обновляем company_name: '{user.company_name}' -> '{company_name}'")
+                user.company_name = company_name
                 self.db.add(user)
 
         # Обновляем или создаем запись в таблице companies
         from models.company import Company
-        company_query = select(Company).where(Company.name == claim.company_name)
+        company_query = select(Company).where(Company.name == company_name)
         company_result = await self.db.execute(company_query)
         company = company_result.scalars().first()
 
         if company:
-            # Обновляем владельца, если компания уже существует
+            # Обновляем владельца и контактные данные
             if company.owner_user_id and company.owner_user_id != user.id:
-                print(f"⚠️ Компания '{claim.company_name}' уже имеет владельца (ID: {company.owner_user_id})")
-                # Можно добавить логику: запретить или перезаписать
+                print(f"⚠️ Компания '{company_name}' уже имеет владельца (ID: {company.owner_user_id})")
             company.owner_user_id = user.id
+            company.contact_email = user.email
+            company.contact_phone = user.phone
+            company.contact_person = user.name
             self.db.add(company)
-            print(f"✅ Владелец компании '{claim.company_name}' установлен: user_id={user.id}")
+            print(f"✅ Владелец компании '{company_name}' установлен: user_id={user.id}")
         else:
             # Создаем новую запись компании
             company = Company(
-                name=claim.company_name,
+                name=company_name,
                 owner_user_id=user.id,
-                reviews_count=0
+                reviews_count=0,
+                contact_email=user.email,
+                contact_phone=user.phone,
+                contact_person=user.name
             )
             self.db.add(company)
-            print(f"✅ Создана новая компания '{claim.company_name}' с владельцем user_id={user.id}")
+            print(f"✅ Создана новая компания '{company_name}' с владельцем user_id={user.id}")
 
         # Обновляем статус заявки
         claim.status = ClaimStatus.APPROVED
@@ -253,7 +272,7 @@ class CompanyClaimService:
                 await send_account_credentials(
                     to_email=claim.email,
                     name=f"{claim.first_name} {claim.last_name}",
-                    company_name=claim.company_name,
+                    company_name=company_name,  # Используем реальное название
                     password=temp_password
                 )
                 print(f"📧 Email с учетными данными отправлен на {claim.email}")

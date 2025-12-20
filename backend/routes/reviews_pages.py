@@ -206,13 +206,32 @@ async def company_reviews_page(
     total_reviews = await service.get_company_reviews_count(company_name)
     reviews = await service.get_company_reviews(company_name, page, per_page)
     
-    # Проверяем, занята ли компания (есть ли владелец)
+    # Проверяем, занята ли компания (есть ли владелец) и получаем данные владельца
     from models.company import Company
+    from models.user import User
     from sqlalchemy import select as sql_select
     company_query = sql_select(Company).where(Company.name == company_name)
     company_result = await db.execute(company_query)
     company = company_result.scalars().first()
     is_claimed = company and company.owner_user_id is not None
+    
+    # Получаем данные владельца компании
+    owner_data = None
+    if is_claimed and company.owner_user_id:
+        owner_query = sql_select(User).where(User.id == company.owner_user_id)
+        owner_result = await db.execute(owner_query)
+        owner = owner_result.scalars().first()
+        if owner:
+            # Используем данные из company (приоритет), если нет - из user
+            photo_path = company.logo if company.logo else owner.photo
+            owner_data = {
+                "name": company.contact_person if company.contact_person else owner.name,
+                "position": owner.position,
+                "email": company.contact_email if company.contact_email else owner.email,
+                "phone": company.contact_phone if company.contact_phone else owner.phone,
+                "photo": f"/static/user_photos/{photo_path}" if photo_path else None,
+            }
+            print(f"✅ Owner data loaded: {owner_data}")
 
     total_pages = (total_reviews + per_page - 1) // per_page
     display_name = reviews[0].subject if reviews else company_name
@@ -300,6 +319,28 @@ async def company_reviews_page(
                     {"label": t.get("label_postal_address"), "value": v(getattr(first, "mailing_address", None))},
                 ]
             },
+        ]
+        
+        # Добавляем контакты владельца сразу после адресов (если есть)
+        if owner_data:
+            contact_rows = []
+            if owner_data.get("name"):
+                contact_rows.append({"label": "Контактное лицо", "value": owner_data["name"]})
+            if owner_data.get("position"):
+                contact_rows.append({"label": "Должность", "value": owner_data["position"]})
+            if owner_data.get("email"):
+                contact_rows.append({"label": "Email", "value": owner_data["email"]})
+            if owner_data.get("phone"):
+                contact_rows.append({"label": "Телефон", "value": owner_data["phone"]})
+            
+            if contact_rows:
+                company_sections.append({
+                    "title": "Контактная информация",
+                    "rows": contact_rows
+                })
+        
+        # Продолжаем с остальными секциями
+        company_sections.extend([
             {
                 "title": t.get("section_capital", "Капитал"),
                 "rows": [
@@ -321,7 +362,7 @@ async def company_reviews_page(
                     {"label": t.get("label_liquidation_date"), "value": v(getattr(first, "liquidation_date", None))},
                 ]
             },
-        ]
+        ])
 
         # JSON-LD
         avg_rating = None
@@ -372,7 +413,8 @@ async def company_reviews_page(
             "meta_desc": meta_desc,
             "og_url": seo['canonical'],
             "og_image": f"{seo['base_url']}/static/safelogist_1.png",
-            "is_claimed": is_claimed,  # Новый флаг для скрытия кнопки
+            "is_claimed": is_claimed,
+            "owner_data": owner_data,  # Данные владельца
             **seo,
         }
     )

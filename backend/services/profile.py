@@ -37,6 +37,7 @@ class ProfileService:
     # -------------------------------------------------------------
     async def update_profile(self, user: User, data: dict, photo: UploadFile | None) -> User:
         old_company_name = user.company_name
+        old_photo = user.photo
         
         # обновление текстовых полей
         for key, value in data.items():
@@ -65,10 +66,11 @@ class ProfileService:
         await self.db.commit()
         await self.db.refresh(user)
         
-        # Синхронизация с таблицей companies (если company_name изменилось)
-        if old_company_name != user.company_name and user.company_name:
-            from models.company import Company
-            
+        # Синхронизация с таблицей companies
+        from models.company import Company
+        
+        # Если company_name изменилось
+        if old_company_name != user.company_name:
             # Удаляем владельца у старой компании (если была)
             if old_company_name:
                 old_company_query = select(Company).where(Company.name == old_company_name)
@@ -79,24 +81,58 @@ class ProfileService:
                     self.db.add(old_company)
             
             # Устанавливаем владельца у новой компании
-            new_company_query = select(Company).where(Company.name == user.company_name)
-            new_company_result = await self.db.execute(new_company_query)
-            new_company = new_company_result.scalars().first()
+            if user.company_name:
+                new_company_query = select(Company).where(Company.name == user.company_name)
+                new_company_result = await self.db.execute(new_company_query)
+                new_company = new_company_result.scalars().first()
+                
+                if new_company:
+                    new_company.owner_user_id = user.id
+                    self.db.add(new_company)
+                else:
+                    # Создаем новую компанию, если её нет
+                    new_company = Company(
+                        name=user.company_name,
+                        owner_user_id=user.id,
+                        reviews_count=0
+                    )
+                    self.db.add(new_company)
+                
+                await self.db.commit()
+                print(f"✅ Синхронизация: владелец компании '{user.company_name}' обновлен (user_id={user.id})")
+        
+        # Синхронизируем фото и контактные данные с companies (если пользователь - владелец)
+        if user.company_name:
+            company_query = select(Company).where(Company.name == user.company_name)
+            company_result = await self.db.execute(company_query)
+            company = company_result.scalars().first()
             
-            if new_company:
-                new_company.owner_user_id = user.id
-                self.db.add(new_company)
-            else:
-                # Создаем новую компанию, если её нет
-                new_company = Company(
-                    name=user.company_name,
-                    owner_user_id=user.id,
-                    reviews_count=0
-                )
-                self.db.add(new_company)
-            
-            await self.db.commit()
-            print(f"✅ Синхронизация: владелец компании '{user.company_name}' обновлен (user_id={user.id})")
+            if company and company.owner_user_id == user.id:
+                # Синхронизируем данные
+                updated = False
+                
+                # Фото (логотип компании = фото пользователя)
+                if user.photo != old_photo or company.logo != user.photo:
+                    company.logo = user.photo
+                    updated = True
+                
+                # Контактные данные
+                if company.contact_email != user.email:
+                    company.contact_email = user.email
+                    updated = True
+                
+                if company.contact_phone != user.phone:
+                    company.contact_phone = user.phone
+                    updated = True
+                
+                if company.contact_person != user.name:
+                    company.contact_person = user.name
+                    updated = True
+                
+                if updated:
+                    self.db.add(company)
+                    await self.db.commit()
+                    print(f"✅ Данные компании '{user.company_name}' синхронизированы с профилем")
         
         return user
 

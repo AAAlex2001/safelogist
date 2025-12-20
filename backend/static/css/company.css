@@ -391,6 +391,17 @@ body::before {
     background: var(--avatar-bg);
     border-radius: 100px;
     padding: 13px;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.company-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    object-fit: cover;
 }
 
 .company-info {

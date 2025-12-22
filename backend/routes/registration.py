@@ -9,7 +9,7 @@ from services.registration import RegistrationService
 router = APIRouter(prefix="/register", tags=["auth"])
 
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/", response_model=UserResponse)
 async def register_user(
     data: UserRegistration,
     db: AsyncSession = Depends(get_db),

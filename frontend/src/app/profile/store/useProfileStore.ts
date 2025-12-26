@@ -286,7 +286,6 @@ export function useProfileStore() {
 
       const data = await response.json();
 
-      // Формируем полный URL для фото
       const photoUrl = data.photo
         ? `${API_URL}/static/user_photos/${data.photo}`
         : null;
@@ -349,7 +348,6 @@ export function useProfileStore() {
 
       const data = await response.json();
 
-      // Формируем полный URL для фото
       const photoUrl = data.photo
         ? `${API_URL}/static/user_photos/${data.photo}`
         : null;

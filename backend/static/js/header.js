@@ -231,23 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const mobileMenuEl = document.querySelector('.mobile-menu');
     const headerEl = document.querySelector('.main-header');
-    const setScrollLock = (locked) => {
-        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-        if (locked) {
-            document.body.dataset.scrollLocked = '1';
-            document.body.style.overflow = 'hidden';
-            if (scrollBarWidth > 0) {
-                document.body.style.paddingRight = `${scrollBarWidth}px`;
-                if (headerEl) headerEl.style.paddingRight = `${scrollBarWidth}px`;
-            }
-        } else {
-            if (document.body.dataset.scrollLocked) {
-                delete document.body.dataset.scrollLocked;
-            }
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-            if (headerEl) headerEl.style.paddingRight = '';
-        }
+    // Disable scroll lock when mobile menu opens — allow page to scroll.
+    const setScrollLock = (/* locked */) => {
+        // intentionally no-op to avoid setting `overflow: hidden` on body
     };
     
     if (burgerMenu && mobileMenuEl) {

@@ -390,7 +390,6 @@ body::before {
     justify-content: center;
     background: var(--avatar-bg);
     border-radius: 100px;
-    padding: 13px;
     width: 70px;
     height: 70px;
     flex-shrink: 0;
@@ -528,10 +527,6 @@ body::before {
         line-height: 24px;
     }
 
-    .company-avatar {
-        padding: 18px;
-    }
-
     .btn {
         font-size: 20px;
         line-height: 24px;
@@ -562,7 +557,6 @@ body::before {
         gap: 24px;
     }
 
-    /* На десктопе внутри аккордиона блоки в ряд */
     .meta-columns {
         flex-direction: row;
         align-items: flex-start;
@@ -578,13 +572,11 @@ body::before {
         width: 100%;
     }
 
-    /* Ограничиваем ширину названия компании */
     .company-name {
         max-width: 360px;
         word-break: break-word;
     }
 
-    /* Кнопки: вернуть auto слева, убрать справа */
     .actions.dual {
         margin-left: auto;
         margin-right: 0;

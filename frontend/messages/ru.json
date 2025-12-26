@@ -1,0 +1,26 @@
+{
+  "Header": {
+    "about": "О сервисе",
+    "features": "Функции",
+    "pricing": "Тарифы",
+    "contacts": "Контакты",
+    "login": "Войти",
+    "register": "Зарегистрироваться",
+    "menu": "Меню"
+  },
+  "Profile": {
+    "title": "Профиль",
+    "personalInfo": "Личная информация",
+    "name": "Имя",
+    "email": "Email",
+    "phone": "Телефон",
+    "company": "Компания",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "logout": "Выйти",
+    "settings": "Настройки",
+    "notifications": "Уведомления",
+    "security": "Безопасность",
+    "language": "Язык"
+  }
+}

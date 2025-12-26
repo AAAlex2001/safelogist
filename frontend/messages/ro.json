@@ -1,0 +1,26 @@
+{
+  "Header": {
+    "about": "Despre serviciu",
+    "features": "Funcții",
+    "pricing": "Tarife",
+    "contacts": "Contacte",
+    "login": "Autentificare",
+    "register": "Înregistrare",
+    "menu": "Meniu"
+  },
+  "Profile": {
+    "title": "Profil",
+    "personalInfo": "Informații personale",
+    "name": "Nume",
+    "email": "Email",
+    "phone": "Telefon",
+    "company": "Companie",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "logout": "Deconectare",
+    "settings": "Setări",
+    "notifications": "Notificări",
+    "security": "Securitate",
+    "language": "Limba"
+  }
+}

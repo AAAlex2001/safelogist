@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import styles from "./Header.module.scss";
 import MobileMenu from "./MobileMenu";
 
 export default function Header() {
+  const t = useTranslations('Header');
   const [menuOpen, setMenuOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
 
@@ -17,7 +19,7 @@ export default function Header() {
       <header className={styles.mainHeader}>
         <div className={styles.headerContainer}>
           <div className={styles.headerLeft}>
-          <Link href="/ru/reviews" className={styles.logoLink} aria-label="SafeLogist">
+          <Link href="/reviews" className={styles.logoLink} aria-label="SafeLogist">
             <div className={styles.logo}>
               <svg
                 width="220"
@@ -77,33 +79,33 @@ export default function Header() {
         </div>
 
         <nav className={styles.headerNav} id="headerNav">
-          <Link href="/ru/reviews" className={styles.navLink}>
-            О сервисе
+          <Link href="/reviews" className={styles.navLink}>
+            {t('about')}
           </Link>
-          <Link href="/ru/reviews" className={styles.navLink}>
-            Функции
+          <Link href="/reviews" className={styles.navLink}>
+            {t('features')}
           </Link>
-          <Link href="/ru/reviews" className={styles.navLink}>
-            Тарифы
+          <Link href="/reviews" className={styles.navLink}>
+            {t('pricing')}
           </Link>
-          <Link href="/ru/reviews" className={styles.navLink}>
-            Контакты
+          <Link href="/reviews" className={styles.navLink}>
+            {t('contacts')}
           </Link>
         </nav>
 
         <div className={styles.headerRight}>
-          <Link href="/ru/login" className={styles.btnLogin}>
-            Войти
+          <Link href="/login" className={styles.btnLogin}>
+            {t('login')}
           </Link>
-          <Link href="/ru/registration" className={styles.btnRegister}>
-            Зарегистрироваться
+          <Link href="/registration" className={styles.btnRegister}>
+            {t('register')}
           </Link>
         </div>
 
         <button
           ref={burgerRef}
           className={`${styles.burgerMenu} ${menuOpen ? styles.active : ""}`}
-          aria-label="Меню"
+          aria-label={t('menu')}
           onClick={toggleMenu}
         >
           <span></span>

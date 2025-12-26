@@ -1,8 +1,4 @@
-import { redirect } from 'next/navigation';
-
-export default function RootPage() {
-  redirect('/ru');
-}
+import styles from "./page.module.css";
 
 export default function Home() {
   return (

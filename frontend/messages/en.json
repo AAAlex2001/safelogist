@@ -1,0 +1,26 @@
+{
+  "Header": {
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contacts": "Contacts",
+    "login": "Login",
+    "register": "Sign up",
+    "menu": "Menu"
+  },
+  "Profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "save": "Save",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "security": "Security",
+    "language": "Language"
+  }
+}

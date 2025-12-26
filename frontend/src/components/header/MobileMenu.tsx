@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import styles from "./MobileMenu.module.scss";
 
 interface MobileMenuProps {
@@ -14,15 +14,13 @@ const LANGS = ["ru", "en", "ro", "uk"] as const;
 type Lang = (typeof LANGS)[number];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const t = useTranslations('Header');
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useLocale();
   const menuRef = useRef<HTMLDivElement>(null);
-
-  // Detect current lang from pathname
-  const pathParts = pathname.split("/").filter(Boolean);
-  const currentLang: Lang = LANGS.includes(pathParts[0] as Lang)
-    ? (pathParts[0] as Lang)
-    : "ru";
+  
+  const currentLang = locale as Lang;
 
   const [showLangPanel, setShowLangPanel] = useState(false);
 
@@ -51,13 +49,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   }, [showLangPanel]);
 
   const handleLangChange = (lang: Lang) => {
-    const parts = pathname.split("/").filter(Boolean);
-    if (LANGS.includes(parts[0] as Lang)) {
-      parts[0] = lang;
-    } else {
-      parts.unshift(lang);
-    }
-    router.push("/" + parts.join("/"));
+    router.push(pathname, { locale: lang });
     setShowLangPanel(false);
     onClose();
   };
@@ -76,7 +68,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     >
       {/* Оставить отзыв */}
       <Link
-        href={`/${currentLang}/reviews/add`}
+        href="/reviews/add"
         className={styles.btnLogin}
         onClick={onClose}
       >
@@ -84,17 +76,17 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       </Link>
 
       {/* Nav links */}
-      <Link href={`/${currentLang}/reviews`} className={styles.navLink} onClick={onClose}>
-        О сервисе
+      <Link href="/reviews" className={styles.navLink} onClick={onClose}>
+        {t('about')}
       </Link>
-      <Link href={`/${currentLang}/reviews`} className={styles.navLink} onClick={onClose}>
-        Функции
+      <Link href="/reviews" className={styles.navLink} onClick={onClose}>
+        {t('features')}
       </Link>
-      <Link href={`/${currentLang}/reviews`} className={styles.navLink} onClick={onClose}>
-        Тарифы
+      <Link href="/reviews" className={styles.navLink} onClick={onClose}>
+        {t('pricing')}
       </Link>
-      <Link href={`/${currentLang}/reviews`} className={styles.navLink} onClick={onClose}>
-        Контакты
+      <Link href="/reviews" className={styles.navLink} onClick={onClose}>
+        {t('contacts')}
       </Link>
 
       {/* Theme & Lang */}
@@ -227,11 +219,11 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Buttons */}
       <div className={styles.buttonsContainer}>
-        <Link href={`/${currentLang}/login`} className={styles.btnLogin} onClick={onClose}>
-          Войти
+        <Link href="/login" className={styles.btnLogin} onClick={onClose}>
+          {t('login')}
         </Link>
-        <Link href={`/${currentLang}/registration`} className={styles.btnRegister} onClick={onClose}>
-          Зарегистрироваться
+        <Link href="/registration" className={styles.btnRegister} onClick={onClose}>
+          {t('register')}
         </Link>
       </div>
     </div>

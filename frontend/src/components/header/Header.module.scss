@@ -1,0 +1,164 @@
+/* Header styles ported from backend/static/css/header.css */
+
+.mainHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.headerContainer {
+  max-width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0;
+}
+
+.logo {
+  width: 220px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.headerNav {
+  display: none;
+}
+
+.headerRight {
+  display: none;
+}
+
+/* Burger menu */
+.burgerMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+  position: relative;
+}
+
+.burgerMenu span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #0d0d0d;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burgerMenu.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.burgerMenu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerMenu.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Nav link */
+.navLink {
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  color: #0d0d0d;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #012af9;
+}
+
+/* Buttons */
+.btnLogin,
+.btnRegister {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btnLogin {
+  background: #ffffff;
+  color: #012af9;
+  border: 2px solid #012af9;
+}
+
+.btnLogin:hover {
+  background: #0020cc;
+  border-color: #0020cc;
+  color: #ffffff;
+}
+
+.btnRegister {
+  background: #012af9;
+  color: #ffffff;
+  border: 2px solid #012af9;
+}
+
+.btnRegister:hover {
+  background: #0020cc;
+  border-color: #0020cc;
+}
+
+.btnRegister:active {
+  background: #0019a3;
+  border-color: #0019a3;
+}
+
+/* Media queries */
+@media (min-width: 768px) {
+  .headerContainer {
+    max-width: 730px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .headerContainer {
+    max-width: 1150px;
+  }
+}

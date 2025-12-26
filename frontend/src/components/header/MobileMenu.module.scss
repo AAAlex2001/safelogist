@@ -1,0 +1,226 @@
+/* Mobile menu styles ported from backend/static/css/header.css */
+
+.mobileMenu {
+  position: fixed;
+  top: 64px;
+  right: 40px;
+  max-width: 360px;
+  width: calc(100% - 60px);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: none;
+  flex-direction: column;
+  padding: 20px;
+  gap: 16px;
+  z-index: 999;
+}
+
+.mobileMenu.active {
+  display: flex;
+  gap: 12px;
+}
+
+.navLink {
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  color: #0d0d0d;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #012af9;
+}
+
+.themeLangContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.themeBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.themeBtn:hover {
+  background: #e5e5e5;
+}
+
+.themeBtn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.themeBtn svg path {
+  stroke: #1a1a1a;
+}
+
+.langContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.langBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #0d0d0d;
+  transition: opacity 0.2s ease;
+}
+
+.langBtn:hover {
+  color: #012af9;
+}
+
+.langBtn.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.langBtn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.langBtn svg path {
+  stroke: #1a1a1a;
+}
+
+.langSelectorPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.langSelectorPanel.active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.langSelectorContent {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+}
+
+.langOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.langOption:hover {
+  opacity: 0.7;
+}
+
+.langOption svg {
+  width: 28px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.langOption span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #0d0d0d;
+  line-height: 1;
+}
+
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btnLogin,
+.btnRegister {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 7px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btnLogin {
+  background: #ffffff;
+  color: #012af9;
+  border: 1px solid #012af9;
+}
+
+.btnLogin:hover {
+  background: #0020cc;
+  border-color: #0020cc;
+  color: #ffffff;
+}
+
+.btnRegister {
+  background: #012af9;
+  color: #ffffff;
+  border: 2px solid #012af9;
+}
+
+.btnRegister:hover {
+  background: #0020cc;
+  border-color: #0020cc;
+}
+
+.btnRegister:active {
+  background: #0019a3;
+  border-color: #0019a3;
+}
+
+@media (min-width: 768px) {
+  .mobileMenu {
+    right: calc((100% - 730px) / 2 + 30px);
+    max-width: 360px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .mobileMenu {
+    right: calc((100% - 1150px) / 2 + 30px);
+    max-width: 360px;
+  }
+}

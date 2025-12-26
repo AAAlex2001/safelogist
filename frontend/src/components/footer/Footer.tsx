@@ -1,13 +1,18 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import styles from "./Footer.module.scss";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
+  
   return (
     <footer className={styles.mainFooter}>
       <div className={styles.footerContainer}>
         <div className={styles.footerTop}>
           <div className={styles.footerLogoSection}>
-            <Link href="/ru/reviews" className={styles.footerLogoLink}>
+            <Link href="/reviews" className={styles.footerLogoLink}>
               <div className={styles.footerLogo}>
                 <svg
                   width="220"
@@ -65,75 +70,75 @@ export default function Footer() {
               </div>
             </Link>
             <p className={styles.footerDescription}>
-              SafeLogist — это платформа для поиска и анализа информации о компаниях, судах и лицах в Молдове.
+              {t("description")}
             </p>
           </div>
 
           <div className={styles.footerLinks}>
             <div className={styles.footerColumn}>
-              <h3 className={styles.footerTitle}>Быстрые ссылки</h3>
+              <h3 className={styles.footerTitle}>{t("quickLinks")}</h3>
               <ul className={styles.footerList}>
                 <li>
-                  <Link href="/ru/chat" className={styles.footerLink}>
-                    Чат Grok
+                  <Link href="/chat" className={styles.footerLink}>
+                    {t("chatGrok")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/reviews" className={styles.footerLink}>
-                    Поиск отзывов
+                  <Link href="/reviews" className={styles.footerLink}>
+                    {t("searchReviews")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/companies" className={styles.footerLink}>
-                    Поиск компаний
+                  <Link href="/companies" className={styles.footerLink}>
+                    {t("searchCompanies")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/courts" className={styles.footerLink}>
-                    Поиск судов
+                  <Link href="/courts" className={styles.footerLink}>
+                    {t("searchCourts")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/persons" className={styles.footerLink}>
-                    Поиск лиц
+                  <Link href="/persons" className={styles.footerLink}>
+                    {t("searchPersons")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/cif" className={styles.footerLink}>
-                    Поиск CIF
+                  <Link href="/cif" className={styles.footerLink}>
+                    {t("searchCIF")}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className={styles.footerColumn}>
-              <h3 className={styles.footerTitle}>Документы</h3>
+              <h3 className={styles.footerTitle}>{t("documents")}</h3>
               <ul className={styles.footerList}>
                 <li>
-                  <Link href="/ru/privacy" className={styles.footerLink}>
-                    Политика конфиденциальности
+                  <Link href="/privacy" className={styles.footerLink}>
+                    {t("privacyPolicy")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/terms" className={styles.footerLink}>
-                    Пользовательское соглашение
+                  <Link href="/terms" className={styles.footerLink}>
+                    {t("termsOfUse")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/personal-data" className={styles.footerLink}>
-                    Политика персональных данных
+                  <Link href="/personal-data" className={styles.footerLink}>
+                    {t("personalDataPolicy")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ru/offer" className={styles.footerLink}>
-                    Договор оферты
+                  <Link href="/offer" className={styles.footerLink}>
+                    {t("offerAgreement")}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className={styles.footerColumn}>
-              <h3 className={styles.footerTitle}>Контакты</h3>
+              <h3 className={styles.footerTitle}>{t("contacts")}</h3>
               <ul className={styles.footerList}>
                 <li>
                   <a href="mailto:hello@example.com" className={styles.footerLink}>
@@ -206,7 +211,7 @@ export default function Footer() {
 
         <div className={styles.footerBottom}>
           <p className={styles.footerCopyright}>
-            © 2024 SafeLogist. Все права защищены.
+            {t("copyright")}
           </p>
         </div>
       </div>

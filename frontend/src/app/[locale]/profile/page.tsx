@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import styles from "./profile.module.scss";
 import { PersonalTab } from "./components/PersonalTab/PersonalTab";
 import { SecurityTab } from "./components/SecurityTab/SecurityTab";
@@ -13,6 +13,7 @@ import { ErrorNotification } from "@/components/notifications/ErrorNotification"
 // Page Content (uses context)
 // ============================================================
 function ProfileContent() {
+  const t = useTranslations("Profile");
   const {
     state,
     hasChanges,
@@ -36,18 +37,14 @@ function ProfileContent() {
       <div className={styles.container}>
         {/* Header */}
         <header className={styles.header}>
-          <div className={styles.title}>Профиль</div>
+          <div className={styles.title}>{t("pageTitle")}</div>
           <div className={styles.subtitle}>
-            Управляйте своими личными данными
+            {t("pageSubtitle")}
           </div>
         </header>
 
         {/* Action buttons */}
         <div className={styles.actions}>
-          <Link href="/" className={styles.actionBtn}>
-            <ArrowLeftIcon />
-            Назад
-          </Link>
           <button
             className={`${styles.actionBtn} ${styles.saveBtn}`}
             type="button"
@@ -59,7 +56,7 @@ function ProfileContent() {
             ) : (
               <>
                 <SaveIcon />
-                Сохранить
+                {t("saveButton")}
                 {hasChanges && state.activeTab === "personal" && (
                   <span className={styles.unsavedDot} />
                 )}
@@ -74,13 +71,13 @@ function ProfileContent() {
             className={`${styles.tab} ${state.activeTab === "personal" ? styles.tabActive : ""}`}
             onClick={() => setTab("personal")}
           >
-            Личные данные
+            {t("personalDataTab")}
           </button>
           <button
             className={`${styles.tab} ${state.activeTab === "security" ? styles.tabActive : ""}`}
             onClick={() => setTab("security")}
           >
-            Безопасность
+            {t("securityTab")}
           </button>
         </div>
 
@@ -121,14 +118,6 @@ export default function ProfilePage() {
 // ============================================================
 // Icons
 // ============================================================
-function ArrowLeftIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
 function SaveIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

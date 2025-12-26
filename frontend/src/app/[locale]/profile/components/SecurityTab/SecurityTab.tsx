@@ -1,9 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import styles from "./SecurityTab.module.scss";
 import { useProfile } from "../../store";
 
 export function SecurityTab() {
+  const t = useTranslations("Profile");
   const {
     state,
     setCurrentPassword,
@@ -20,16 +22,16 @@ export function SecurityTab() {
     <>
       {/* Password card */}
       <div className={styles.securityCard}>
-        <div className={styles.sectionTitle}>Пароль</div>
+        <div className={styles.sectionTitle}>{t("passwordSection")}</div>
         <div className={styles.fieldGroup}>
           {/* Current password */}
           <div className={styles.passwordField}>
-            <label className={styles.passwordLabel}>Текущий пароль</label>
+            <label className={styles.passwordLabel}>{t("currentPassword")}</label>
             <div className={styles.passwordInputWrapper}>
               <input
                 type="password"
                 className={`${styles.passwordInput} ${security.errors.current ? styles.passwordInputError : ""}`}
-                placeholder="****************"
+                placeholder={t("passwordPlaceholder")}
                 value={security.currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
@@ -41,12 +43,12 @@ export function SecurityTab() {
 
           {/* New password */}
           <div className={styles.passwordField}>
-            <label className={styles.passwordLabel}>Новый пароль</label>
+            <label className={styles.passwordLabel}>{t("newPassword")}</label>
             <div className={styles.passwordInputWrapper}>
               <input
                 type={security.showNew ? "text" : "password"}
                 className={`${styles.passwordInput} ${security.errors.new ? styles.passwordInputError : ""}`}
-                placeholder="****************"
+                placeholder={t("passwordPlaceholder")}
                 value={security.newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
@@ -54,7 +56,7 @@ export function SecurityTab() {
                 type="button"
                 className={styles.eyeButton}
                 onClick={toggleShowNew}
-                aria-label={security.showNew ? "Скрыть пароль" : "Показать пароль"}
+                aria-label={security.showNew ? t("hidePassword") : t("showPassword")}
               >
                 {security.showNew ? <EyeClosedIcon /> : <EyeOpenIcon />}
               </button>
@@ -66,12 +68,12 @@ export function SecurityTab() {
 
           {/* Repeat password */}
           <div className={styles.passwordField}>
-            <label className={styles.passwordLabel}>Повторите новый пароль</label>
+            <label className={styles.passwordLabel}>{t("repeatPassword")}</label>
             <div className={styles.passwordInputWrapper}>
               <input
                 type={security.showRepeat ? "text" : "password"}
                 className={`${styles.passwordInput} ${security.errors.repeat ? styles.passwordInputError : ""}`}
-                placeholder="****************"
+                placeholder={t("passwordPlaceholder")}
                 value={security.repeatPassword}
                 onChange={(e) => setRepeatPassword(e.target.value)}
               />
@@ -79,7 +81,7 @@ export function SecurityTab() {
                 type="button"
                 className={styles.eyeButton}
                 onClick={toggleShowRepeat}
-                aria-label={security.showRepeat ? "Скрыть пароль" : "Показать пароль"}
+                aria-label={security.showRepeat ? t("hidePassword") : t("showPassword")}
               >
                 {security.showRepeat ? <EyeClosedIcon /> : <EyeOpenIcon />}
               </button>
@@ -95,9 +97,9 @@ export function SecurityTab() {
       <div className={styles.accountCard}>
         <div className={styles.accountContent}>
           <div className={styles.deleteSection}>
-            <div className={styles.deleteTitle}>Действия с аккаунтом</div>
+            <div className={styles.deleteTitle}>{t("accountActions")}</div>
             <div className={styles.deleteHint}>
-              Безвозвратно удалить аккаунт и все данные
+              {t("deleteAccountHint")}
             </div>
           </div>
           <button
@@ -106,7 +108,7 @@ export function SecurityTab() {
             onClick={deleteAccount}
             disabled={saving}
           >
-            Удалить аккаунт
+            {t("deleteAccount")}
           </button>
         </div>
       </div>

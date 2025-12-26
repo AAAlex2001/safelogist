@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import styles from "./PersonalTab.module.scss";
 import { useProfile, type UserRole } from "../../store";
 
 export function PersonalTab() {
+  const t = useTranslations("Profile");
   const {
     state,
     setFullName,
@@ -50,11 +52,11 @@ export function PersonalTab() {
     <>
       {/* Profile photo card */}
       <div className={styles.card}>
-        <div className={styles.sectionTitle}>Фотография профиля</div>
+        <div className={styles.sectionTitle}>{t("photoSection")}</div>
         <div className={styles.photoSection}>
           <div className={styles.avatar}>
             {personal.photo ? (
-              <img src={personal.photo} alt="Фото профиля" className={styles.avatarImage} />
+              <img src={personal.photo} alt={t("photoAlt")} className={styles.avatarImage} />
             ) : (
               <IdCardIcon />
             )}
@@ -73,24 +75,24 @@ export function PersonalTab() {
               onClick={() => fileInputRef.current?.click()}
             >
               <PictureIcon />
-              Загрузить фото
+              {t("uploadPhoto")}
             </button>
-            <span className={styles.photoHint}>JPG или PNG. Максимум 2 МБ.</span>
+            <span className={styles.photoHint}>{t("photoHint")}</span>
           </div>
         </div>
       </div>
 
       {/* Personal info card */}
       <div className={styles.card}>
-        <div className={styles.sectionTitle}>Личная информация</div>
+        <div className={styles.sectionTitle}>{t("personalInfo")}</div>
         <div className={styles.fieldGroup}>
           {/* Name */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Имя</label>
+            <label className={styles.fieldLabel}>{t("name")}</label>
             <input
               type="text"
               className={styles.fieldInput}
-              placeholder="Ваше имя"
+              placeholder={t("namePlaceholder")}
               value={personal.fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -98,25 +100,25 @@ export function PersonalTab() {
 
           {/* Industry / Role */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Род деятельности</label>
+            <label className={styles.fieldLabel}>{t("industry")}</label>
             <div className={styles.selectWrapper}>
               <select
                 className={styles.selectField}
                 value={personal.industry}
                 onChange={(e) => setIndustry(e.target.value as UserRole | "")}
               >
-                <option value="">Выберите род деятельности</option>
-                <option value="TRANSPORT_COMPANY">Транспортная компания</option>
-                <option value="CARGO_OWNER">Грузовладелец</option>
-                <option value="FORWARDER">Экспедитор</option>
-                <option value="USER">Пользователь</option>
+                <option value="">{t("industryPlaceholder")}</option>
+                <option value="TRANSPORT_COMPANY">{t("industryTransport")}</option>
+                <option value="CARGO_OWNER">{t("industryCargoOwner")}</option>
+                <option value="FORWARDER">{t("industryForwarder")}</option>
+                <option value="USER">{t("industryUser")}</option>
               </select>
             </div>
           </div>
 
           {/* Phone */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Номер телефона</label>
+            <label className={styles.fieldLabel}>{t("phone")}</label>
             <div className={styles.phoneInput}>
               <RuFlagIcon />
               <span className={styles.phoneCode}>+7</span>
@@ -124,7 +126,7 @@ export function PersonalTab() {
               <input
                 type="tel"
                 className={styles.phoneNumber}
-                placeholder="Введите номер телефона"
+                placeholder={t("phonePlaceholder")}
                 value={personal.phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
@@ -134,16 +136,16 @@ export function PersonalTab() {
           {/* Email */}
           <div className={styles.fieldWrapper}>
             <div className={styles.emailLabelRow}>
-              <label className={styles.fieldLabel}>Электронная почта</label>
+              <label className={styles.fieldLabel}>{t("email")}</label>
               <div className={styles.verifiedBadge}>
-                <span className={styles.verifiedText}>Подтверждена</span>
+                <span className={styles.verifiedText}>{t("emailVerified")}</span>
                 <VerifiedIcon />
               </div>
             </div>
             <input
               type="email"
               className={styles.fieldInput}
-              placeholder="username@example.com"
+              placeholder={t("emailPlaceholder")}
               value={personal.email}
               onChange={(e) => setEmail(e.target.value)}
               readOnly
@@ -154,15 +156,15 @@ export function PersonalTab() {
 
       {/* Work info card */}
       <div className={styles.card}>
-        <div className={styles.sectionTitle}>Рабочая информация</div>
+        <div className={styles.sectionTitle}>{t("workInfo")}</div>
         <div className={styles.fieldGroup}>
           {/* Company */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Компания</label>
+            <label className={styles.fieldLabel}>{t("company")}</label>
             <input
               type="text"
               className={styles.fieldInput}
-              placeholder="Введите название"
+              placeholder={t("companyPlaceholder")}
               value={personal.company}
               onChange={(e) => setCompany(e.target.value)}
             />
@@ -170,11 +172,11 @@ export function PersonalTab() {
 
           {/* Position */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Должность</label>
+            <label className={styles.fieldLabel}>{t("position")}</label>
             <input
               type="text"
               className={styles.fieldInput}
-              placeholder="Финансовый директор"
+              placeholder={t("positionPlaceholder")}
               value={personal.position}
               onChange={(e) => setPosition(e.target.value)}
             />
@@ -182,12 +184,12 @@ export function PersonalTab() {
 
           {/* Location */}
           <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>Местоположение организации</label>
+            <label className={styles.fieldLabel}>{t("location")}</label>
             <div className={styles.locationInput}>
               <LocationIcon />
               <textarea
                 className={styles.locationText}
-                placeholder="г. Москва, Новокузнецкая, 1, стр. 112"
+                placeholder={t("locationPlaceholder")}
                 value={personal.address}
                 onChange={(e) => setAddress(e.target.value)}
               />

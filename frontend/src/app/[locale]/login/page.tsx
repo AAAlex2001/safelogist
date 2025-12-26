@@ -1,13 +1,15 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import styles from "./login.module.scss";
 import { InputField } from "@/components/input/InputField";
 import { Button } from "@/components/button/Button";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
 import { useLoginHook } from "./store/useLogin";
-import Link from "next/link";
 
 export default function LoginPage() {
+  const t = useTranslations("Login");
   const {
     email,
     password,
@@ -89,12 +91,12 @@ export default function LoginPage() {
               onClose={() => setError(null)}
             />
           ) : null}
-          <p className={styles.title}>Войдите в аккаунт, чтобы продолжить</p>
+          <p className={styles.title}>{t("title")}</p>
 
           <div className={styles.card}>
             <InputField
-              label="Электронная почта"
-              placeholder="username@example.com"
+              label={t("email")}
+              placeholder={t("emailPlaceholder")}
               type="email"
               name="email"
               value={email}
@@ -103,8 +105,8 @@ export default function LoginPage() {
               disabled={loading}
             />
             <InputField
-              label="Пароль"
-              placeholder="****************"
+              label={t("password")}
+              placeholder={t("passwordPlaceholder")}
               type="password"
               name="password"
               value={password}
@@ -113,16 +115,16 @@ export default function LoginPage() {
               disabled={loading}
             />
             <Link href="/forgot-password" className={styles.forgot}>
-              Забыли пароль?
+              {t("forgotPassword")}
             </Link>
           </div>
 
           <div className={styles.actions}>
             <Button type="submit" fullWidth disabled={loading} loading={loading}>
-              Войти
+              {t("loginButton")}
             </Button>
             <div className={styles.secondaryLink}>
-              Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+              {t("noAccount")} <a href="/register">{t("registerLink")}</a>
             </div>
           </div>
         </form>

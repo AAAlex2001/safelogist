@@ -72,7 +72,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         className={styles.btnLogin}
         onClick={onClose}
       >
-        Оставить отзыв
+        {t('leaveReview')}
       </Link>
 
       {/* Nav links */}

@@ -6,10 +6,12 @@ import { Button } from "@/components/button/Button";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
 import { SuccessNotification } from "@/components/notifications/SuccessNotification";
 import { useForgotPassword } from "./store/useForgotPassword";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("ForgotPassword");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const {
@@ -121,43 +123,43 @@ export default function ForgotPasswordPage() {
 
           {step === "email" ? (
             <>
-              <h1 className={styles.title}>Восстановить пароль</h1>
-              <p className={styles.subtitle}>
-                Укажите email — мы отправим инструкцию для восстановления
-              </p>
+              <h1 className={styles.title}>{t('title')}</h1>
+              <div className={styles.inputBlock}>
+                <p className={styles.subtitle}>{t('subtitleEmail')}</p>
 
-              <div className={styles.field}>
-                <InputField
-                  label="Электронная почта"
-                  placeholder="username@example.com"
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={setEmail}
-                  error={errorEmail}
-                  disabled={loading}
-                />
+                <div className={styles.field}>
+                  <InputField
+                    label=""
+                    placeholder={t('emailPlaceholder')}
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={setEmail}
+                    error={errorEmail}
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
               <div className={styles.actions}>
                 <Link href="/login" className={styles.back}>
-                  Назад
+                  {t('backButton')}
                 </Link>
                 <Button type="submit" disabled={loading} loading={loading}>
-                  Восстановить пароль
+                  {t('resetButton')}
                 </Button>
               </div>
             </>
           ) : step === "code" ? (
             <>
-              <h1 className={styles.title}>Восстановить пароль</h1>
-              <p className={styles.subtitle}>Введите код, отправленный на вашу почту</p>
+              <h1 className={styles.title}>{t('title')}</h1>
+              <p className={styles.subtitle}>{t('subtitleCode')}</p>
 
               <div className={styles.field}>
                 <div className={styles.codeInputWrapper}>
                   <InputField
                     label=""
-                    placeholder="******"
+                    placeholder={t('codePlaceholder')}
                     type="password"
                     name="code"
                     value={code}
@@ -167,7 +169,7 @@ export default function ForgotPasswordPage() {
                   />
                 </div>
                 <div className={styles.codeHint}>
-                  Если письма нет — проверьте папку «Спам»
+                  {t('codeHint')}
                 </div>
               </div>
 
@@ -177,25 +179,25 @@ export default function ForgotPasswordPage() {
                   className={`${styles.back} ${styles.backLink}`}
                   onClick={goBackToEmail}
                 >
-                  Назад
+                  {t('backButton')}
                 </button>
                 <Button type="submit" disabled={loading} loading={loading}>
-                  Отправить код
+                  {t('sendCodeButton')}
                 </Button>
               </div>
             </>
           ) : (
             <>
-              <h1 className={styles.title}>Изменение пароля</h1>
+              <h1 className={styles.title}>{t('titleReset')}</h1>
               <p className={styles.subtitle}>
-                Создайте новый надёжный пароль, не используемый на других сайтах
+                {t('subtitleReset')}
               </p>
 
               <div className={styles.field}>
                 <div className={styles.passwordWrapper}>
                   <InputField
-                    label="Новый пароль"
-                    placeholder="****************"
+                    label=""
+                    placeholder={t('passwordPlaceholder')}
                     type={showPassword ? "text" : "password"}
                     name="password"
                     value={password}
@@ -207,7 +209,7 @@ export default function ForgotPasswordPage() {
                     type="button"
                     className={styles.eyeButton}
                     onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                    aria-label={showPassword ? t('hidePassword') : t('showPassword')}
                   >
                     {showPassword ? (
                       <svg
@@ -241,8 +243,8 @@ export default function ForgotPasswordPage() {
 
                 <div className={styles.passwordWrapper}>
                   <InputField
-                    label="Повторите пароль"
-                    placeholder="****************"
+                    label=""
+                    placeholder={t('passwordPlaceholder')}
                     type={showConfirm ? "text" : "password"}
                     name="confirmPassword"
                     value={confirmPassword}
@@ -254,7 +256,7 @@ export default function ForgotPasswordPage() {
                     type="button"
                     className={styles.eyeButton}
                     onClick={() => setShowConfirm((v) => !v)}
-                    aria-label={showConfirm ? "Скрыть пароль" : "Показать пароль"}
+                    aria-label={showConfirm ? t('hidePassword') : t('showPassword')}
                   >
                     {showConfirm ? (
                       <svg
@@ -289,7 +291,7 @@ export default function ForgotPasswordPage() {
 
               <div className={styles.actionsSingle}>
                 <Button type="submit" disabled={loading} loading={loading} fullWidth>
-                  Сохранить изменения
+                  {t('saveButton')}
                 </Button>
               </div>
             </>

@@ -6,7 +6,8 @@
     "contacts": "Contacts",
     "login": "Login",
     "register": "Sign up",
-    "menu": "Menu"
+    "menu": "Menu",
+    "leaveReview": "Leave a review"
   },
   "Profile": {
     "pageTitle": "Profile",
@@ -50,6 +51,34 @@
     "deleteAccountHint": "Permanently delete account and all data",
     "deleteAccount": "Delete Account",
     "loading": "Loading..."
+  },
+  "Login": {
+    "title": "Log in to your account to continue",
+    "email": "Email",
+    "emailPlaceholder": "username@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "****************",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Log in",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Sign up"
+  },
+  "ForgotPassword": {
+    "title": "Reset password",
+    "subtitleEmail": "Enter your email and we'll send you instructions to reset your password",
+    "emailPlaceholder": "username@example.com",
+    "backButton": "Back",
+    "resetButton": "Continue",
+    "subtitleCode": "Enter the code sent to your email",
+    "codePlaceholder": "******",
+    "codeHint": "If you don't see the email, check your spam folder",
+    "sendCodeButton": "Send code",
+    "titleReset": "Change password",
+    "subtitleReset": "Create a new strong password that you don't use on other sites",
+    "passwordPlaceholder": "****************",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "saveButton": "Save changes"
   },
   "Footer": {
     "description": "SafeLogist is a platform for searching and analyzing information about companies, courts and individuals in Moldova.",

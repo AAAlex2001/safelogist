@@ -6,7 +6,8 @@
     "contacts": "Контакты",
     "login": "Войти",
     "register": "Зарегистрироваться",
-    "menu": "Меню"
+    "menu": "Меню",
+    "leaveReview": "Оставить отзыв"
   },
   "Profile": {
     "pageTitle": "Профиль",
@@ -50,6 +51,34 @@
     "deleteAccountHint": "Безвозвратно удалить аккаунт и все данные",
     "deleteAccount": "Удалить аккаунт",
     "loading": "Загрузка..."
+  },
+  "Login": {
+    "title": "Войдите в аккаунт, чтобы продолжить",
+    "email": "Электронная почта",
+    "emailPlaceholder": "username@example.com",
+    "password": "Пароль",
+    "passwordPlaceholder": "****************",
+    "forgotPassword": "Забыли пароль?",
+    "loginButton": "Войти",
+    "noAccount": "Нет аккаунта?",
+    "registerLink": "Зарегистрироваться"
+  },
+  "ForgotPassword": {
+    "title": "Восстановить пароль",
+    "subtitleEmail": "Укажите email — мы отправим инструкцию для восстановления",
+    "emailPlaceholder": "username@example.com",
+    "backButton": "Назад",
+    "resetButton": "Продолжить",
+    "subtitleCode": "Введите код, отправленный на вашу почту",
+    "codePlaceholder": "******",
+    "codeHint": "Если письма нет — проверьте папку «Спам»",
+    "sendCodeButton": "Отправить код",
+    "titleReset": "Изменение пароля",
+    "subtitleReset": "Создайте новый надёжный пароль, не используемый на других сайтах",
+    "passwordPlaceholder": "****************",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль",
+    "saveButton": "Сохранить изменения"
   },
   "Footer": {
     "description": "Проверенная информация о логистических компаниях для ваших уверенных решений",

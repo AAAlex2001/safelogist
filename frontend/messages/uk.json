@@ -6,7 +6,8 @@
     "contacts": "Контакти",
     "login": "Увійти",
     "register": "Зареєструватися",
-    "menu": "Меню"
+    "menu": "Меню",
+    "leaveReview": "Залишити відгук"
   },
   "Profile": {
     "pageTitle": "Профіль",
@@ -50,6 +51,34 @@
     "deleteAccountHint": "Безповоротно видалити акаунт та всі дані",
     "deleteAccount": "Видалити акаунт",
     "loading": "Завантаження..."
+  },
+  "Login": {
+    "title": "Увійдіть в акаунт, щоб продовжити",
+    "email": "Електронна пошта",
+    "emailPlaceholder": "username@example.com",
+    "password": "Пароль",
+    "passwordPlaceholder": "****************",
+    "forgotPassword": "Забули пароль?",
+    "loginButton": "Увійти",
+    "noAccount": "Немає акаунту?",
+    "registerLink": "Зареєструватися"
+  },
+  "ForgotPassword": {
+    "title": "Відновити пароль",
+    "subtitleEmail": "Вкажіть email — ми надішлемо інструкцію для відновлення",
+    "emailPlaceholder": "username@example.com",
+    "backButton": "Назад",
+    "resetButton": "Продовжити",
+    "subtitleCode": "Введіть код, надісланий на вашу пошту",
+    "codePlaceholder": "******",
+    "codeHint": "Якщо листа немає — перевірте папку «Спам»",
+    "sendCodeButton": "Надіслати код",
+    "titleReset": "Зміна пароля",
+    "subtitleReset": "Створіть новий надійний пароль, який не використовується на інших сайтах",
+    "passwordPlaceholder": "****************",
+    "showPassword": "Показати пароль",
+    "hidePassword": "Сховати пароль",
+    "saveButton": "Зберегти зміни"
   },
   "Footer": {
     "description": "SafeLogist — це платформа для пошуку та аналізу інформації про компанії, суди та осіб у Молдові.",

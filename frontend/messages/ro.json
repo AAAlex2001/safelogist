@@ -6,7 +6,8 @@
     "contacts": "Contacte",
     "login": "Autentificare",
     "register": "Înregistrare",
-    "menu": "Meniu"
+    "menu": "Meniu",
+    "leaveReview": "Lasă o recenzie"
   },
   "Profile": {
     "pageTitle": "Profil",
@@ -50,6 +51,34 @@
     "deleteAccountHint": "Ștergeți permanent contul și toate datele",
     "deleteAccount": "Șterge contul",
     "loading": "Se încarcă..."
+  },
+  "Login": {
+    "title": "Autentificați-vă în cont pentru a continua",
+    "email": "Email",
+    "emailPlaceholder": "username@example.com",
+    "password": "Parolă",
+    "passwordPlaceholder": "****************",
+    "forgotPassword": "Ați uitat parola?",
+    "loginButton": "Autentificare",
+    "noAccount": "Nu aveți un cont?",
+    "registerLink": "Înregistrare"
+  },
+  "ForgotPassword": {
+    "title": "Resetare parolă",
+    "subtitleEmail": "Introduceți email-ul și vă vom trimite instrucțiuni pentru resetare",
+    "emailPlaceholder": "username@example.com",
+    "backButton": "Înapoi",
+    "resetButton": "Continua",
+    "subtitleCode": "Introduceți codul trimis pe email",
+    "codePlaceholder": "******",
+    "codeHint": "Dacă nu găsiți emailul, verificați folderul spam",
+    "sendCodeButton": "Trimite cod",
+    "titleReset": "Schimbare parolă",
+    "subtitleReset": "Creați o parolă nouă puternică pe care nu o folosiți pe alte site-uri",
+    "passwordPlaceholder": "****************",
+    "showPassword": "Arată parola",
+    "hidePassword": "Ascunde parola",
+    "saveButton": "Salvează modificările"
   },
   "Footer": {
     "description": "SafeLogist este o platformă pentru căutarea și analiza informațiilor despre companii, instanțe și persoane din Moldova.",

@@ -3,7 +3,6 @@
 """
 import os
 import logging
-from typing import Optional
 from urllib.parse import quote, unquote
 from fastapi import APIRouter, Depends, Request, Query
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -12,8 +11,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_db
 from services.reviews_service import ReviewsService
-from dependencies.auth import get_current_user_optional
-from models.user import User
 from helpers.translations import (
     SUPPORTED_LANGS, DEFAULT_LANG,
     normalize_lang, get_translations
@@ -118,30 +115,9 @@ async def reviews_list_page(
     request: Request,
     lang: str,
     page: int = Query(1, ge=1),
-    db: AsyncSession = Depends(get_db),
-    current_user: Optional[User] = Depends(get_current_user_optional)
+    db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
-    t = get_translations(lang_code)
-    
-    # Проверка авторизации: только боты и авторизованные пользователи
-    if not is_search_bot(request) and current_user is None:
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html lang="{lang_code}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{t.get("auth_required", "Требуется авторизация")}</title>
-            </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1>{t.get("auth_required", "Требуется авторизация")}</h1>
-            <p>{t.get("auth_required_message", "Для просмотра информации о компаниях необходимо войти в систему.")}</p>
-            <a href="/login" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">{t.get("login", "Войти")}</a>
-            <a href="/registration" style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">{t.get("register", "Зарегистрироваться")}</a>
-            </body></html>""",
-            status_code=401
-        )
     
     # Защита от парсинга: ограничиваем обычных пользователей
     if not is_search_bot(request) and page > MAX_PAGES_FOR_USERS:
@@ -218,32 +194,9 @@ async def reviews_search_page(
     request: Request,
     lang: str,
     q: str = Query(..., min_length=1),
-    db: AsyncSession = Depends(get_db),
-    current_user: Optional[User] = Depends(get_current_user_optional)
+    db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
-    t = get_translations(lang_code)
-    
-    # Проверка авторизации: только боты и авторизованные пользователи
-    if not is_search_bot(request) and current_user is None:
-        seo = build_seo_context(request, lang_code)
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html lang="{lang_code}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{t.get("auth_required", "Требуется авторизация")}</title>
-            </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1>{t.get("auth_required", "Требуется авторизация")}</h1>
-            <p>{t.get("auth_required_message", "Для просмотра информации о компаниях необходимо войти в систему.")}</p>
-            <a href="/login" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">{t.get("login", "Войти")}</a>
-            <a href="/registration" style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">{t.get("register", "Зарегистрироваться")}</a>
-            </body></html>""",
-            status_code=401
-        )
-    
     service = ReviewsService(db)
 
     companies = await service.search_companies_with_stats(q.strip())
@@ -288,32 +241,11 @@ async def company_reviews_page(
     lang: str,
     company_id: int,
     page: int = Query(1, ge=1),
-    db: AsyncSession = Depends(get_db),
-    current_user: Optional[User] = Depends(get_current_user_optional)
+    db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
     t = get_translations(lang_code)
     seo = build_seo_context(request, lang_code)
-    
-    # Проверка авторизации: только боты и авторизованные пользователи
-    if not is_search_bot(request) and current_user is None:
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html lang="{lang_code}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{t.get("auth_required", "Требуется авторизация")}</title>
-                <link rel="canonical" href="{seo['canonical']}">
-            </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1>{t.get("auth_required", "Требуется авторизация")}</h1>
-            <p>{t.get("auth_required_message", "Для просмотра информации о компаниях необходимо войти в систему.")}</p>
-            <a href="/login" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">{t.get("login", "Войти")}</a>
-            <a href="/registration" style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">{t.get("register", "Зарегистрироваться")}</a>
-            </body></html>""",
-            status_code=401
-        )
     
     # Защита от парсинга: ограничиваем обычных пользователей
     if not is_search_bot(request) and page > MAX_PAGES_FOR_USERS:

@@ -7,7 +7,16 @@
     "login": "Увійти",
     "register": "Зареєструватися",
     "menu": "Меню",
-    "leaveReview": "Залишити відгук"
+    "leaveReview": "Залишити відгук",
+    "requestsAvailable": "Доступні запити до досьє",
+    "of": "з",
+    "search": "Пошук",
+    "notifications": "Сповіщення",
+    "settings": "Налаштування",
+    "profile": "Профіль",
+    "favorites": "Обране",
+    "payments": "Тарифи та оплата",
+    "logout": "Вийти"
   },
   "Profile": {
     "pageTitle": "Профіль",

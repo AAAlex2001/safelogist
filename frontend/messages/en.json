@@ -7,7 +7,16 @@
     "login": "Login",
     "register": "Sign up",
     "menu": "Menu",
-    "leaveReview": "Leave a review"
+    "leaveReview": "Leave a review",
+    "requestsAvailable": "Available dossier requests",
+    "of": "of",
+    "search": "Search",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "profile": "Profile",
+    "favorites": "Favorites",
+    "payments": "Pricing and payments",
+    "logout": "Log out"
   },
   "Profile": {
     "pageTitle": "Profile",

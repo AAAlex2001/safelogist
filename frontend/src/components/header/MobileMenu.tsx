@@ -4,16 +4,30 @@ import { useEffect, useRef, useState } from "react";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import styles from "./MobileMenu.module.scss";
+import ReviewIcon from "@/icons/ReviewIcon";
+import FavoriteIcon from "@/icons/FavoriteIcon";
+import ProfileIcon from "@/icons/ProfileIcon";
+import PaymentIcon from "@/icons/PaymentIcon";
+import LogoutIcon from "@/icons/LogoutIcon";
+import UserIcon from "@/icons/UserIcon";
+
+interface UserData {
+  name: string;
+  email: string;
+  photo: string | null;
+}
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  isLoggedIn: boolean;
+  userData: UserData | null;
 }
 
 const LANGS = ["ru", "en", "ro", "uk"] as const;
 type Lang = (typeof LANGS)[number];
 
-export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose, isLoggedIn, userData }: MobileMenuProps) {
   const t = useTranslations('Header');
   const pathname = usePathname();
   const router = useRouter();
@@ -23,6 +37,13 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const currentLang = locale as Lang;
 
   const [showLangPanel, setShowLangPanel] = useState(false);
+  
+  // Mock data for requests
+  const requestsData = {
+    plan: "Enterprise+",
+    availableRequests: 234,
+    totalRequests: 500
+  };
 
   // Close menu on outside click
   useEffect(() => {
@@ -64,16 +85,85 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   return (
     <div
       ref={menuRef}
-      className={`${styles.mobileMenu} ${isOpen ? styles.active : ""}`}
+      className={`${styles.mobileMenu} ${isOpen ? styles.active : ""} ${isLoggedIn ? styles.loggedIn : ""}`}
     >
-      {/* Оставить отзыв */}
-      <Link
-        href="/reviews/add"
-        className={styles.btnLogin}
-        onClick={onClose}
-      >
-        {t('leaveReview')}
-      </Link>
+      {isLoggedIn ? (
+        <>
+          {/* User Profile Section */}
+          <div className={styles.profileSection}>
+            <div className={styles.userInfo}>
+              <div className={styles.avatarCircle}>
+                {userData?.photo ? (
+                  <img 
+                    src={userData.photo} 
+                    alt={userData.name}
+                    className={styles.avatarPhoto}
+                  />
+                ) : (
+                  <UserIcon />
+                )}
+              </div>
+              <div className={styles.userDetails}>
+                <div className={styles.userName}>{userData?.name || "User"}</div>
+                <div className={styles.userEmail}>{userData?.email || ""}</div>
+                <div className={styles.userPlan}>{requestsData.plan}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Requests Statistics */}
+          <div className={styles.requestsStats}>
+            <div className={styles.requestsHeader}>
+              <span className={styles.requestsLabel}>{t('requestsAvailable')}</span>
+              <span className={styles.requestsCount}>{requestsData.availableRequests} {t('of')} {requestsData.totalRequests}</span>
+            </div>
+            <div className={styles.progressBar}>
+              <div 
+                className={styles.progressFill} 
+                style={{ width: `${(requestsData.availableRequests / requestsData.totalRequests) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Menu Tabs */}
+          <div className={styles.menuTabs}>
+            <Link href="/settings" className={styles.menuTab} onClick={onClose}>
+              <ReviewIcon />
+              <span>{t('settings')}</span>
+            </Link>
+
+            <Link href="/favorites" className={styles.menuTab} onClick={onClose}>
+              <FavoriteIcon />
+              <span>{t('favorites')}</span>
+            </Link>
+
+            <Link href="/profile" className={styles.menuTab} onClick={onClose}>
+              <ProfileIcon />
+              <span>{t('profile')}</span>
+            </Link>
+
+            <Link href="/payments" className={styles.menuTab} onClick={onClose}>
+              <PaymentIcon />
+              <span>{t('payments')}</span>
+            </Link>
+          </div>
+
+          {/* Logout Button */}
+          <button className={styles.logoutButton} onClick={onClose}>
+            <LogoutIcon />
+            <span>{t('logout')}</span>
+          </button>
+        </>
+      ) : (
+        <>
+          {/* Оставить отзыв */}
+          <Link
+            href="/reviews/add"
+            className={styles.btnLogin}
+            onClick={onClose}
+          >
+            {t('leaveReview')}
+          </Link>
 
       {/* Nav links */}
       <Link href="/reviews" className={styles.navLink} onClick={onClose}>
@@ -226,6 +316,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {t('register')}
         </Link>
       </div>
+        </>
+      )}
     </div>
   );
 }

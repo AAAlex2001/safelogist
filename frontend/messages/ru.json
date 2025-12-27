@@ -7,7 +7,16 @@
     "login": "Войти",
     "register": "Зарегистрироваться",
     "menu": "Меню",
-    "leaveReview": "Оставить отзыв"
+    "leaveReview": "Оставить отзыв",
+    "requestsAvailable": "Доступно запросов к досье",
+    "of": "из",
+    "search": "Поиск",
+    "notifications": "Уведомления",
+    "settings": "Настройки",
+    "profile": "Профиль",
+    "favorites": "Избранное",
+    "payments": "Тарифы и оплата",
+    "logout": "Выйти"
   },
   "Profile": {
     "pageTitle": "Профиль",

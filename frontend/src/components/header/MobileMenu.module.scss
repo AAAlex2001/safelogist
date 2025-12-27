@@ -224,3 +224,209 @@
     max-width: 360px;
   }
 }
+
+/* Logged In User Styles */
+.mobileMenu.loggedIn {
+  width: 332px;
+  max-width: 332px;
+  padding: 16px 16px 8px;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 16px;
+  border-bottom: 1px solid rgba(113, 113, 130, 0.2);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.avatarCircle {
+  width: 42px;
+  height: 42px;
+  background: #EBEBEB;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarCircle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.avatarPhoto {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.userName {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #0D0D0D;
+}
+
+.userEmail {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #717182;
+}
+
+.userPlan {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  background: #ABBCFF;
+  border-radius: 8px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #0D0D0D;
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+/* Requests Statistics */
+.requestsStats {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.requestsHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.requestsLabel {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #717182;
+  flex: 1;
+}
+
+.requestsCount {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: right;
+  color: #0D0D0D;
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #CDCCD0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #717182;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Menu Tabs */
+.menuTabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(113, 113, 130, 0.2);
+}
+
+.menuTab {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 8px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.menuTab:hover {
+  background: #F5F5F5;
+}
+
+.menuTab svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.menuTab span {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #717182;
+}
+
+/* Logout Button */
+.logoutButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+  margin-top: 8px;
+  text-decoration: none;
+}
+
+.logoutButton:hover {
+  background: #F5F5F5;
+}
+
+.logoutButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.logoutButton span {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #717182;
+  flex: 1;
+  text-align: left;
+}

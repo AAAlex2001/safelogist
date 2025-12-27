@@ -7,7 +7,16 @@
     "login": "Autentificare",
     "register": "Înregistrare",
     "menu": "Meniu",
-    "leaveReview": "Lasă o recenzie"
+    "leaveReview": "Lasă o recenzie",
+    "requestsAvailable": "Cereri de dosar disponibile",
+    "of": "din",
+    "search": "Căutare",
+    "notifications": "Notificări",
+    "settings": "Setări",
+    "profile": "Profil",
+    "favorites": "Favorite",
+    "payments": "Tarife și plăți",
+    "logout": "Deconectare"
   },
   "Profile": {
     "pageTitle": "Profil",

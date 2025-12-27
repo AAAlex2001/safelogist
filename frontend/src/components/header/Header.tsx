@@ -1,15 +1,56 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import styles from "./Header.module.scss";
 import MobileMenu from "./MobileMenu";
+import SearchIcon from "@/icons/SearchIcon";
+import NotificationIcon from "@/icons/NotificationIcon";
+import SettingsIcon from "@/icons/SettingsIcon";
+import UserIcon from "@/icons/UserIcon";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+
+interface UserData {
+  name: string;
+  email: string;
+  photo: string | null;
+}
 
 export default function Header() {
   const t = useTranslations('Header');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
+  
+  // Check auth token and load user data
+  useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    setIsLoggedIn(!!token);
+    
+    if (token) {
+      // Load user profile data
+      fetch(`${API_URL}/api/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUserData({
+            name: data.name || "User",
+            email: data.email || "",
+            photo: data.photo ? `${API_URL}/static/user_photos/${data.photo}` : null,
+          });
+        })
+        .catch(() => {
+          setUserData(null);
+        });
+    }
+  }, []);
+  
+  const availableRequests = 234;
+  const totalRequests = 500;
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
@@ -93,14 +134,53 @@ export default function Header() {
           </Link>
         </nav>
 
-        <div className={styles.headerRight}>
-          <Link href="/login" className={styles.btnLogin}>
-            {t('login')}
-          </Link>
-          <Link href="/registration" className={styles.btnRegister}>
-            {t('register')}
-          </Link>
-        </div>
+        {isLoggedIn ? (
+          <div className={styles.headerRight}>
+            <div className={styles.userSection}>
+              <div className={styles.requestsText}>
+                {t('requestsAvailable')}: {availableRequests}/{totalRequests}
+              </div>
+              <div className={styles.userIcons}>
+                {/* Search Icon */}
+                <button className={styles.iconButton} aria-label={t('search')}>
+                  <SearchIcon />
+                </button>
+
+                {/* Notifications Icon */}
+                <button className={styles.iconButton} aria-label={t('notifications')}>
+                  <NotificationIcon />
+                </button>
+
+                {/* Settings Icon */}
+                <button className={styles.iconButton} aria-label={t('settings')}>
+                  <SettingsIcon />
+                </button>
+
+                {/* Profile Icon */}
+                <button className={styles.iconButton} aria-label={t('profile')}>
+                  {userData?.photo ? (
+                    <img 
+                      src={userData.photo} 
+                      alt={userData.name}
+                      className={styles.profilePhoto}
+                    />
+                  ) : (
+                    <UserIcon />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.headerRight}>
+            <Link href="/login" className={styles.btnLogin}>
+              {t('login')}
+            </Link>
+            <Link href="/registration" className={styles.btnRegister}>
+              {t('register')}
+            </Link>
+          </div>
+        )}
 
         <button
           ref={burgerRef}
@@ -115,7 +195,7 @@ export default function Header() {
       </div>
     </header>
 
-    <MobileMenu isOpen={menuOpen} onClose={closeMenu} />
+    <MobileMenu isOpen={menuOpen} onClose={closeMenu} isLoggedIn={isLoggedIn} userData={userData} />
   </>
   );
 }

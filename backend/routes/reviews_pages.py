@@ -135,7 +135,7 @@ async def reviews_list_page(
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Страница недоступна</title>
             </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <body style="font-family: 'Montserrat', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
             <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">← Назад к списку</a>
             <h1>Страница недоступна</h1>
             <p>Для просмотра большего количества компаний воспользуйтесь поиском.</p>
@@ -264,7 +264,7 @@ async def company_reviews_page(
                 <title>Страница недоступна</title>
                 <link rel="canonical" href="{seo['canonical']}">
             </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <body style="font-family: 'Montserrat', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
             <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">← {t.get("back_to_list")}</a>
             <h1>Страница недоступна</h1>
             <p>Для просмотра большего количества отзывов воспользуйтесь поиском.</p>
@@ -288,7 +288,7 @@ async def company_reviews_page(
                 <link rel="canonical" href="{seo['canonical']}">
                 {''.join([f'<link rel="alternate" hreflang="{h["hreflang"]}" href="{h["href"]}">' for h in seo['hreflangs']])}
             </head>
-            <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <body style="font-family: 'Montserrat', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
             <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">{t.get("back_to_list")}</a>
             <h1>{t.get("not_found")}</h1></body></html>""",
             status_code=404

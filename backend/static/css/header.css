@@ -81,7 +81,7 @@
     font-size: 18px;
     font-weight: 700;
     color: var(--header-text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .header-nav {
@@ -364,7 +364,7 @@
 
 .btn-login,
 .btn-register {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;

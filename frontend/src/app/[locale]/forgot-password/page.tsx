@@ -142,7 +142,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               <div className={styles.actions}>
-                <Link href="/ru/login" className={styles.back}>
+                <Link href="/login" className={styles.back}>
                   {t('backButton')}
                 </Link>
                 <Button type="submit" disabled={loading} loading={loading}>

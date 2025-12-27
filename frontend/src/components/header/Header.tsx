@@ -94,7 +94,7 @@ export default function Header() {
         </nav>
 
         <div className={styles.headerRight}>
-          <Link href="/login" className={styles.btnLogin}>
+          <Link href="/ru/login" className={styles.btnLogin}>
             {t('login')}
           </Link>
           <Link href="/registration" className={styles.btnRegister}>

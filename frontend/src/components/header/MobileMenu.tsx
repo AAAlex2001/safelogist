@@ -219,7 +219,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Buttons */}
       <div className={styles.buttonsContainer}>
-        <Link href="/login" className={styles.btnLogin} onClick={onClose}>
+        <Link href="/ru/login" className={styles.btnLogin} onClick={onClose}>
           {t('login')}
         </Link>
         <Link href="/registration" className={styles.btnRegister} onClick={onClose}>

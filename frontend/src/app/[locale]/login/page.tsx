@@ -114,7 +114,7 @@ export default function LoginPage() {
               error={errorPassword}
               disabled={loading}
             />
-            <Link href="/forgot-password" className={styles.forgot}>
+            <Link href="/ru/forgot-password" className={styles.forgot}>
               {t("forgotPassword")}
             </Link>
           </div>

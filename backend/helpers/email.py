@@ -95,10 +95,10 @@ async def send_account_credentials(
 
 После первого входа мы настоятельно рекомендуем изменить пароль в настройках профиля.
 
-Войти в систему: https://safelogist.net/login
+Войти в систему: https://safelogist.net/ru/login
 
 ---
-Если у вас возникли вопросы, свяжитесь с нами: info@safelogist.net
+If у вас возникли вопросы, свяжитесь с нами: info@safelogist.net
 © 2025 SafeLogist. Все права защищены.
 """
 

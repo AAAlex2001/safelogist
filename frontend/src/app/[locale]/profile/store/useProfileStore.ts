@@ -32,13 +32,11 @@ export interface ProfileState {
   };
 
   security: {
-    currentPassword: string;
     newPassword: string;
     repeatPassword: string;
     showNew: boolean;
     showRepeat: boolean;
     errors: {
-      current: string | null;
       new: string | null;
       repeat: string | null;
     };
@@ -73,12 +71,11 @@ type ProfileAction =
   | { type: "SET_PHOTO"; payload: string | null }
   | { type: "SET_PHOTO_FILE"; payload: File | null }
   | { type: "LOAD_PROFILE"; payload: Partial<ProfileState["personal"]> }
-  | { type: "SET_CURRENT_PASSWORD"; payload: string }
   | { type: "SET_NEW_PASSWORD"; payload: string }
   | { type: "SET_REPEAT_PASSWORD"; payload: string }
   | { type: "TOGGLE_SHOW_NEW" }
   | { type: "TOGGLE_SHOW_REPEAT" }
-  | { type: "SET_SECURITY_ERROR"; payload: { field: "current" | "new" | "repeat"; message: string | null } }
+  | { type: "SET_SECURITY_ERROR"; payload: { field: "new" | "repeat"; message: string | null } }
   | { type: "CLEAR_SECURITY_ERRORS" }
   | { type: "RESET_SECURITY" }
   | { type: "RESET" };
@@ -103,13 +100,11 @@ const initialState: ProfileState = {
   },
 
   security: {
-    currentPassword: "",
     newPassword: "",
     repeatPassword: "",
     showNew: false,
     showRepeat: false,
     errors: {
-      current: null,
       new: null,
       repeat: null,
     },
@@ -167,15 +162,6 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
         },
       };
 
-    case "SET_CURRENT_PASSWORD":
-      return {
-        ...state,
-        security: {
-          ...state.security,
-          currentPassword: action.payload,
-          errors: { ...state.security.errors, current: null },
-        },
-      };
     case "SET_NEW_PASSWORD":
       return {
         ...state,
@@ -344,12 +330,7 @@ export function useProfileStore() {
     dispatch({ type: "CLEAR_NOTIFICATIONS" });
 
     let hasError = false;
-    const { currentPassword, newPassword, repeatPassword } = state.security;
-
-    if (!currentPassword) {
-      dispatch({ type: "SET_SECURITY_ERROR", payload: { field: "current", message: "Введите текущий пароль" } });
-      hasError = true;
-    }
+    const { newPassword, repeatPassword } = state.security;
 
     if (!newPassword) {
       dispatch({ type: "SET_SECURITY_ERROR", payload: { field: "new", message: "Введите новый пароль" } });
@@ -382,7 +363,6 @@ export function useProfileStore() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          current_password: currentPassword,
           new_password: newPassword,
         }),
       });
@@ -471,7 +451,6 @@ export function useProfileStore() {
       setPhoto: (v: string | null) => dispatch({ type: "SET_PHOTO", payload: v }),
       setPhotoFile: (v: File | null) => dispatch({ type: "SET_PHOTO_FILE", payload: v }),
 
-      setCurrentPassword: (v: string) => dispatch({ type: "SET_CURRENT_PASSWORD", payload: v }),
       setNewPassword: (v: string) => dispatch({ type: "SET_NEW_PASSWORD", payload: v }),
       setRepeatPassword: (v: string) => dispatch({ type: "SET_REPEAT_PASSWORD", payload: v }),
       toggleShowNew: () => dispatch({ type: "TOGGLE_SHOW_NEW" }),

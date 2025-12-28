@@ -10,7 +10,6 @@ export function SecurityTab() {
   const t = useTranslations("Profile");
   const {
     state,
-    setCurrentPassword,
     setNewPassword,
     setRepeatPassword,
     deleteAccount,
@@ -23,16 +22,6 @@ export function SecurityTab() {
       <div className={styles.securityCard}>
         <div className={styles.sectionTitle}>{t("passwordSection")}</div>
         <div className={styles.fieldGroup}>
-          <InputField
-            type="password"
-            label={t("currentPassword")}
-            placeholder={t("passwordPlaceholder")}
-            value={security.currentPassword}
-            onChange={setCurrentPassword}
-            error={security.errors.current}
-            variant="white"
-          />
-
           <InputField
             type="password"
             label={t("newPassword")}

@@ -7,37 +7,38 @@ import { ErrorNotification } from "@/components/notifications/ErrorNotification"
 import { SuccessNotification } from "@/components/notifications/SuccessNotification";
 import { useForgotPassword } from "./store/useForgotPassword";
 import { Link } from "@/i18n/navigation";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { FormEvent } from "react";
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("ForgotPassword");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+
   const {
-    step,
-    email,
-    code,
-    password,
-    confirmPassword,
-    loading,
-    error,
-    success,
-    errorEmail,
-    errorCode,
-    errorPassword,
-    errorConfirm,
+    state,
+    requestCode,
+    verifyCode,
+    resetPassword,
+    goBackToEmail,
     setEmail,
     setCode,
-    setError,
-    setSuccess,
     setPassword,
     setConfirmPassword,
-    handleSubmit,
-    handleVerifyCode,
-    goBackToEmail,
-    handleReset,
+    toggleShowPassword,
+    toggleShowConfirm,
+    setError,
+    setSuccess,
   } = useForgotPassword();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (state.step === "email") {
+      await requestCode();
+    } else if (state.step === "code") {
+      await verifyCode();
+    } else {
+      await resetPassword();
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -101,27 +102,25 @@ export default function ForgotPasswordPage() {
 
         <form
           className={styles.form}
-          onSubmit={
-            step === "email" ? handleSubmit : step === "code" ? handleVerifyCode : handleReset
-          }
+          onSubmit={handleSubmit}
           noValidate
         >
-          {error ? (
+          {state.error ? (
             <ErrorNotification
-              message={error}
+              message={state.error}
               duration={5000}
               onClose={() => setError(null)}
             />
           ) : null}
-          {success ? (
+          {state.success ? (
             <SuccessNotification
-              message={success}
+              message={state.success}
               duration={5000}
               onClose={() => setSuccess(null)}
             />
           ) : null}
 
-          {step === "email" ? (
+          {state.step === "email" ? (
             <>
               <h1 className={styles.title}>{t('title')}</h1>
               <div className={styles.inputBlock}>
@@ -133,10 +132,10 @@ export default function ForgotPasswordPage() {
                     placeholder={t('emailPlaceholder')}
                     type="email"
                     name="email"
-                    value={email}
+                    value={state.form.email}
                     onChange={setEmail}
-                    error={errorEmail}
-                    disabled={loading}
+                    error={state.fieldErrors.email}
+                    disabled={state.loading}
                   />
                 </div>
               </div>
@@ -145,12 +144,12 @@ export default function ForgotPasswordPage() {
                 <Link href="/login" className={styles.back}>
                   {t('backButton')}
                 </Link>
-                <Button type="submit" disabled={loading} loading={loading}>
+                <Button type="submit" disabled={state.loading} loading={state.loading}>
                   {t('resetButton')}
                 </Button>
               </div>
             </>
-          ) : step === "code" ? (
+          ) : state.step === "code" ? (
             <>
               <h1 className={styles.title}>{t('title')}</h1>
               <p className={styles.subtitle}>{t('subtitleCode')}</p>
@@ -162,10 +161,10 @@ export default function ForgotPasswordPage() {
                     placeholder={t('codePlaceholder')}
                     type="password"
                     name="code"
-                    value={code}
+                    value={state.form.code}
                     onChange={setCode}
-                    error={errorCode}
-                    disabled={loading}
+                    error={state.fieldErrors.code}
+                    disabled={state.loading}
                   />
                 </div>
                 <div className={styles.codeHint}>
@@ -181,7 +180,7 @@ export default function ForgotPasswordPage() {
                 >
                   {t('backButton')}
                 </button>
-                <Button type="submit" disabled={loading} loading={loading}>
+                <Button type="submit" disabled={state.loading} loading={state.loading}>
                   {t('sendCodeButton')}
                 </Button>
               </div>
@@ -198,20 +197,20 @@ export default function ForgotPasswordPage() {
                   <InputField
                     label=""
                     placeholder={t('passwordPlaceholder')}
-                    type={showPassword ? "text" : "password"}
+                    type={state.form.showPassword ? "text" : "password"}
                     name="password"
-                    value={password}
+                    value={state.form.password}
                     onChange={setPassword}
-                    error={errorPassword}
-                    disabled={loading}
+                    error={state.fieldErrors.password}
+                    disabled={state.loading}
                   />
                   <button
                     type="button"
                     className={styles.eyeButton}
-                    onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? t('hidePassword') : t('showPassword')}
+                    onClick={toggleShowPassword}
+                    aria-label={state.form.showPassword ? t('hidePassword') : t('showPassword')}
                   >
-                    {showPassword ? (
+                    {state.form.showPassword ? (
                       <svg
                         width="20"
                         height="18"
@@ -245,20 +244,20 @@ export default function ForgotPasswordPage() {
                   <InputField
                     label=""
                     placeholder={t('passwordPlaceholder')}
-                    type={showConfirm ? "text" : "password"}
+                    type={state.form.showConfirm ? "text" : "password"}
                     name="confirmPassword"
-                    value={confirmPassword}
+                    value={state.form.confirmPassword}
                     onChange={setConfirmPassword}
-                    error={errorConfirm}
-                    disabled={loading}
+                    error={state.fieldErrors.confirm}
+                    disabled={state.loading}
                   />
                   <button
                     type="button"
                     className={styles.eyeButton}
-                    onClick={() => setShowConfirm((v) => !v)}
-                    aria-label={showConfirm ? t('hidePassword') : t('showPassword')}
+                    onClick={toggleShowConfirm}
+                    aria-label={state.form.showConfirm ? t('hidePassword') : t('showPassword')}
                   >
-                    {showConfirm ? (
+                    {state.form.showConfirm ? (
                       <svg
                         width="20"
                         height="18"
@@ -290,7 +289,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               <div className={styles.actionsSingle}>
-                <Button type="submit" disabled={loading} loading={loading} fullWidth>
+                <Button type="submit" disabled={state.loading} loading={state.loading} fullWidth>
                   {t('saveButton')}
                 </Button>
               </div>

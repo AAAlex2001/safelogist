@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           photo: data.photo ? `${API_URL}/static/user_photos/${data.photo}` : null,
         });
       } else {
-        // Token invalid, logout
         logout();
       }
     } catch {
@@ -56,12 +55,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [loadUserData]);
 
-  // Check auth on mount
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  // Listen for storage changes (other tabs)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "authToken") {
@@ -73,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, [checkAuth]);
 
-  // Listen for custom auth events (same tab)
   useEffect(() => {
     const handleAuthChange = () => {
       checkAuth();
@@ -87,7 +83,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("authToken", token);
     setIsLoggedIn(true);
     loadUserData(token);
-    // Dispatch custom event for same-tab updates
     window.dispatchEvent(new Event("authChange"));
   }, [loadUserData]);
 
@@ -95,7 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setUserData(null);
-    // Dispatch custom event for same-tab updates
     window.dispatchEvent(new Event("authChange"));
   }, []);
 

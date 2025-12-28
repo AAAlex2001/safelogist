@@ -10,9 +10,6 @@ import { SuccessNotification } from "@/components/notifications/SuccessNotificat
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
 import { Tabs } from "@/components/tabs";
 
-// ============================================================
-// Page Content (uses context)
-// ============================================================
 function ProfileContent() {
   const t = useTranslations("Profile");
   const {
@@ -36,7 +33,6 @@ function ProfileContent() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <header className={styles.header}>
           <div className={styles.title}>{t("pageTitle")}</div>
           <div className={styles.subtitle}>
@@ -44,7 +40,6 @@ function ProfileContent() {
           </div>
         </header>
 
-        {/* Action buttons */}
         <div className={styles.actions}>
           <button
             className={`${styles.actionBtn} ${styles.saveBtn}`}
@@ -66,7 +61,6 @@ function ProfileContent() {
           </button>
         </div>
 
-        {/* Tabs */}
         <Tabs
           tabs={[
             { id: "personal", label: t("personalDataTab") },
@@ -76,13 +70,11 @@ function ProfileContent() {
           onTabChange={(tab) => setTab(tab as "personal" | "security")}
         />
 
-        {/* Tab content */}
         {state.activeTab === "personal" && <PersonalTab />}
         {state.activeTab === "security" && <SecurityTab />}
       </div>
       <Footer />
 
-      {/* Notifications */}
       {state.success && (
         <SuccessNotification
           message={state.success}
@@ -99,9 +91,6 @@ function ProfileContent() {
   );
 }
 
-// ============================================================
-// Page (wraps with Provider)
-// ============================================================
 export default function ProfilePage() {
   return (
     <ProfileProvider>
@@ -110,9 +99,6 @@ export default function ProfilePage() {
   );
 }
 
-// ============================================================
-// Icons
-// ============================================================
 function SaveIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

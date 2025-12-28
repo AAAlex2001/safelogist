@@ -2,9 +2,6 @@
 
 import { useReducer, useCallback, useMemo } from "react";
 
-// ============================================================
-// API Endpoints
-// ============================================================
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const ENDPOINTS = {
   profile: `${API_URL}/api/profile`,
@@ -12,21 +9,16 @@ const ENDPOINTS = {
   deleteAccount: `${API_URL}/api/profile/delete`,
 } as const;
 
-// ============================================================
-// Types
-// ============================================================
 export type UserRole = "TRANSPORT_COMPANY" | "CARGO_OWNER" | "FORWARDER" | "USER";
 export type ActiveTab = "personal" | "security";
 
 export interface ProfileState {
-  // UI State
   activeTab: ActiveTab;
   loading: boolean;
   saving: boolean;
   error: string | null;
   success: string | null;
 
-  // Personal Data
   personal: {
     fullName: string;
     industry: UserRole | "";
@@ -39,7 +31,6 @@ export interface ProfileState {
     photoFile: File | null;
   };
 
-  // Security Data
   security: {
     currentPassword: string;
     newPassword: string;
@@ -53,7 +44,6 @@ export interface ProfileState {
     };
   };
 
-  // Original data for change detection
   _original: {
     fullName: string;
     industry: UserRole | "";
@@ -66,19 +56,13 @@ export interface ProfileState {
   } | null;
 }
 
-// ============================================================
-// Actions
-// ============================================================
 type ProfileAction =
-  // UI Actions
   | { type: "SET_TAB"; payload: ActiveTab }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_SAVING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_SUCCESS"; payload: string | null }
   | { type: "CLEAR_NOTIFICATIONS" }
-
-  // Personal Actions
   | { type: "SET_FULL_NAME"; payload: string }
   | { type: "SET_INDUSTRY"; payload: UserRole | "" }
   | { type: "SET_PHONE"; payload: string }
@@ -89,8 +73,6 @@ type ProfileAction =
   | { type: "SET_PHOTO"; payload: string | null }
   | { type: "SET_PHOTO_FILE"; payload: File | null }
   | { type: "LOAD_PROFILE"; payload: Partial<ProfileState["personal"]> }
-
-  // Security Actions
   | { type: "SET_CURRENT_PASSWORD"; payload: string }
   | { type: "SET_NEW_PASSWORD"; payload: string }
   | { type: "SET_REPEAT_PASSWORD"; payload: string }
@@ -99,13 +81,8 @@ type ProfileAction =
   | { type: "SET_SECURITY_ERROR"; payload: { field: "current" | "new" | "repeat"; message: string | null } }
   | { type: "CLEAR_SECURITY_ERRORS" }
   | { type: "RESET_SECURITY" }
-
-  // General
   | { type: "RESET" };
 
-// ============================================================
-// Initial State
-// ============================================================
 const initialState: ProfileState = {
   activeTab: "personal",
   loading: false,
@@ -141,12 +118,8 @@ const initialState: ProfileState = {
   _original: null,
 };
 
-// ============================================================
-// Reducer
-// ============================================================
 function reducer(state: ProfileState, action: ProfileAction): ProfileState {
   switch (action.type) {
-    // UI
     case "SET_TAB":
       return { ...state, activeTab: action.payload };
     case "SET_LOADING":
@@ -160,7 +133,6 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
     case "CLEAR_NOTIFICATIONS":
       return { ...state, error: null, success: null };
 
-    // Personal
     case "SET_FULL_NAME":
       return { ...state, personal: { ...state.personal, fullName: action.payload } };
     case "SET_INDUSTRY":
@@ -195,7 +167,6 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
         },
       };
 
-    // Security
     case "SET_CURRENT_PASSWORD":
       return {
         ...state,
@@ -243,7 +214,6 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
     case "RESET_SECURITY":
       return { ...state, security: initialState.security };
 
-    // General
     case "RESET":
       return initialState;
 
@@ -252,22 +222,13 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
   }
 }
 
-// ============================================================
-// Helpers
-// ============================================================
 function getAuthToken(): string | null {
   return typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
 }
 
-// ============================================================
-// Hook
-// ============================================================
 export function useProfileStore() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // ----------------------------------------------------------
-  // API: Load Profile
-  // ----------------------------------------------------------
   const loadProfile = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -313,9 +274,6 @@ export function useProfileStore() {
     }
   }, []);
 
-  // ----------------------------------------------------------
-  // API: Save Profile
-  // ----------------------------------------------------------
   const saveProfile = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -378,9 +336,6 @@ export function useProfileStore() {
     }
   }, [state.personal]);
 
-  // ----------------------------------------------------------
-  // API: Change Password
-  // ----------------------------------------------------------
   const changePassword = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return false;
@@ -388,7 +343,6 @@ export function useProfileStore() {
     dispatch({ type: "CLEAR_SECURITY_ERRORS" });
     dispatch({ type: "CLEAR_NOTIFICATIONS" });
 
-    // Validation
     let hasError = false;
     const { currentPassword, newPassword, repeatPassword } = state.security;
 
@@ -452,9 +406,6 @@ export function useProfileStore() {
     }
   }, [state.security]);
 
-  // ----------------------------------------------------------
-  // API: Delete Account
-  // ----------------------------------------------------------
   const deleteAccount = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -488,9 +439,6 @@ export function useProfileStore() {
     }
   }, []);
 
-  // ----------------------------------------------------------
-  // Computed: Has unsaved changes
-  // ----------------------------------------------------------
   const hasChanges = useMemo(() => {
     if (!state._original) return false;
 
@@ -506,18 +454,13 @@ export function useProfileStore() {
     );
   }, [state.personal, state._original]);
 
-  // ----------------------------------------------------------
-  // Actions
-  // ----------------------------------------------------------
   const actions = useMemo(
     () => ({
-      // UI
       setTab: (tab: ActiveTab) => dispatch({ type: "SET_TAB", payload: tab }),
       setError: (msg: string | null) => dispatch({ type: "SET_ERROR", payload: msg }),
       setSuccess: (msg: string | null) => dispatch({ type: "SET_SUCCESS", payload: msg }),
       clearNotifications: () => dispatch({ type: "CLEAR_NOTIFICATIONS" }),
 
-      // Personal
       setFullName: (v: string) => dispatch({ type: "SET_FULL_NAME", payload: v }),
       setIndustry: (v: UserRole | "") => dispatch({ type: "SET_INDUSTRY", payload: v }),
       setPhone: (v: string) => dispatch({ type: "SET_PHONE", payload: v }),
@@ -528,37 +471,29 @@ export function useProfileStore() {
       setPhoto: (v: string | null) => dispatch({ type: "SET_PHOTO", payload: v }),
       setPhotoFile: (v: File | null) => dispatch({ type: "SET_PHOTO_FILE", payload: v }),
 
-      // Security
       setCurrentPassword: (v: string) => dispatch({ type: "SET_CURRENT_PASSWORD", payload: v }),
       setNewPassword: (v: string) => dispatch({ type: "SET_NEW_PASSWORD", payload: v }),
       setRepeatPassword: (v: string) => dispatch({ type: "SET_REPEAT_PASSWORD", payload: v }),
       toggleShowNew: () => dispatch({ type: "TOGGLE_SHOW_NEW" }),
       toggleShowRepeat: () => dispatch({ type: "TOGGLE_SHOW_REPEAT" }),
 
-      // General
       reset: () => dispatch({ type: "RESET" }),
     }),
     []
   );
 
   return {
-    // State
     state,
     hasChanges,
 
-    // API Methods
     loadProfile,
     saveProfile,
     changePassword,
     deleteAccount,
 
-    // Actions
     ...actions,
   };
 }
 
-// ============================================================
-// Export Type for Context
-// ============================================================
 export type ProfileStore = ReturnType<typeof useProfileStore>;
 

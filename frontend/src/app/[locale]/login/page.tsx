@@ -6,22 +6,23 @@ import styles from "./login.module.scss";
 import { InputField } from "@/components/input/InputField";
 import { Button } from "@/components/button/Button";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
-import { useLoginHook } from "./store/useLogin";
+import { useLogin } from "./store/useLogin";
+import { FormEvent } from "react";
 
 export default function LoginPage() {
   const t = useTranslations("Login");
   const {
-    email,
-    password,
-    loading,
-    error,
-    errorEmail,
-    errorPassword,
+    state,
+    login,
     setEmail,
     setPassword,
     setError,
-    handleLogin,
-  } = useLoginHook();
+  } = useLogin();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await login();
+  };
 
   return (
     <div className={styles.loginPage}>
@@ -83,10 +84,10 @@ export default function LoginPage() {
           </svg>
         </div>
 
-        <form className={styles.loginForm} onSubmit={handleLogin} noValidate>
-          {error ? (
+        <form className={styles.loginForm} onSubmit={handleSubmit} noValidate>
+          {state.error ? (
             <ErrorNotification
-              message={error}
+              message={state.error}
               duration={5000}
               onClose={() => setError(null)}
             />
@@ -99,20 +100,20 @@ export default function LoginPage() {
               placeholder={t("emailPlaceholder")}
               type="email"
               name="email"
-              value={email}
+              value={state.form.email}
               onChange={setEmail}
-              error={errorEmail}
-              disabled={loading}
+              error={state.fieldErrors.email}
+              disabled={state.loading}
             />
             <InputField
               label={t("password")}
               placeholder={t("passwordPlaceholder")}
               type="password"
               name="password"
-              value={password}
+              value={state.form.password}
               onChange={setPassword}
-              error={errorPassword}
-              disabled={loading}
+              error={state.fieldErrors.password}
+              disabled={state.loading}
             />
             <Link href="/forgot-password" className={styles.forgot}>
               {t("forgotPassword")}
@@ -120,7 +121,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.actions}>
-            <Button type="submit" fullWidth disabled={loading} loading={loading}>
+            <Button type="submit" fullWidth disabled={state.loading} loading={state.loading}>
               {t("loginButton")}
             </Button>
             <div className={styles.secondaryLink}>

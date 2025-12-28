@@ -22,12 +22,10 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabId>("notifications");
   const [saving, setSaving] = useState(false);
 
-  // Notification settings
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [pushNotifications, setPushNotifications] = useState(false);
   const [monitoringAlerts, setMonitoringAlerts] = useState(false);
 
-  // Get current locale from pathname
   const currentLocale = pathname.split("/")[1] || "ru";
   const [language, setLanguage] = useState(currentLocale);
 
@@ -49,7 +47,6 @@ export default function SettingsPage() {
 
   const handleLanguageChange = (newLang: string) => {
     setLanguage(newLang);
-    // Update URL locale
     const segments = pathname.split("/");
     segments[1] = newLang;
     router.push(segments.join("/"));
@@ -57,7 +54,6 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    // TODO: Save settings to backend
     await new Promise((resolve) => setTimeout(resolve, 500));
     setSaving(false);
   };
@@ -65,13 +61,11 @@ export default function SettingsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <header className={styles.header}>
           <div className={styles.title}>{t("pageTitle")}</div>
           <div className={styles.subtitle}>{t("pageSubtitle")}</div>
         </header>
 
-        {/* Save button */}
         <div className={styles.actions}>
           <Button onClick={handleSave} loading={saving}>
             <SaveIcon />
@@ -79,7 +73,6 @@ export default function SettingsPage() {
           </Button>
         </div>
 
-        {/* Tabs */}
         <Tabs
           tabs={[
             { id: "notifications", label: t("notificationsTab") },
@@ -89,11 +82,9 @@ export default function SettingsPage() {
           onTabChange={(tab) => setActiveTab(tab as TabId)}
         />
 
-        {/* Tab content */}
         {activeTab === "notifications" && (
           <div className={styles.card}>
             <div className={styles.notificationsList}>
-              {/* Email notifications */}
               <div className={styles.notificationItem}>
                 <div className={styles.notificationInfo}>
                   <div className={styles.notificationTitle}>
@@ -109,7 +100,6 @@ export default function SettingsPage() {
                 />
               </div>
 
-              {/* Push notifications */}
               <div className={styles.notificationItem}>
                 <div className={styles.notificationInfo}>
                   <div className={styles.notificationTitle}>
@@ -125,7 +115,6 @@ export default function SettingsPage() {
                 />
               </div>
 
-              {/* Monitoring alerts */}
               <div className={styles.notificationItem}>
                 <div className={styles.notificationInfo}>
                   <div className={styles.notificationTitle}>

@@ -3,14 +3,8 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useReviewsStore, type ReviewsStore } from "./useReviewsStore";
 
-// ============================================================
-// Context
-// ============================================================
 const ReviewsContext = createContext<ReviewsStore | null>(null);
 
-// ============================================================
-// Provider
-// ============================================================
 interface ReviewsProviderProps {
   children: ReactNode;
 }
@@ -18,10 +12,8 @@ interface ReviewsProviderProps {
 export function ReviewsProvider({ children }: ReviewsProviderProps) {
   const store = useReviewsStore();
 
-  // Auto-load reviews on mount
   useEffect(() => {
     store.loadAboutMeReviews();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -31,9 +23,6 @@ export function ReviewsProvider({ children }: ReviewsProviderProps) {
   );
 }
 
-// ============================================================
-// Hook
-// ============================================================
 export function useReviews(): ReviewsStore {
   const context = useContext(ReviewsContext);
 

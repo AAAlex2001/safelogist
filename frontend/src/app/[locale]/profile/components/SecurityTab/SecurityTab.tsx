@@ -20,11 +20,9 @@ export function SecurityTab() {
 
   return (
     <>
-      {/* Password card */}
       <div className={styles.securityCard}>
         <div className={styles.sectionTitle}>{t("passwordSection")}</div>
         <div className={styles.fieldGroup}>
-          {/* Current password */}
           <div className={styles.passwordField}>
             <label className={styles.passwordLabel}>{t("currentPassword")}</label>
             <div className={styles.passwordInputWrapper}>
@@ -41,7 +39,6 @@ export function SecurityTab() {
             )}
           </div>
 
-          {/* New password */}
           <div className={styles.passwordField}>
             <label className={styles.passwordLabel}>{t("newPassword")}</label>
             <div className={styles.passwordInputWrapper}>
@@ -66,7 +63,6 @@ export function SecurityTab() {
             )}
           </div>
 
-          {/* Repeat password */}
           <div className={styles.passwordField}>
             <label className={styles.passwordLabel}>{t("repeatPassword")}</label>
             <div className={styles.passwordInputWrapper}>
@@ -93,7 +89,6 @@ export function SecurityTab() {
         </div>
       </div>
 
-      {/* Account actions card */}
       <div className={styles.accountCard}>
         <div className={styles.accountContent}>
           <div className={styles.deleteSection}>
@@ -116,7 +111,6 @@ export function SecurityTab() {
   );
 }
 
-/* Icons */
 function EyeOpenIcon() {
   return (
     <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">

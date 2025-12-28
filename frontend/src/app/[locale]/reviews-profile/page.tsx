@@ -9,9 +9,6 @@ import { MyReviewsTab } from "./components/MyReviewsTab/MyReviewsTab";
 import { RejectedTab } from "./components/RejectedTab/RejectedTab";
 import { ReviewsProvider, useReviews } from "./store";
 
-// ============================================================
-// Page Content (uses context)
-// ============================================================
 function ReviewsContent() {
   const t = useTranslations("Reviews");
   const { state, setTab, loadAboutMeReviews, loadMyReviews, loadRejectedReviews } = useReviews();
@@ -26,7 +23,6 @@ function ReviewsContent() {
     const tab = tabId as "about" | "reviews" | "rejected";
     setTab(tab);
     
-    // Load data for the selected tab
     if (tab === "about") {
       loadAboutMeReviews();
     } else if (tab === "reviews") {
@@ -39,20 +35,17 @@ function ReviewsContent() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <header className={styles.header}>
           <div className={styles.title}>{t("pageTitle")}</div>
           <div className={styles.subtitle}>{t("pageSubtitle")}</div>
         </header>
 
-        {/* Tabs */}
         <Tabs
           tabs={tabs}
           activeTab={state.activeTab}
           onTabChange={handleTabChange}
         />
 
-        {/* Tab content */}
         {state.activeTab === "about" && <AboutMeTab />}
         {state.activeTab === "reviews" && <MyReviewsTab />}
         {state.activeTab === "rejected" && <RejectedTab />}
@@ -62,9 +55,6 @@ function ReviewsContent() {
   );
 }
 
-// ============================================================
-// Page (wraps with Provider)
-// ============================================================
 export default function ReviewsPage() {
   return (
     <ReviewsProvider>

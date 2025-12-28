@@ -3,25 +3,16 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useProfileStore, type ProfileStore } from "./useProfileStore";
 
-// ============================================================
-// Context
-// ============================================================
 const ProfileContext = createContext<ProfileStore | null>(null);
 
-// ============================================================
-// Provider
-// ============================================================
 interface ProfileProviderProps {
   children: ReactNode;
 }
 
 export function ProfileProvider({ children }: ProfileProviderProps) {
   const store = useProfileStore();
-
-  // Auto-load profile on mount
   useEffect(() => {
     store.loadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -31,9 +22,6 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   );
 }
 
-// ============================================================
-// Hook
-// ============================================================
 export function useProfile(): ProfileStore {
   const context = useContext(ProfileContext);
 

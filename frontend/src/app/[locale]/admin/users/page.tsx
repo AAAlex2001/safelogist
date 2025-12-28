@@ -35,7 +35,6 @@ export default function UsersPage() {
         return res.json();
       })
       .then((data) => {
-        // Убеждаемся, что это массив
         setUsers(Array.isArray(data) ? data : []);
       })
       .catch((err) => {

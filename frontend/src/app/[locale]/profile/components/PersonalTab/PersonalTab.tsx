@@ -26,7 +26,6 @@ export function PersonalTab() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file
     if (!["image/jpeg", "image/png"].includes(file.type)) {
       return;
     }
@@ -50,7 +49,6 @@ export function PersonalTab() {
 
   return (
     <>
-      {/* Profile photo card */}
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("photoSection")}</div>
         <div className={styles.photoSection}>
@@ -82,11 +80,9 @@ export function PersonalTab() {
         </div>
       </div>
 
-      {/* Personal info card */}
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("personalInfo")}</div>
         <div className={styles.fieldGroup}>
-          {/* Name */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("name")}</label>
             <input
@@ -98,7 +94,6 @@ export function PersonalTab() {
             />
           </div>
 
-          {/* Industry / Role */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("industry")}</label>
             <div className={styles.selectWrapper}>
@@ -116,7 +111,6 @@ export function PersonalTab() {
             </div>
           </div>
 
-          {/* Phone */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("phone")}</label>
             <div className={styles.phoneInput}>
@@ -133,7 +127,6 @@ export function PersonalTab() {
             </div>
           </div>
 
-          {/* Email */}
           <div className={styles.fieldWrapper}>
             <div className={styles.emailLabelRow}>
               <label className={styles.fieldLabel}>{t("email")}</label>
@@ -154,11 +147,9 @@ export function PersonalTab() {
         </div>
       </div>
 
-      {/* Work info card */}
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("workInfo")}</div>
         <div className={styles.fieldGroup}>
-          {/* Company */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("company")}</label>
             <input
@@ -170,7 +161,6 @@ export function PersonalTab() {
             />
           </div>
 
-          {/* Position */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("position")}</label>
             <input
@@ -182,7 +172,6 @@ export function PersonalTab() {
             />
           </div>
 
-          {/* Location */}
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>{t("location")}</label>
             <div className={styles.locationInput}>
@@ -201,7 +190,6 @@ export function PersonalTab() {
   );
 }
 
-/* Icons */
 function IdCardIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">

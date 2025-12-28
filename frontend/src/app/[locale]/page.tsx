@@ -4,7 +4,6 @@ export default function LocaleHome() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {/* Hero Section */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
@@ -56,7 +55,6 @@ export default function LocaleHome() {
           </div>
         </section>
 
-        {/* Features Section */}
         <section className={styles.features}>
           <h2 className={styles.featuresTitle}>Почему SafeLogist?</h2>
           <div className={styles.featuresGrid}>
@@ -114,7 +112,6 @@ export default function LocaleHome() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className={styles.cta}>
           <h2 className={styles.ctaTitle}>Готовы проверить компанию?</h2>
           <p className={styles.ctaSubtitle}>
@@ -129,7 +126,6 @@ export default function LocaleHome() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <p>© 2025 SafeLogist. Все права защищены.</p>
       </footer>

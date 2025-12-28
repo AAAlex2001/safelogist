@@ -6,7 +6,6 @@ import styles from "../../reviews.module.scss";
 export function RejectedTab() {
   const t = useTranslations("Reviews");
 
-  // TODO: Fetch user's rejected reviews data here
   const reviews: never[] = [];
 
   if (reviews.length === 0) {
@@ -21,7 +20,6 @@ export function RejectedTab() {
 
   return (
     <div className={styles.tabContent}>
-      {/* TODO: Render review cards here */}
     </div>
   );
 }

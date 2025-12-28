@@ -42,7 +42,6 @@ export default function AddReviewPage() {
         <div className={styles.infoInputs}>
           <div className={styles.reviewInput}>
             <div className={styles.inputReview}>
-              {/* О ком ваш отзыв */}
               <InputField
                 label={t("companyLabel")}
                 placeholder={t("companyPlaceholder")}
@@ -50,14 +49,12 @@ export default function AddReviewPage() {
                 onChange={setCompanyName}
               />
 
-              {/* Оценка сотрудничества */}
               <StarRating
                 label={t("ratingLabel")}
                 value={rating}
                 onChange={setRating}
               />
 
-              {/* Расскажите о вашем опыте */}
               <TextareaField
                 label={t("experienceLabel")}
                 placeholder={t("experiencePlaceholder")}
@@ -67,7 +64,6 @@ export default function AddReviewPage() {
               />
             </div>
 
-            {/* Прикрепите документ */}
             <div className={styles.documentSection}>
               <div className={styles.fileUpload}>
                 <label className={styles.label}>{t("documentLabel")}</label>
@@ -85,7 +81,6 @@ export default function AddReviewPage() {
                 </div>
               </div>
 
-              {/* Информация о документах */}
               <div className={styles.inputField}>
                 <div className={styles.h3}>{t("documentHint")}</div>
                 <div className={styles.list}>
@@ -114,7 +109,6 @@ export default function AddReviewPage() {
             </div>
           </div>
 
-          {/* Кнопка отправки */}
           <Button fullWidth onClick={handleSubmit}>
             {t("submitButton")}
           </Button>

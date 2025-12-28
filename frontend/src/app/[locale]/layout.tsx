@@ -35,12 +35,10 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   
-  // Проверяем, что локаль поддерживается
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
   
-  // Устанавливаем локаль для static rendering
   setRequestLocale(locale);
   
   const messages = await getMessages();

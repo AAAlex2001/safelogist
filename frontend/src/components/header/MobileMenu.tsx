@@ -32,14 +32,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   const [showLangPanel, setShowLangPanel] = useState(false);
   
-  // Mock data for requests
   const requestsData = {
     plan: "Enterprise+",
     availableRequests: 234,
     totalRequests: 500
   };
 
-  // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -54,7 +52,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isOpen, onClose]);
 
-  // Close lang panel on outside click
   useEffect(() => {
     const handleClick = () => setShowLangPanel(false);
     if (showLangPanel) {
@@ -83,7 +80,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     >
       {isLoggedIn ? (
         <>
-          {/* User Profile Section */}
           <div className={styles.profileSection}>
             <div className={styles.userInfo}>
               <div className={styles.avatarCircle}>
@@ -105,7 +101,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
           </div>
 
-          {/* Requests Statistics */}
           <div className={styles.requestsStats}>
             <div className={styles.requestsHeader}>
               <span className={styles.requestsLabel}>{t('requestsAvailable')}</span>
@@ -119,7 +114,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
           </div>
 
-          {/* Menu Tabs */}
           <div className={styles.menuTabs}>
             <Link href="/reviews-profile" className={styles.menuTab} onClick={onClose}>
               <ReviewIcon />
@@ -142,7 +136,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </Link>
           </div>
 
-          {/* Logout Button */}
           <button className={styles.logoutButton} onClick={() => { logout(); onClose(); }}>
             <LogoutIcon />
             <span>Выйти</span>
@@ -150,7 +143,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </>
       ) : (
         <>
-          {/* Оставить отзыв */}
           <Link
             href="/reviews/add"
             className={styles.btnLogin}
@@ -159,7 +151,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             {t('leaveReview')}
           </Link>
 
-      {/* Nav links */}
       <Link href="/reviews" className={styles.navLink} onClick={onClose}>
         {t('about')}
       </Link>
@@ -173,7 +164,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         {t('contacts')}
       </Link>
 
-      {/* Theme & Lang */}
       <div className={styles.themeLangContainer}>
         <button
           className={styles.themeBtn}
@@ -235,7 +225,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             className={`${styles.langSelectorPanel} ${showLangPanel ? styles.active : ""}`}
           >
             <div className={styles.langSelectorContent}>
-              {/* RU */}
               <button
                 className={styles.langOption}
                 onClick={(e) => {
@@ -250,7 +239,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </svg>
                 <span>RU</span>
               </button>
-              {/* EN */}
               <button
                 className={styles.langOption}
                 onClick={(e) => {
@@ -265,7 +253,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </svg>
                 <span>EN</span>
               </button>
-              {/* RO */}
               <button
                 className={styles.langOption}
                 onClick={(e) => {
@@ -281,7 +268,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </svg>
                 <span>RO</span>
               </button>
-              {/* UK */}
               <button
                 className={styles.langOption}
                 onClick={(e) => {
@@ -301,7 +287,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
       </div>
 
-      {/* Buttons */}
       <div className={styles.buttonsContainer}>
         <Link href="/login" className={styles.btnLogin} onClick={onClose}>
           {t('login')}

@@ -125,5 +125,24 @@
     "totalReviews": "Всього відгуків",
     "fromLabel": "Від:",
     "pageLabel": "Сторінка"
+  },
+  "AddReview": {
+    "pageTitle": "Додати відгук",
+    "pageSubtitle": "Поділіться своїм досвідом з іншими користувачами",
+    "companyLabel": "Про кого ваш відгук? *",
+    "companyPlaceholder": "Назва компанії або ПІБ",
+    "ratingLabel": "Оцінка співпраці *",
+    "experienceLabel": "Розкажіть про ваш досвід *",
+    "experiencePlaceholder": "Дайте пораду іншим логістам.",
+    "documentLabel": "Прикріпіть документ *",
+    "selectFile": "Вибрати файл",
+    "fileFormats": "Підтримувані формати: PDF, JPG, PNG (до 10 МБ)",
+    "documentHint": "Щоб залишити відгук, прикріпіть один з документів:",
+    "docCMR": "CMR",
+    "docContract": "Договір",
+    "docAct": "Акт виконаних робіт",
+    "docInvoice": "Товарна накладна",
+    "docOther": "Інший документ, що підтверджує співпрацю",
+    "submitButton": "Надіслати відгук"
   }
 }

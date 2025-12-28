@@ -27,6 +27,7 @@
   line-height: 17px;
   color: #0d0d0d;
   resize: none;
+  overflow: hidden;
   font-family: var(--font-base);
   
   &::placeholder {

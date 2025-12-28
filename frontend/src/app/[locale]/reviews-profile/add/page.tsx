@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { InputField } from "@/components/input/InputField";
 import { TextareaField } from "@/components/input/TextareaField";
 import { StarRating } from "@/components/input/StarRating";
@@ -10,6 +11,7 @@ import CheckIcon from "@/icons/CheckIcon";
 import styles from "./addReview.module.scss";
 
 export default function AddReviewPage() {
+  const t = useTranslations("AddReview");
   const [companyName, setCompanyName] = useState("");
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
@@ -29,12 +31,10 @@ export default function AddReviewPage() {
     <div className={styles.review}>
       <div className={styles.headings}>
         <div className={styles.h1}>
-          <div className={styles.txt}>Добавить отзыв</div>
+          <div className={styles.txt}>{t("pageTitle")}</div>
         </div>
         <div className={styles.h2}>
-          <div className={styles.txt}>
-            Поделитесь своим опытом с другими пользователями
-          </div>
+          <div className={styles.txt}>{t("pageSubtitle")}</div>
         </div>
       </div>
 
@@ -44,23 +44,23 @@ export default function AddReviewPage() {
             <div className={styles.inputReview}>
               {/* О ком ваш отзыв */}
               <InputField
-                label="О ком ваш отзыв? *"
-                placeholder="Название компании или ФИО"
+                label={t("companyLabel")}
+                placeholder={t("companyPlaceholder")}
                 value={companyName}
                 onChange={setCompanyName}
               />
 
               {/* Оценка сотрудничества */}
               <StarRating
-                label="Оценка сотрудничества *"
+                label={t("ratingLabel")}
                 value={rating}
                 onChange={setRating}
               />
 
               {/* Расскажите о вашем опыте */}
               <TextareaField
-                label="Расскажите о вашем опыте *"
-                placeholder="Как всё прошло? Что понравилось, а что нет? Дайте совет другим клиентам."
+                label={t("experienceLabel")}
+                placeholder={t("experiencePlaceholder")}
                 value={reviewText}
                 onChange={setReviewText}
                 rows={3}
@@ -70,7 +70,7 @@ export default function AddReviewPage() {
             {/* Прикрепите документ */}
             <div className={styles.documentSection}>
               <div className={styles.fileUpload}>
-                <label className={styles.label}>Прикрепите документ *</label>
+                <label className={styles.label}>{t("documentLabel")}</label>
                 <div className={styles.fileInputWrapper}>
                   <Button variant="outline" fullWidth as="label">
                     <input
@@ -79,43 +79,35 @@ export default function AddReviewPage() {
                       onChange={handleFileChange}
                       style={{ display: "none" }}
                     />
-                    {document ? document.name : "Выбрать файл"}
+                    {document ? document.name : t("selectFile")}
                   </Button>
-                  <div className={styles.fileInfo}>
-                    Поддерживаемые форматы: PDF, JPG, PNG (до 10 МБ)
-                  </div>
+                  <div className={styles.fileInfo}>{t("fileFormats")}</div>
                 </div>
               </div>
 
               {/* Информация о документах */}
               <div className={styles.inputField}>
-                <div className={styles.h3}>
-                  Чтобы оставить отзыв, прикрепите один из документов:
-                </div>
+                <div className={styles.h3}>{t("documentHint")}</div>
                 <div className={styles.list}>
                   <div className={styles.listItem}>
                     <CheckIcon />
-                    <div className={styles.listText}>CMR</div>
+                    <div className={styles.listText}>{t("docCMR")}</div>
                   </div>
                   <div className={styles.listItem}>
                     <CheckIcon />
-                    <div className={styles.listText}>Договор</div>
+                    <div className={styles.listText}>{t("docContract")}</div>
                   </div>
                   <div className={styles.listItem}>
                     <CheckIcon />
-                    <div className={styles.listText}>
-                      Акт выполненных работ
-                    </div>
+                    <div className={styles.listText}>{t("docAct")}</div>
                   </div>
                   <div className={styles.listItem}>
                     <CheckIcon />
-                    <div className={styles.listText}>Товарная накладная</div>
+                    <div className={styles.listText}>{t("docInvoice")}</div>
                   </div>
                   <div className={styles.listItem}>
                     <CheckIcon />
-                    <div className={styles.listText}>
-                      Другой документ, подтверждающий сотрудничество
-                    </div>
+                    <div className={styles.listText}>{t("docOther")}</div>
                   </div>
                 </div>
               </div>
@@ -124,7 +116,7 @@ export default function AddReviewPage() {
 
           {/* Кнопка отправки */}
           <Button fullWidth onClick={handleSubmit}>
-            Отправить отзыв
+            {t("submitButton")}
           </Button>
         </div>
       </div>

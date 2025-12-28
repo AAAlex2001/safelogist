@@ -125,5 +125,24 @@
     "totalReviews": "Total recenzii",
     "fromLabel": "De la:",
     "pageLabel": "Pagina"
+  },
+  "AddReview": {
+    "pageTitle": "Adaugă recenzie",
+    "pageSubtitle": "Împartașiți experiența cu alți utilizatori",
+    "companyLabel": "Despre cine este recenzia? *",
+    "companyPlaceholder": "Numele companiei sau numele complet",
+    "ratingLabel": "Evaluarea cooperării *",
+    "experienceLabel": "Povestiți despre experiența dvs. *",
+    "experiencePlaceholder": "Dați sfaturi altor logisticieni.",
+    "documentLabel": "Atasați un document *",
+    "selectFile": "Selectați fișierul",
+    "fileFormats": "Formate acceptate: PDF, JPG, PNG (până la 10 MB)",
+    "documentHint": "Pentru a lăsa o recenzie, atașați unul din documente:",
+    "docCMR": "CMR",
+    "docContract": "Contract",
+    "docAct": "Act de lucrări finalizate",
+    "docInvoice": "Factură",
+    "docOther": "Alt document care confirmă cooperarea",
+    "submitButton": "Trimite recenzia"
   }
 }

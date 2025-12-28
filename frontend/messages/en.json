@@ -125,5 +125,24 @@
     "totalReviews": "Total reviews",
     "fromLabel": "From:",
     "pageLabel": "Page"
+  },
+  "AddReview": {
+    "pageTitle": "Add Review",
+    "pageSubtitle": "Share your experience with other users",
+    "companyLabel": "Who is your review about? *",
+    "companyPlaceholder": "Company name or full name",
+    "ratingLabel": "Cooperation rating *",
+    "experienceLabel": "Tell about your experience *",
+    "experiencePlaceholder": "Give advice to other logisticians.",
+    "documentLabel": "Attach a document *",
+    "selectFile": "Select file",
+    "fileFormats": "Supported formats: PDF, JPG, PNG (up to 10 MB)",
+    "documentHint": "To leave a review, attach one of the documents:",
+    "docCMR": "CMR",
+    "docContract": "Contract",
+    "docAct": "Act of completed work",
+    "docInvoice": "Waybill",
+    "docOther": "Other document confirming cooperation",
+    "submitButton": "Submit Review"
   }
 }

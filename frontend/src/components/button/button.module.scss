@@ -13,6 +13,7 @@
   font-family: var(--font-base);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
+  min-width: 200px;
 }
 
 .button:hover {

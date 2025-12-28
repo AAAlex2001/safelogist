@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { Tabs } from "@/components/tabs";
 import { Toggle } from "@/components/toggle";
-import { SelectField } from "@/components/input/SelectField";
+import { InputField } from "@/components/input/InputField";
 import { Button } from "@/components/button/Button";
 import { useTheme } from "@/context/ThemeContext";
 import Footer from "@/components/footer/Footer";
@@ -136,17 +136,21 @@ export default function SettingsPage() {
         {activeTab === "interface" && (
           <div className={styles.card}>
             <div className={styles.interfaceSettings}>
-              <SelectField
+              <InputField
+                type="select"
                 label={t("themeLabel")}
                 options={themeOptions}
                 value={theme}
                 onChange={(val) => setTheme(val as "light" | "dark")}
+                variant="white"
               />
-              <SelectField
+              <InputField
+                type="select"
                 label={t("languageLabel")}
                 options={languageOptions}
                 value={language}
                 onChange={handleLanguageChange}
+                variant="white"
               />
             </div>
           </div>

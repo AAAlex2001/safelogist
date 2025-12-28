@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { InputField } from "@/components/input/InputField";
-import { TextareaField } from "@/components/input/TextareaField";
 import { StarRating } from "@/components/input/StarRating";
 import { Button } from "@/components/button/Button";
 import Footer from "@/components/footer/Footer";
@@ -55,7 +54,8 @@ export default function AddReviewPage() {
                 onChange={setRating}
               />
 
-              <TextareaField
+              <InputField
+                type="textarea"
                 label={t("experienceLabel")}
                 placeholder={t("experiencePlaceholder")}
                 value={reviewText}

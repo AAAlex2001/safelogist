@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import styles from "./PersonalTab.module.scss";
 import { useProfile, type UserRole } from "../../store";
 import { Button } from "@/components/button/Button";
+import { InputField } from "@/components/input/InputField";
 
 export function PersonalTab() {
   const t = useTranslations("Profile");
@@ -83,107 +84,78 @@ export function PersonalTab() {
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("personalInfo")}</div>
         <div className={styles.fieldGroup}>
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("name")}</label>
-            <input
-              type="text"
-              className={styles.fieldInput}
-              placeholder={t("namePlaceholder")}
-              value={personal.fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
+          <InputField
+            label={t("name")}
+            placeholder={t("namePlaceholder")}
+            value={personal.fullName}
+            onChange={setFullName}
+            variant="white"
+          />
 
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("industry")}</label>
-            <div className={styles.selectWrapper}>
-              <select
-                className={styles.selectField}
-                value={personal.industry}
-                onChange={(e) => setIndustry(e.target.value as UserRole | "")}
-              >
-                <option value="">{t("industryPlaceholder")}</option>
-                <option value="TRANSPORT_COMPANY">{t("industryTransport")}</option>
-                <option value="CARGO_OWNER">{t("industryCargoOwner")}</option>
-                <option value="FORWARDER">{t("industryForwarder")}</option>
-                <option value="USER">{t("industryUser")}</option>
-              </select>
-            </div>
-          </div>
+          <InputField
+            type="select"
+            label={t("industry")}
+            placeholder={t("industryPlaceholder")}
+            value={personal.industry}
+            onChange={(val) => setIndustry(val as UserRole | "")}
+            options={[
+              { value: "TRANSPORT_COMPANY", label: t("industryTransport") },
+              { value: "CARGO_OWNER", label: t("industryCargoOwner") },
+              { value: "FORWARDER", label: t("industryForwarder") },
+              { value: "USER", label: t("industryUser") },
+            ]}
+            variant="white"
+          />
 
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("phone")}</label>
-            <div className={styles.phoneInput}>
-              <RuFlagIcon />
-              <span className={styles.phoneCode}>+7</span>
-              <PhoneArrowIcon />
-              <input
-                type="tel"
-                className={styles.phoneNumber}
-                placeholder={t("phonePlaceholder")}
-                value={personal.phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-          </div>
+          <InputField
+            type="tel"
+            label={t("phone")}
+            placeholder={t("phonePlaceholder")}
+            value={personal.phone}
+            onChange={setPhone}
+            variant="white"
+          />
 
-          <div className={styles.fieldWrapper}>
-            <div className={styles.emailLabelRow}>
-              <label className={styles.fieldLabel}>{t("email")}</label>
-              <div className={styles.verifiedBadge}>
-                <span className={styles.verifiedText}>{t("emailVerified")}</span>
-                <VerifiedIcon />
-              </div>
-            </div>
-            <input
-              type="email"
-              className={styles.fieldInput}
-              placeholder={t("emailPlaceholder")}
-              value={personal.email}
-              onChange={(e) => setEmail(e.target.value)}
-              readOnly
-            />
-          </div>
+          <InputField
+            type="email"
+            label={t("email")}
+            placeholder={t("emailPlaceholder")}
+            value={personal.email}
+            onChange={setEmail}
+            disabled
+            variant="white"
+          />
         </div>
       </div>
 
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("workInfo")}</div>
         <div className={styles.fieldGroup}>
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("company")}</label>
-            <input
-              type="text"
-              className={styles.fieldInput}
-              placeholder={t("companyPlaceholder")}
-              value={personal.company}
-              onChange={(e) => setCompany(e.target.value)}
-            />
-          </div>
+          <InputField
+            label={t("company")}
+            placeholder={t("companyPlaceholder")}
+            value={personal.company}
+            onChange={setCompany}
+            variant="white"
+          />
 
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("position")}</label>
-            <input
-              type="text"
-              className={styles.fieldInput}
-              placeholder={t("positionPlaceholder")}
-              value={personal.position}
-              onChange={(e) => setPosition(e.target.value)}
-            />
-          </div>
+          <InputField
+            label={t("position")}
+            placeholder={t("positionPlaceholder")}
+            value={personal.position}
+            onChange={setPosition}
+            variant="white"
+          />
 
-          <div className={styles.fieldWrapper}>
-            <label className={styles.fieldLabel}>{t("location")}</label>
-            <div className={styles.locationInput}>
-              <LocationIcon />
-              <textarea
-                className={styles.locationText}
-                placeholder={t("locationPlaceholder")}
-                value={personal.address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-          </div>
+          <InputField
+            type="textarea"
+            label={t("location")}
+            placeholder={t("locationPlaceholder")}
+            value={personal.address}
+            onChange={setAddress}
+            rows={2}
+            variant="white"
+          />
         </div>
       </div>
     </>
@@ -209,42 +181,6 @@ function PictureIcon() {
       <circle cx="8.5" cy="8.5" r="1.5" stroke="#012AF9" strokeWidth="1.5"/>
       <path d="M3 16L8 11L13 16" stroke="#012AF9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M14 15L17 12L21 16" stroke="#012AF9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function RuFlagIcon() {
-  return (
-    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="14" height="10" rx="1" fill="white"/>
-      <rect y="3.33" width="14" height="3.34" fill="#0C47B7"/>
-      <rect y="6.67" width="14" height="3.33" fill="#E53B35"/>
-    </svg>
-  );
-}
-
-function PhoneArrowIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 6L7.5 9.5L11 6" stroke="#0D0D0D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function VerifiedIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" fill="#1AB580"/>
-      <path d="M7 10L9 12L13 8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function LocationIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 10.625C11.3807 10.625 12.5 9.50571 12.5 8.125C12.5 6.74429 11.3807 5.625 10 5.625C8.61929 5.625 7.5 6.74429 7.5 8.125C7.5 9.50571 8.61929 10.625 10 10.625Z" stroke="#8C8C8C" strokeWidth="1.5"/>
-      <path d="M10 17.5C10 17.5 16.25 12.9167 16.25 8.125C16.25 4.67322 13.4518 1.875 10 1.875C6.54822 1.875 3.75 4.67322 3.75 8.125C3.75 12.9167 10 17.5 10 17.5Z" stroke="#8C8C8C" strokeWidth="1.5"/>
     </svg>
   );
 }

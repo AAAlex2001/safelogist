@@ -147,7 +147,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 24px;
 }
 
 .paginationButtons {
@@ -236,7 +235,7 @@
 .reviewsList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 24px;
 }
 
 /* Review card details */
@@ -322,17 +321,9 @@
     max-width: 730px;
   }
 
-  .reviewCard {
-    padding: 20px;
-  }
-
   .subtitle {
     font-size: 20px;
     line-height: 28px;
-  }
-
-  .reviewsList {
-    gap: 16px;
   }
 }
 

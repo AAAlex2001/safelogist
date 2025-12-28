@@ -24,8 +24,6 @@ export default function ForgotPasswordPage() {
     setCode,
     setPassword,
     setConfirmPassword,
-    toggleShowPassword,
-    toggleShowConfirm,
     setError,
     setSuccess,
   } = useForgotPassword();

@@ -1,0 +1,117 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--page-gradient);
+  color: var(--text-primary);
+  padding: 160px 20px 0;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--text-primary);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 30px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 22px;
+}
+
+/* Notifications */
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationItem {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0 5px 0 3px;
+  gap: 12px;
+  border-radius: 20px;
+}
+
+.notificationInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.notificationTitle {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-primary);
+}
+
+.notificationDesc {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-secondary);
+}
+
+/* Interface */
+.interfaceSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .page {
+    padding: 160px 20px 0;
+  }
+
+  .container {
+    max-width: 730px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1150px;
+  }
+}

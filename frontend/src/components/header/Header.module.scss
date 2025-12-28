@@ -6,10 +6,10 @@
   left: 0;
   right: 0;
   height: 64px;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--header-bg, rgba(255, 255, 255, 0.3));
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  border-bottom: 1px solid var(--header-border, rgba(229, 229, 229, 0.5));
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -44,6 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-primary);
 }
 
 .logo svg {

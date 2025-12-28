@@ -144,5 +144,22 @@
     "docInvoice": "Factură",
     "docOther": "Alt document care confirmă cooperarea",
     "submitButton": "Trimite recenzia"
+  },
+  "Settings": {
+    "pageTitle": "Setări",
+    "pageSubtitle": "Personalizați platforma după nevoile dvs.",
+    "saveButton": "Salvează",
+    "notificationsTab": "Notificări",
+    "interfaceTab": "Interfață",
+    "emailNotifications": "Notificări Email",
+    "emailNotificationsDesc": "Primiți notificări importante prin email",
+    "pushNotifications": "Notificări Push",
+    "pushNotificationsDesc": "Primiți notificări push importante",
+    "monitoringAlerts": "Alerte de monitorizare",
+    "monitoringAlertsDesc": "Notificări despre modificări în obiectele urmărite",
+    "themeLabel": "Temă",
+    "themeLight": "Deschisă",
+    "themeDark": "Întunecata",
+    "languageLabel": "Limba interfeței"
   }
 }

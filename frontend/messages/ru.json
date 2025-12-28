@@ -144,5 +144,22 @@
     "docInvoice": "Товарная накладная",
     "docOther": "Другой документ, подтверждающий сотрудничество",
     "submitButton": "Отправить отзыв"
+  },
+  "Settings": {
+    "pageTitle": "Настройки",
+    "pageSubtitle": "Настройте платформу под свои потребности",
+    "saveButton": "Сохранить",
+    "notificationsTab": "Уведомления",
+    "interfaceTab": "Интерфейс",
+    "emailNotifications": "Email уведомления",
+    "emailNotificationsDesc": "Получать важные уведомления на почту",
+    "pushNotifications": "Push уведомления",
+    "pushNotificationsDesc": "Получать важные уведомления на почту",
+    "monitoringAlerts": "Оповещения мониторинга",
+    "monitoringAlertsDesc": "Уведомления об изменениях в отслеживаемых объектах",
+    "themeLabel": "Тема оформления",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная",
+    "languageLabel": "Язык интерфейса"
   }
 }

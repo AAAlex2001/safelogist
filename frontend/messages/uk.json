@@ -144,5 +144,22 @@
     "docInvoice": "Товарна накладна",
     "docOther": "Інший документ, що підтверджує співпрацю",
     "submitButton": "Надіслати відгук"
+  },
+  "Settings": {
+    "pageTitle": "Налаштування",
+    "pageSubtitle": "Налаштуйте платформу під свої потреби",
+    "saveButton": "Зберегти",
+    "notificationsTab": "Сповіщення",
+    "interfaceTab": "Інтерфейс",
+    "emailNotifications": "Email сповіщення",
+    "emailNotificationsDesc": "Отримувати важливі сповіщення на пошту",
+    "pushNotifications": "Push сповіщення",
+    "pushNotificationsDesc": "Отримувати важливі push-сповіщення",
+    "monitoringAlerts": "Оповіщення моніторингу",
+    "monitoringAlertsDesc": "Сповіщення про зміни у відстежуваних об'єктах",
+    "themeLabel": "Тема оформлення",
+    "themeLight": "Світла",
+    "themeDark": "Темна",
+    "languageLabel": "Мова інтерфейсу"
   }
 }

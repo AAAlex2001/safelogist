@@ -1,0 +1,34 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  width: 52px;
+  height: 32px;
+  background: var(--toggle-bg, #e5e7ea);
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggle.checked {
+  background: var(--primary);
+}
+
+.thumb {
+  width: 24px;
+  height: 24px;
+  background: #ffffff;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 2px 5px rgba(103, 110, 118, 0.08);
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.toggle.checked .thumb {
+  transform: translateX(18px);
+}

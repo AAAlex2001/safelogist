@@ -144,5 +144,22 @@
     "docInvoice": "Waybill",
     "docOther": "Other document confirming cooperation",
     "submitButton": "Submit Review"
+  },
+  "Settings": {
+    "pageTitle": "Settings",
+    "pageSubtitle": "Customize the platform to your needs",
+    "saveButton": "Save",
+    "notificationsTab": "Notifications",
+    "interfaceTab": "Interface",
+    "emailNotifications": "Email notifications",
+    "emailNotificationsDesc": "Receive important notifications by email",
+    "pushNotifications": "Push notifications",
+    "pushNotificationsDesc": "Receive important push notifications",
+    "monitoringAlerts": "Monitoring alerts",
+    "monitoringAlertsDesc": "Notifications about changes in tracked objects",
+    "themeLabel": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "languageLabel": "Interface language"
   }
 }

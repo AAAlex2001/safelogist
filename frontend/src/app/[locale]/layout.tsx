@@ -8,6 +8,7 @@ import { setRequestLocale } from 'next-intl/server';
 import "../globals.css";
 import Header from "../../components/header/Header";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const montserrat = Montserrat({
   variable: "--font-base",
@@ -48,10 +49,12 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className={montserrat.variable}>
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>
-            <Header />
-            {children}
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <Header />
+              {children}
+            </AuthProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

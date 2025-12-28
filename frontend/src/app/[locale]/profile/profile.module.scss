@@ -47,67 +47,6 @@
   gap: 16px;
 }
 
-.actionBtn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 24px;
-  gap: 10px;
-  height: 40px;
-  background: #f9fafb;
-  border: 2px solid #012af9;
-  border-radius: 10px;
-  font-size: 18px;
-  line-height: 24px;
-  color: #012af9;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-
-.actionBtn:hover {
-  background: rgba(1, 42, 249, 0.05);
-}
-
-.actionBtn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.saveBtn {
-  background: #012af9;
-  color: #f9fafb;
-  border-color: #012af9;
-  font-family: var(--font-base);
-  min-width: 160px;
-}
-
-.saveBtn:hover {
-  background: #011fcf;
-}
-
-.saveBtn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-/* Button spinner */
-.btnSpinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #ffffff;
-  border-radius: 50%;
-  animation: btnSpin 0.6s linear infinite;
-}
-
-@keyframes btnSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (min-width: 768px) {
 
   .page {

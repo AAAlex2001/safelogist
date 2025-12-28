@@ -11,6 +11,7 @@ import PaymentIcon from "@/icons/PaymentIcon";
 import LogoutIcon from "@/icons/LogoutIcon";
 import UserIcon from "@/icons/UserIcon";
 import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/button/Button";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -143,12 +144,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </>
       ) : (
         <>
-          <Link
-            href="/reviews/add"
-            className={styles.btnLogin}
-            onClick={onClose}
-          >
-            {t('leaveReview')}
+          <Link href="/reviews-profile/add" onClick={onClose}>
+            <Button variant="outline" fullWidth>
+              {t('leaveReview')}
+            </Button>
           </Link>
 
       <Link href="/reviews" className={styles.navLink} onClick={onClose}>
@@ -288,11 +287,15 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       </div>
 
       <div className={styles.buttonsContainer}>
-        <Link href="/login" className={styles.btnLogin} onClick={onClose}>
-          {t('login')}
+        <Link href="/login" onClick={onClose}>
+          <Button variant="outline" fullWidth>
+            {t('login')}
+          </Button>
         </Link>
-        <Link href="/registration" className={styles.btnRegister} onClick={onClose}>
-          {t('register')}
+        <Link href="/registration" onClick={onClose}>
+          <Button fullWidth>
+            {t('register')}
+          </Button>
         </Link>
       </div>
         </>

@@ -170,47 +170,6 @@
   gap: 12px;
 }
 
-.btnLogin,
-.btnRegister {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 7px 24px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.btnLogin {
-  background: #ffffff;
-  color: #012af9;
-  border: 1px solid #012af9;
-}
-
-.btnLogin:hover {
-  background: #0020cc;
-  border-color: #0020cc;
-  color: #ffffff;
-}
-
-.btnRegister {
-  background: #012af9;
-  color: #ffffff;
-  border: 2px solid #012af9;
-}
-
-.btnRegister:hover {
-  background: #0020cc;
-  border-color: #0020cc;
-}
-
-.btnRegister:active {
-  background: #0019a3;
-  border-color: #0019a3;
-}
-
 @media (min-width: 768px) {
   .mobileMenu {
     right: calc((100% - 730px) / 2 + 30px);

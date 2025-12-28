@@ -9,6 +9,7 @@ import { ProfileProvider, useProfile } from "./store";
 import { SuccessNotification } from "@/components/notifications/SuccessNotification";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
 import { Tabs } from "@/components/tabs";
+import { Button } from "@/components/button/Button";
 
 function ProfileContent() {
   const t = useTranslations("Profile");
@@ -41,24 +42,17 @@ function ProfileContent() {
         </header>
 
         <div className={styles.actions}>
-          <button
-            className={`${styles.actionBtn} ${styles.saveBtn}`}
-            type="button"
+          <Button
             onClick={handleSave}
             disabled={state.saving || state.loading}
+            loading={state.saving}
           >
-            {state.saving ? (
-              <span className={styles.btnSpinner} />
-            ) : (
-              <>
-                <SaveIcon />
-                {t("saveButton")}
-                {hasChanges && state.activeTab === "personal" && (
-                  <span className={styles.unsavedDot} />
-                )}
-              </>
+            <SaveIcon />
+            {t("saveButton")}
+            {hasChanges && state.activeTab === "personal" && (
+              <span className={styles.unsavedDot} />
             )}
-          </button>
+          </Button>
         </div>
 
         <Tabs

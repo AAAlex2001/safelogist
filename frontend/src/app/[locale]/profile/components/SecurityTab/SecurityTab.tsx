@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import styles from "./SecurityTab.module.scss";
 import { useProfile } from "../../store";
+import { Button } from "@/components/button/Button";
 
 export function SecurityTab() {
   const t = useTranslations("Profile");
@@ -97,14 +98,13 @@ export function SecurityTab() {
               {t("deleteAccountHint")}
             </div>
           </div>
-          <button
-            type="button"
-            className={styles.deleteBtn}
+          <Button
+            variant="outline"
             onClick={deleteAccount}
             disabled={saving}
           >
             {t("deleteAccount")}
-          </button>
+          </Button>
         </div>
       </div>
     </>

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import styles from "./PersonalTab.module.scss";
 import { useProfile, type UserRole } from "../../store";
+import { Button } from "@/components/button/Button";
 
 export function PersonalTab() {
   const t = useTranslations("Profile");
@@ -67,14 +68,13 @@ export function PersonalTab() {
               onChange={handlePhotoUpload}
               style={{ display: "none" }}
             />
-            <button
-              className={styles.uploadBtn}
-              type="button"
+            <Button
+              variant="outline"
               onClick={() => fileInputRef.current?.click()}
             >
               <PictureIcon />
               {t("uploadPhoto")}
-            </button>
+            </Button>
             <span className={styles.photoHint}>{t("photoHint")}</span>
           </div>
         </div>

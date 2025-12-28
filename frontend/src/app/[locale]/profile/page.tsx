@@ -8,6 +8,7 @@ import Footer from "@/components/footer/Footer";
 import { ProfileProvider, useProfile } from "./store";
 import { SuccessNotification } from "@/components/notifications/SuccessNotification";
 import { ErrorNotification } from "@/components/notifications/ErrorNotification";
+import { Tabs } from "@/components/tabs";
 
 // ============================================================
 // Page Content (uses context)
@@ -66,20 +67,14 @@ function ProfileContent() {
         </div>
 
         {/* Tabs */}
-        <div className={styles.tabs}>
-          <button
-            className={`${styles.tab} ${state.activeTab === "personal" ? styles.tabActive : ""}`}
-            onClick={() => setTab("personal")}
-          >
-            {t("personalDataTab")}
-          </button>
-          <button
-            className={`${styles.tab} ${state.activeTab === "security" ? styles.tabActive : ""}`}
-            onClick={() => setTab("security")}
-          >
-            {t("securityTab")}
-          </button>
-        </div>
+        <Tabs
+          tabs={[
+            { id: "personal", label: t("personalDataTab") },
+            { id: "security", label: t("securityTab") },
+          ]}
+          activeTab={state.activeTab}
+          onTabChange={(tab) => setTab(tab as "personal" | "security")}
+        />
 
         {/* Tab content */}
         {state.activeTab === "personal" && <PersonalTab />}

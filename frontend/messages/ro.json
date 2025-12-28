@@ -105,5 +105,25 @@
     "offerAgreement": "Acord de ofertă",
     "contacts": "Contacte",
     "copyright": "© 2025 SafeLogist. Toate drepturile rezervate."
+  },
+  "Reviews": {
+    "pageTitle": "Recenzii",
+    "pageSubtitle": "Gestionați recenziile despre dvs. și recenziile dvs.",
+    "aboutMeTab": "Despre mine",
+    "myReviewsTab": "Ale mele",
+    "rejectedTab": "Respinse",
+    "emptyAboutMeTitle": "Încă nu există recenzii despre dvs.",
+    "emptyAboutMeText": "Recenziile lăsate de alți utilizatori despre dvs. vor apărea aici",
+    "emptyMyReviewsTitle": "Nu ați lăsat încă recenzii",
+    "emptyMyReviewsText": "Împărtășiți experiența cu companii și recenziile dvs. vor apărea aici",
+    "emptyRejectedTitle": "Nu există recenzii respinse",
+    "emptyRejectedText": "Recenziile respinse de moderare vor fi afișate aici",
+    "loading": "Se încarcă...",
+    "errorTitle": "Eroare de încărcare",
+    "noCompanyTitle": "Compania nu este specificată",
+    "noCompanyText": "Specificați numele companiei în profilul dvs. pentru a vedea recenziile despre aceasta",
+    "totalReviews": "Total recenzii",
+    "fromLabel": "De la:",
+    "pageLabel": "Pagina"
   }
 }

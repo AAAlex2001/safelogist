@@ -105,5 +105,25 @@
     "offerAgreement": "Договор-оферта",
     "contacts": "Контакты",
     "copyright": "© 2025 SafeLogist. Все права защищены."
+  },
+  "Reviews": {
+    "pageTitle": "Отзывы",
+    "pageSubtitle": "Управляйте отзывами о вас и вашими отзывами",
+    "aboutMeTab": "Обо мне",
+    "myReviewsTab": "Мои",
+    "rejectedTab": "Отклонены",
+    "emptyAboutMeTitle": "Пока нет отзывов о вас",
+    "emptyAboutMeText": "Здесь будут отображаться отзывы, оставленные о вас другими пользователями",
+    "emptyMyReviewsTitle": "Вы ещё не оставляли отзывов",
+    "emptyMyReviewsText": "Поделитесь опытом работы с компаниями, и ваши отзывы появятся здесь",
+    "emptyRejectedTitle": "Нет отклонённых отзывов",
+    "emptyRejectedText": "Отзывы, отклонённые модерацией, будут отображаться здесь",
+    "fromLabel": "От кого:",
+    "loading": "Загрузка...",
+    "errorTitle": "Ошибка загрузки",
+    "noCompanyTitle": "Компания не указана",
+    "noCompanyText": "Укажите название компании в профиле, чтобы видеть отзывы о ней",
+    "totalReviews": "Всего отзывов",
+    "pageLabel": "Страница"
   }
 }

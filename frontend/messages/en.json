@@ -105,5 +105,25 @@
     "offerAgreement": "Offer Agreement",
     "contacts": "Contacts",
     "copyright": "© 2025 SafeLogist. All rights reserved."
+  },
+  "Reviews": {
+    "pageTitle": "Reviews",
+    "pageSubtitle": "Manage reviews about you and your reviews",
+    "aboutMeTab": "About Me",
+    "myReviewsTab": "My",
+    "rejectedTab": "Rejected",
+    "emptyAboutMeTitle": "No reviews about you yet",
+    "emptyAboutMeText": "Reviews left by other users about you will appear here",
+    "emptyMyReviewsTitle": "You haven't left any reviews yet",
+    "emptyMyReviewsText": "Share your experience with companies and your reviews will appear here",
+    "emptyRejectedTitle": "No rejected reviews",
+    "emptyRejectedText": "Reviews rejected by moderation will be displayed here",
+    "loading": "Loading...",
+    "errorTitle": "Loading error",
+    "noCompanyTitle": "Company not specified",
+    "noCompanyText": "Specify your company name in your profile to see reviews about it",
+    "totalReviews": "Total reviews",
+    "fromLabel": "From:",
+    "pageLabel": "Page"
   }
 }

@@ -105,5 +105,25 @@
     "offerAgreement": "Договір-оферта",
     "contacts": "Контакти",
     "copyright": "© 2025 SafeLogist. Всі права захищені."
+  },
+  "Reviews": {
+    "pageTitle": "Відгуки",
+    "pageSubtitle": "Керуйте відгуками про вас та вашими відгуками",
+    "aboutMeTab": "Про мене",
+    "myReviewsTab": "Мої",
+    "rejectedTab": "Відхилені",
+    "emptyAboutMeTitle": "Поки немає відгуків про вас",
+    "emptyAboutMeText": "Тут відображатимуться відгуки, залишені про вас іншими користувачами",
+    "emptyMyReviewsTitle": "Ви ще не залишали відгуків",
+    "emptyMyReviewsText": "Поділіться досвідом роботи з компаніями, і ваші відгуки з'являться тут",
+    "emptyRejectedTitle": "Немає відхилених відгуків",
+    "emptyRejectedText": "Відгуки, відхилені модерацією, відображатимуться тут",
+    "loading": "Завантаження...",
+    "errorTitle": "Помилка завантаження",
+    "noCompanyTitle": "Компанія не вказана",
+    "noCompanyText": "Вкажіть назву компанії у профілі, щоб бачити відгуки про неї",
+    "totalReviews": "Всього відгуків",
+    "fromLabel": "Від кого:",
+    "pageLabel": "Сторінка"
   }
 }

@@ -6,6 +6,7 @@ import { TextareaField } from "@/components/input/TextareaField";
 import { StarRating } from "@/components/input/StarRating";
 import { Button } from "@/components/button/Button";
 import Footer from "@/components/footer/Footer";
+import CheckIcon from "@/icons/CheckIcon";
 import styles from "./addReview.module.scss";
 
 export default function AddReviewPage() {
@@ -21,7 +22,6 @@ export default function AddReviewPage() {
   };
 
   const handleSubmit = () => {
-    // Логика отправки отзыва
     console.log({ companyName, rating, reviewText, document });
   };
 
@@ -72,17 +72,15 @@ export default function AddReviewPage() {
               <div className={styles.fileUpload}>
                 <label className={styles.label}>Прикрепите документ *</label>
                 <div className={styles.fileInputWrapper}>
-                  <label className={styles.btns}>
+                  <Button variant="outline" fullWidth as="label">
                     <input
                       type="file"
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={handleFileChange}
                       style={{ display: "none" }}
                     />
-                    <div className={styles.btnTxt}>
-                      {document ? document.name : "Выбрать файл"}
-                    </div>
-                  </label>
+                    {document ? document.name : "Выбрать файл"}
+                  </Button>
                   <div className={styles.fileInfo}>
                     Поддерживаемые форматы: PDF, JPG, PNG (до 10 МБ)
                   </div>
@@ -96,105 +94,25 @@ export default function AddReviewPage() {
                 </div>
                 <div className={styles.list}>
                   <div className={styles.listItem}>
-                    <div className={styles.iconCheck}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 4L6 11L3 8"
-                          stroke="#012AF9"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <CheckIcon />
                     <div className={styles.listText}>CMR</div>
                   </div>
                   <div className={styles.listItem}>
-                    <div className={styles.iconCheck}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 4L6 11L3 8"
-                          stroke="#012AF9"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <CheckIcon />
                     <div className={styles.listText}>Договор</div>
                   </div>
                   <div className={styles.listItem}>
-                    <div className={styles.iconCheck}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 4L6 11L3 8"
-                          stroke="#012AF9"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <CheckIcon />
                     <div className={styles.listText}>
                       Акт выполненных работ
                     </div>
                   </div>
                   <div className={styles.listItem}>
-                    <div className={styles.iconCheck}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 4L6 11L3 8"
-                          stroke="#012AF9"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <CheckIcon />
                     <div className={styles.listText}>Товарная накладная</div>
                   </div>
                   <div className={styles.listItem}>
-                    <div className={styles.iconCheck}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 4L6 11L3 8"
-                          stroke="#012AF9"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <CheckIcon />
                     <div className={styles.listText}>
                       Другой документ, подтверждающий сотрудничество
                     </div>

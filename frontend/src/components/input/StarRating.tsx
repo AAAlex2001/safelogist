@@ -1,5 +1,6 @@
 "use client";
 
+import StarIcon from "@/icons/StarIcon";
 import styles from "./starRating.module.scss";
 
 type StarRatingProps = {
@@ -34,18 +35,7 @@ export function StarRating({
             disabled={disabled}
             aria-label={`${index + 1} звезда`}
           >
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16 4.5L19.5 11.5L27 12.5L21.5 18L23 25.5L16 21.5L9 25.5L10.5 18L5 12.5L12.5 11.5L16 4.5Z"
-                fill={index < value ? "#FFD700" : "#D9D9D9"}
-              />
-            </svg>
+            <StarIcon size={32} filled={index < value} />
           </button>
         ))}
       </div>

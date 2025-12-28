@@ -31,6 +31,17 @@
 
 .fullWidth {
   width: 100%;
+  display: flex;
+}
+
+.outline {
+  background: #f9fafb;
+  color: var(--primary, #012af9);
+  border: 2px solid var(--primary, #012af9);
+}
+
+.outline:hover {
+  background: rgba(1, 42, 249, 0.05);
 }
 
 .spinner {

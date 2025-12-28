@@ -6,7 +6,7 @@
   margin: 0 auto;
   min-height: 100vh;
   background: linear-gradient(0deg, rgba(222, 246, 255, 0.039) 0%, rgba(1, 42, 249, 0.09) 100%);
-  padding-top: 144px;
+  padding: 144px 20px 0 20px;
 }
 
 /* headings */
@@ -24,10 +24,8 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  height: 32px;
 
   .txt {
-    height: 32px;
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -45,10 +43,8 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  height: 56px;
 
   .txt {
-    height: 56px;
     font-weight: 400;
     font-size: 20px;
     line-height: 28px;
@@ -65,7 +61,7 @@
   align-items: flex-start;
   padding: 24px;
   gap: 10px;
-  width: 480px;
+  max-width: 480px;
   background: #f8faff;
   box-shadow: 0 4px 14px rgba(1, 42, 249, 0.1);
   border-radius: 28px;
@@ -76,6 +72,7 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  width: 100%;
 }
 
 .reviewInput {
@@ -83,6 +80,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  width: 100%;
 }
 
 .inputReview {
@@ -90,6 +88,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  width: 100%;
 }
 
 .documentSection {
@@ -97,8 +96,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
-  width: 272px;
-  height: 276px;
+  width: 100%;
 }
 
 .fileUpload {
@@ -106,8 +104,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  width: 272px;
-  height: 111px;
+  width: 100%;
 }
 
 .fileInputWrapper {
@@ -115,37 +112,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  width: 272px;
-  height: 82px;
-}
-
-.btns {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 32px;
-  gap: 10px;
-  width: 272px;
-  height: 40px;
-  background: #f9fafb;
-  border: 2px solid #012af9;
-  border-radius: 10px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-  cursor: pointer;
-}
-
-.btnTxt {
-  width: 144px;
-  height: 20px;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 125%;
-  color: #012af9;
+  width: 100%;
 }
 
 .fileInfo {
@@ -154,7 +121,6 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  height: 36px;
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
@@ -164,9 +130,8 @@
 .inputField {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 10px;
-  height: 149px;
   border-radius: 10px;
 }
 
@@ -177,7 +142,6 @@
   align-items: center;
   padding: 0px;
   gap: 10px;
-  height: 38px;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
@@ -187,25 +151,13 @@
 .list {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 4px;
-  width: 272px;
-  height: 101px;
 }
 
 .listItem {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
   gap: 6px;
-  width: 272px;
-  height: 17px;
-}
-
-.iconCheck {
-  width: 16px;
-  height: 16px;
-  flex: none;
 }
 
 .listText {

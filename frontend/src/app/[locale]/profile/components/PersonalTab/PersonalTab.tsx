@@ -83,7 +83,7 @@ export function PersonalTab() {
 
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("personalInfo")}</div>
-        <div className={styles.fieldGroup}>
+        <div className={styles.fieldGroup4}>
           <InputField
             label={t("name")}
             placeholder={t("namePlaceholder")}
@@ -130,7 +130,7 @@ export function PersonalTab() {
 
       <div className={styles.card}>
         <div className={styles.sectionTitle}>{t("workInfo")}</div>
-        <div className={styles.fieldGroup}>
+        <div className={styles.fieldGroup3}>
           <InputField
             label={t("company")}
             placeholder={t("companyPlaceholder")}
@@ -153,7 +153,7 @@ export function PersonalTab() {
             placeholder={t("locationPlaceholder")}
             value={personal.address}
             onChange={setAddress}
-            rows={2}
+            rows={1}
             variant="white"
           />
         </div>

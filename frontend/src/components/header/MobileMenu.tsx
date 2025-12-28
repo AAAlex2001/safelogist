@@ -127,31 +127,31 @@ export default function MobileMenu({ isOpen, onClose, isLoggedIn, userData }: Mo
 
           {/* Menu Tabs */}
           <div className={styles.menuTabs}>
-            <Link href="/settings" className={styles.menuTab} onClick={onClose}>
+            <Link href="/reviews/my" className={styles.menuTab} onClick={onClose}>
               <ReviewIcon />
-              <span>{t('settings')}</span>
+              <span>Мои отзывы</span>
             </Link>
 
             <Link href="/favorites" className={styles.menuTab} onClick={onClose}>
               <FavoriteIcon />
-              <span>{t('favorites')}</span>
+              <span>Избранное</span>
             </Link>
 
             <Link href="/profile" className={styles.menuTab} onClick={onClose}>
               <ProfileIcon />
-              <span>{t('profile')}</span>
+              <span>Профиль</span>
             </Link>
 
-            <Link href="/payments" className={styles.menuTab} onClick={onClose}>
+            <Link href="/pricing" className={styles.menuTab} onClick={onClose}>
               <PaymentIcon />
-              <span>{t('payments')}</span>
+              <span>Тарифы и оплата</span>
             </Link>
           </div>
 
           {/* Logout Button */}
           <button className={styles.logoutButton} onClick={onClose}>
             <LogoutIcon />
-            <span>{t('logout')}</span>
+            <span>Выйти</span>
           </button>
         </>
       ) : (

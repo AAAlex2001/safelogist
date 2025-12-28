@@ -7,6 +7,7 @@ import { routing } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import "../globals.css";
 import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
 
 const montserrat = Montserrat({
   variable: "--font-base",
@@ -49,6 +50,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <Header />
           {children}
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>

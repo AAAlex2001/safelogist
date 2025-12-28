@@ -1,13 +1,15 @@
 .inputBlock {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
+  width: 100%;
 }
 
 .label {
   font-size: 16px;
   line-height: 19px;
   color: #0d0d0d;
+  font-weight: 400;
 }
 
 .input {
@@ -15,15 +17,19 @@
   height: 44px;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #012af91a;
+  border: 1px solid rgba(1, 42, 249, 0.1);
   background: #f8faff;
-  box-shadow: 0 2px 12px 0 #012af90d;
+  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
   font-size: 14px;
   line-height: 17px;
   font-family: var(--font-base);
-  color: #8c8c8c;
+  color: #0d0d0d;
   outline: none;
   font-weight: 400;
+
+  &::placeholder {
+    color: #8c8c8c;
+  }
 }
 
 .input:focus {

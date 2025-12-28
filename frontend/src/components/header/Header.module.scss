@@ -110,6 +110,30 @@
   color: #012af9;
 }
 
+/* User Navigation (Logged in) */
+.userNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userNavLink {
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  color: #0d0d0d;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.userNavLink:hover {
+  background: linear-gradient(0deg, #FFFFFF, #FFFFFF),
+              linear-gradient(0deg, rgba(1, 42, 249, 0.1), rgba(1, 42, 249, 0.1));
+  background: rgba(1, 42, 249, 0.1);
+}
+
 /* Buttons */
 .btnLogin,
 .btnRegister {

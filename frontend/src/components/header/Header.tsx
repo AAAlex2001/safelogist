@@ -5,10 +5,6 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import styles from "./Header.module.scss";
 import MobileMenu from "./MobileMenu";
-import SearchIcon from "@/icons/SearchIcon";
-import NotificationIcon from "@/icons/NotificationIcon";
-import SettingsIcon from "@/icons/SettingsIcon";
-import UserIcon from "@/icons/UserIcon";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -136,40 +132,20 @@ export default function Header() {
 
         {isLoggedIn ? (
           <div className={styles.headerRight}>
-            <div className={styles.userSection}>
-              <div className={styles.requestsText}>
-                {t('requestsAvailable')}: {availableRequests}/{totalRequests}
-              </div>
-              <div className={styles.userIcons}>
-                {/* Search Icon */}
-                <button className={styles.iconButton} aria-label={t('search')}>
-                  <SearchIcon />
-                </button>
-
-                {/* Notifications Icon */}
-                <button className={styles.iconButton} aria-label={t('notifications')}>
-                  <NotificationIcon />
-                </button>
-
-                {/* Settings Icon */}
-                <button className={styles.iconButton} aria-label={t('settings')}>
-                  <SettingsIcon />
-                </button>
-
-                {/* Profile Icon */}
-                <button className={styles.iconButton} aria-label={t('profile')}>
-                  {userData?.photo ? (
-                    <img 
-                      src={userData.photo} 
-                      alt={userData.name}
-                      className={styles.profilePhoto}
-                    />
-                  ) : (
-                    <UserIcon />
-                  )}
-                </button>
-              </div>
-            </div>
+            <nav className={styles.userNav}>
+              <Link href="/reviews/my" className={styles.userNavLink}>
+                Мои отзывы
+              </Link>
+              <Link href="/favorites" className={styles.userNavLink}>
+                Избранное
+              </Link>
+              <Link href="/profile" className={styles.userNavLink}>
+                Профиль
+              </Link>
+              <Link href="/pricing" className={styles.userNavLink}>
+                Тарифы и оплата
+              </Link>
+            </nav>
           </div>
         ) : (
           <div className={styles.headerRight}>

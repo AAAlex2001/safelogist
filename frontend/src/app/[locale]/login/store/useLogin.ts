@@ -145,6 +145,9 @@ export const useLoginHook = () => {
           localStorage.setItem("companyName", data.company_name);
         }
 
+        // Dispatch event for AuthContext to update header immediately
+        window.dispatchEvent(new Event("authChange"));
+
         router.replace("/profile");
       } else {
         dispatch({ type: "SET_ERROR", payload: "Ошибка сервера. Попробуйте позже" });

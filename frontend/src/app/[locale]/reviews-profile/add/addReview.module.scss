@@ -1,13 +1,12 @@
-/* review */
 .review {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 320px;
   margin: 0 auto;
-  padding: 128px 0 80px;
   min-height: 100vh;
+  background: linear-gradient(0deg, rgba(222, 246, 255, 0.039) 0%, rgba(1, 42, 249, 0.09) 100%);
+  padding-top: 144px;
 }
 
 /* headings */
@@ -15,9 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px;
   gap: 16px;
-  width: 320px;
   margin-bottom: 52px;
 }
 
@@ -26,17 +23,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0px;
   gap: 8px;
-  width: 320px;
   height: 32px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 
   .txt {
-    width: 320px;
     height: 32px;
     font-style: normal;
     font-weight: 700;
@@ -46,9 +36,6 @@
     align-items: center;
     text-align: center;
     color: #0d0d0d;
-    flex: none;
-    order: 0;
-    flex-grow: 1;
   }
 }
 
@@ -57,19 +44,11 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0px;
   gap: 10px;
-  width: 320px;
   height: 56px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 
   .txt {
-    width: 320px;
     height: 56px;
-    font-style: normal;
     font-weight: 400;
     font-size: 20px;
     line-height: 28px;
@@ -77,113 +56,69 @@
     align-items: center;
     text-align: center;
     color: #0d0d0d;
-    flex: none;
-    order: 0;
-    flex-grow: 1;
   }
 }
 
-/* add review */
 .addReview {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 24px;
   gap: 10px;
-  width: 320px;
+  width: 480px;
   background: #f8faff;
-  box-shadow: 0px 4px 14px rgba(1, 42, 249, 0.1);
+  box-shadow: 0 4px 14px rgba(1, 42, 249, 0.1);
   border-radius: 28px;
 }
 
-/* info inputs */
 .infoInputs {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px;
   gap: 24px;
-  width: 272px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* review input */
 .reviewInput {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 16px;
-  width: 272px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* input review */
 .inputReview {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 16px;
-  width: 272px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* Frame 1321317238 */
-.frame1321317238 {
+.documentSection {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 16px;
   width: 272px;
   height: 276px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* Frame 1321317237 */
-.frame1321317237 {
+.fileUpload {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 10px;
   width: 272px;
   height: 111px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* Frame 1321317239 */
-.frame1321317239 {
+.fileInputWrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 6px;
   width: 272px;
   height: 82px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* btns */
 .btns {
   box-sizing: border-box;
   display: flex;
@@ -207,14 +142,10 @@
 .btnTxt {
   width: 144px;
   height: 20px;
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 125%;
   color: #012af9;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .fileInfo {
@@ -222,40 +153,23 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0px;
   gap: 10px;
-  width: 272px;
   height: 36px;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
-  display: flex;
-  align-items: flex-end;
   color: #8c8c8c;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* Input field info */
 .inputField {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 0px;
   gap: 10px;
-  width: 272px;
   height: 149px;
   border-radius: 10px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* H3 */
 .h3 {
   display: flex;
   flex-direction: row;
@@ -263,55 +177,35 @@
   align-items: center;
   padding: 0px;
   gap: 10px;
-  width: 272px;
   height: 38px;
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  display: flex;
-  align-items: flex-end;
   color: #012af9;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
-/* list */
 .list {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 4px;
   width: 272px;
   height: 101px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
 .listItem {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 0px;
   gap: 6px;
   width: 272px;
   height: 17px;
-  flex: none;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
 .iconCheck {
   width: 16px;
   height: 16px;
   flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .listText {
@@ -322,9 +216,4 @@
   display: flex;
   align-items: flex-end;
   color: #4d4d4d;
-  flex: none;
-  order: 1;
-  flex-grow: 1;
 }
-
-/* Submit button styles removed - using Button component */

@@ -5,6 +5,7 @@ import { InputField } from "@/components/input/InputField";
 import { TextareaField } from "@/components/input/TextareaField";
 import { StarRating } from "@/components/input/StarRating";
 import { Button } from "@/components/button/Button";
+import Footer from "@/components/footer/Footer";
 import styles from "./addReview.module.scss";
 
 export default function AddReviewPage() {
@@ -67,10 +68,10 @@ export default function AddReviewPage() {
             </div>
 
             {/* Прикрепите документ */}
-            <div className={styles.frame1321317238}>
-              <div className={styles.frame1321317237}>
+            <div className={styles.documentSection}>
+              <div className={styles.fileUpload}>
                 <label className={styles.label}>Прикрепите документ *</label>
-                <div className={styles.frame1321317239}>
+                <div className={styles.fileInputWrapper}>
                   <label className={styles.btns}>
                     <input
                       type="file"
@@ -209,6 +210,7 @@ export default function AddReviewPage() {
           </Button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

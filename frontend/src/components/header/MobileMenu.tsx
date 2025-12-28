@@ -10,29 +10,23 @@ import ProfileIcon from "@/icons/ProfileIcon";
 import PaymentIcon from "@/icons/PaymentIcon";
 import LogoutIcon from "@/icons/LogoutIcon";
 import UserIcon from "@/icons/UserIcon";
-
-interface UserData {
-  name: string;
-  email: string;
-  photo: string | null;
-}
+import { useAuth } from "@/context/AuthContext";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  isLoggedIn: boolean;
-  userData: UserData | null;
 }
 
 const LANGS = ["ru", "en", "ro", "uk"] as const;
 type Lang = (typeof LANGS)[number];
 
-export default function MobileMenu({ isOpen, onClose, isLoggedIn, userData }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const t = useTranslations('Header');
   const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { isLoggedIn, userData, logout } = useAuth();
   
   const currentLang = locale as Lang;
 
@@ -127,7 +121,7 @@ export default function MobileMenu({ isOpen, onClose, isLoggedIn, userData }: Mo
 
           {/* Menu Tabs */}
           <div className={styles.menuTabs}>
-            <Link href="/reviews/my" className={styles.menuTab} onClick={onClose}>
+            <Link href="/reviews-profile" className={styles.menuTab} onClick={onClose}>
               <ReviewIcon />
               <span>Мои отзывы</span>
             </Link>
@@ -149,7 +143,7 @@ export default function MobileMenu({ isOpen, onClose, isLoggedIn, userData }: Mo
           </div>
 
           {/* Logout Button */}
-          <button className={styles.logoutButton} onClick={onClose}>
+          <button className={styles.logoutButton} onClick={() => { logout(); onClose(); }}>
             <LogoutIcon />
             <span>Выйти</span>
           </button>

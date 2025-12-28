@@ -1,52 +1,17 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import styles from "./Header.module.scss";
 import MobileMenu from "./MobileMenu";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
-
-interface UserData {
-  name: string;
-  email: string;
-  photo: string | null;
-}
+import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
   const t = useTranslations('Header');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
-  
-  // Check auth token and load user data
-  useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
-    setIsLoggedIn(!!token);
-    
-    if (token) {
-      // Load user profile data
-      fetch(`${API_URL}/api/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setUserData({
-            name: data.name || "User",
-            email: data.email || "",
-            photo: data.photo ? `${API_URL}/static/user_photos/${data.photo}` : null,
-          });
-        })
-        .catch(() => {
-          setUserData(null);
-        });
-    }
-  }, []);
-  
-  const availableRequests = 234;
-  const totalRequests = 500;
+  const { isLoggedIn, userData } = useAuth();
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
@@ -133,7 +98,7 @@ export default function Header() {
         {isLoggedIn ? (
           <div className={styles.headerRight}>
             <nav className={styles.userNav}>
-              <Link href="/reviews/my" className={styles.userNavLink}>
+              <Link href="/reviews-profile" className={styles.userNavLink}>
                 Мои отзывы
               </Link>
               <Link href="/favorites" className={styles.userNavLink}>
@@ -171,7 +136,7 @@ export default function Header() {
       </div>
     </header>
 
-    <MobileMenu isOpen={menuOpen} onClose={closeMenu} isLoggedIn={isLoggedIn} userData={userData} />
+    <MobileMenu isOpen={menuOpen} onClose={closeMenu} />
   </>
   );
 }

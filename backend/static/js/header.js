@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Добавляем кнопку "Оставить отзыв" в начало
             const reviewBtn = document.createElement('a');
-            reviewBtn.href = `/reviews-profile/add?lang=${lang}`;
+            reviewBtn.href = `/${lang}/reviews-profile/add`;
             reviewBtn.className = 'btn-add-review';
             reviewBtn.textContent = 'Оставить отзыв';
             mobileMenuEl.appendChild(reviewBtn);

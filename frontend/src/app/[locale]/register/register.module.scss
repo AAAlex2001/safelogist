@@ -1,0 +1,279 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page::before,
+.page::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 16vw;
+  height: 50%;
+  background: var(--primary);
+  filter: blur(70px);
+  opacity: 0.85;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.page::before {
+  left: -15vw;
+}
+
+.page::after {
+  right: -15vw;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  max-width: 320px;
+  width: 100%;
+}
+
+.logo {
+  width: 220px;
+  height: 39px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-size: 18px;
+  line-height: 21px;
+  font-family: var(--font-base);
+  color: var(--primary);
+  text-align: center;
+  font-weight: 400;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 19px;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 400;
+}
+
+.inputBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: transparent;
+  filter: drop-shadow(0px 2px 12px rgba(1, 42, 249, 0.05));
+  border-radius: 16px;
+  padding: 16px 0;
+}
+
+.codeHint {
+  text-align: center;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.actionsRow {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.back {
+  color: var(--primary);
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+  transition: color 0.2s ease;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.back:hover {
+  color: var(--primary-dark);
+}
+
+.secondaryLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.secondaryLink a {
+  margin-left: 4px;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.secondaryLink a:hover {
+  text-decoration: underline;
+}
+
+.termsText {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.termsText a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.termsText a:hover {
+  text-decoration: underline;
+}
+
+/* Phone input styles */
+.phoneWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.phoneLabel {
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.phoneError {
+  font-size: 12px;
+  color: #e5484d;
+}
+
+.phoneInput {
+  width: 100% !important;
+}
+
+.phoneInput :global(.react-tel-input) {
+  width: 100%;
+}
+
+.phoneInput :global(.form-control) {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 14px 16px 14px 52px !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--input-border) !important;
+  background: var(--input-bg) !important;
+  box-shadow: var(--card-shadow) !important;
+  font-size: 14px !important;
+  line-height: 17px !important;
+  font-family: var(--font-base) !important;
+  color: var(--text-primary) !important;
+}
+
+.phoneInput :global(.form-control)::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.phoneInput :global(.form-control):focus {
+  border-color: var(--primary) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.phoneInput :global(.flag-dropdown) {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 10px 0 0 10px !important;
+}
+
+.phoneInput :global(.selected-flag) {
+  background: transparent !important;
+  padding-left: 12px !important;
+}
+
+.phoneInput :global(.selected-flag:hover),
+.phoneInput :global(.selected-flag:focus),
+.phoneInput :global(.selected-flag.open) {
+  background: transparent !important;
+}
+
+.phoneInput :global(.country-list) {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.phoneInput :global(.country-list .country) {
+  padding: 10px 12px !important;
+}
+
+.phoneInput :global(.country-list .country:hover) {
+  background: var(--surface-bg) !important;
+}
+
+.phoneInput :global(.country-list .country.highlight) {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+.phoneInputError :global(.form-control) {
+  border-color: #e5484d !important;
+  background: #fff0f2 !important;
+}
+
+@media (max-width: 768px) {
+  .page::before,
+  .page::after {
+    width: 80%;
+    height: 28vh;
+    left: 50%;
+    opacity: 0.46;
+    filter: blur(60px);
+    transform: translateX(-50%);
+    top: auto;
+  }
+
+  .page::before {
+    top: -26vh;
+  }
+
+  .page::after {
+    bottom: -26vh;
+  }
+}

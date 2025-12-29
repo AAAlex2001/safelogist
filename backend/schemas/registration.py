@@ -41,3 +41,19 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ============================================================================
+# Email Verification (for registration)
+# ============================================================================
+
+
+class EmailCodeRequest(BaseModel):
+    """Запрос на отправку кода верификации email"""
+    email: EmailStr = Field(..., description="Email для верификации")
+
+
+class EmailCodeVerify(BaseModel):
+    """Проверка кода верификации email"""
+    email: EmailStr = Field(..., description="Email для верификации")
+    code: str = Field(..., description="6-значный код верификации")

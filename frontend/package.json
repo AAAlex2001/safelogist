@@ -12,7 +12,8 @@
     "next": "^16.0.7",
     "next-intl": "^4.6.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-phone-input-2": "^2.15.1"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -1,16 +1,23 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import delete
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime, timedelta
+import random
 import re
 
 from models.user import User
+from models.forgot_password import PasswordResetCode
 from schemas.registration import UserRegistration
 from helpers.security import hash_password
+from helpers.email import send_email_code
 from services.telegram_notifier import telegram_notifier
 
 
 class RegistrationService:
+    CODE_EXPIRE_MINUTES = 10
+
     def __init__(self, db: AsyncSession):
         self.db = db
 
@@ -23,7 +30,7 @@ class RegistrationService:
         return result.scalars().first()
 
     # ---------------------------------------------------------
-    # 3. Проверка phone
+    # 2. Проверка phone
     # ---------------------------------------------------------
     async def get_user_by_phone(self, phone: str) -> User | None:
         query = select(User).where(User.phone == phone)
@@ -31,7 +38,62 @@ class RegistrationService:
         return result.scalars().first()
 
     # ---------------------------------------------------------
-    # 4. Создание пользователя
+    # 3. Отправка кода верификации email
+    # ---------------------------------------------------------
+    async def send_verification_code(self, email: str) -> None:
+        # Проверяем, не занят ли email
+        if await self.get_user_by_email(email):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пользователь с таким email уже существует",
+            )
+
+        # Удаляем старые коды для этого email
+        await self.db.execute(
+            delete(PasswordResetCode).where(PasswordResetCode.email == email)
+        )
+
+        code: int = random.randint(100000, 999999)
+
+        verification_code = PasswordResetCode(
+            email=email,
+            user_id=None,  # для регистрации user_id не нужен
+            code=str(code),
+            expires_at=datetime.utcnow() + timedelta(minutes=self.CODE_EXPIRE_MINUTES),
+        )
+
+        self.db.add(verification_code)
+        await self.db.commit()
+        await send_email_code(email, str(code))
+
+    # ---------------------------------------------------------
+    # 4. Проверка кода верификации
+    # ---------------------------------------------------------
+    async def verify_code(self, email: str, code: str) -> bool:
+        result = await self.db.execute(
+            select(PasswordResetCode).where(
+                PasswordResetCode.email == email,
+                PasswordResetCode.code == code
+            )
+        )
+        code_obj = result.scalars().first()
+
+        if not code_obj:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Неверный код"
+            )
+
+        if code_obj.expires_at < datetime.utcnow():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Код истёк"
+            )
+
+        return True
+
+    # ---------------------------------------------------------
+    # 5. Создание пользователя
     # ---------------------------------------------------------
     async def create_user(self, data: UserRegistration) -> User:
         # Простая валидация пароля

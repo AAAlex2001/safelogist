@@ -410,9 +410,6 @@ body {
 }
 
 @media (min-width: 768px) {
-    .header-container {
-        max-width: 730px;
-    }
 
     .mobile-menu {
         right: calc((100% - 730px) / 2 + 30px);
@@ -422,11 +419,11 @@ body {
 
 @media (min-width: 1440px) {
     .header-container {
-        max-width: 1150px;
+        max-width: 1635px;
     }
 
     .mobile-menu {
-        right: calc((100% - 1150px) / 2 + 30px);
+        right: calc((100% - 1635px) / 2 + 30px);
         max-width: 360px;
     }
 }

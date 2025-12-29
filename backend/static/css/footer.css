@@ -149,14 +149,13 @@
 
 @media (min-width: 768px) {
     .main-footer {
-        max-width: 730px;
         margin: 140px auto 0;
     }
 }
 
 @media (min-width: 1440px) {
     .main-footer {
-        max-width: 1150px;
+        max-width: 1635px;
     }
 
     .footer-description {
@@ -165,7 +164,7 @@
 
     .footer-top {
         flex-direction: row;
-        gap: 50px;
+        gap: 230px;
     }
 
     .footer-links {

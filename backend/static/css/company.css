@@ -503,11 +503,6 @@ body::before {
         line-height: 28px;
     }
 
-    .company-page {
-        width: 100%;
-        max-width: 730px;
-    }
-
     .company-card {
         margin: 0 auto 40px;
     }
@@ -546,8 +541,7 @@ body::before {
     }
 
     .company-page {
-        width: 100%;
-        max-width: 1150px;
+        max-width: 1635px;
     }
 
     .company-top-row {

@@ -8,6 +8,8 @@ type Stats = {
   active_users: number;
   pending_claims: number;
   approved_claims: number;
+  pending_reviews: number;
+  approved_reviews: number;
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -47,6 +49,14 @@ export default function AdminDashboard() {
         <div className={styles.statCard}>
           <div className={styles.statValue}>{stats?.approved_claims || 0}</div>
           <div className={styles.statLabel}>Approved Claims</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>{stats?.pending_reviews || 0}</div>
+          <div className={styles.statLabel}>Pending Reviews</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>{stats?.approved_reviews || 0}</div>
+          <div className={styles.statLabel}>Approved Reviews</div>
         </div>
       </div>
     </div>

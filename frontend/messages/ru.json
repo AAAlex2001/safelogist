@@ -124,7 +124,11 @@
     "noCompanyTitle": "Компания не указана",
     "noCompanyText": "Укажите название компании в профиле, чтобы видеть отзывы о ней",
     "totalReviews": "Всего отзывов",
-    "pageLabel": "Страница"
+    "pageLabel": "Страница",
+    "statusPending": "На модерации",
+    "statusApproved": "Одобрен",
+    "statusRejected": "Отклонён",
+    "adminCommentLabel": "Причина отклонения:"
   },
   "AddReview": {
     "pageTitle": "Добавить отзыв",
@@ -143,7 +147,10 @@
     "docAct": "Акт выполненных работ",
     "docInvoice": "Товарная накладная",
     "docOther": "Другой документ, подтверждающий сотрудничество",
-    "submitButton": "Отправить отзыв"
+    "submitButton": "Отправить отзыв",
+    "searching": "Поиск...",
+    "noCompaniesFound": "Компании не найдены",
+    "reviewsCount": "{count} отзывов"
   },
   "Settings": {
     "pageTitle": "Настройки",

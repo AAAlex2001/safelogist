@@ -8,6 +8,7 @@ type StarRatingProps = {
   value: number;
   onChange?: (rating: number) => void;
   disabled?: boolean;
+  error?: string | null;
 };
 
 export function StarRating({
@@ -15,6 +16,7 @@ export function StarRating({
   value,
   onChange,
   disabled = false,
+  error,
 }: StarRatingProps) {
   const handleStarClick = (index: number) => {
     if (!disabled && onChange) {
@@ -39,6 +41,7 @@ export function StarRating({
           </button>
         ))}
       </div>
+      {error && <span className={styles.error}>{error}</span>}
     </div>
   );
 }

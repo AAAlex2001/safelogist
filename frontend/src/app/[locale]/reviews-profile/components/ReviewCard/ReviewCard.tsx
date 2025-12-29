@@ -8,14 +8,15 @@ import type { ReviewItem } from "../../store";
 
 interface ReviewCardProps {
   review: ReviewItem;
+  showStatus?: boolean;
 }
 
-export function ReviewCard({ review }: ReviewCardProps) {
+export function ReviewCard({ review, showStatus = false }: ReviewCardProps) {
   const t = useTranslations('Reviews');
   const params = useParams();
   const locale = params.locale as string;
 
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return "—";
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -31,10 +32,44 @@ export function ReviewCard({ review }: ReviewCardProps) {
     ));
   };
 
+  const getStatusLabel = (status: string | null | undefined) => {
+    switch (status) {
+      case "PENDING": return t("statusPending");
+      case "APPROVED": return t("statusApproved");
+      case "REJECTED": return t("statusRejected");
+      default: return "";
+    }
+  };
+
+  const getStatusClass = (status: string | null | undefined) => {
+    switch (status) {
+      case "PENDING": return styles.statusPending;
+      case "APPROVED": return styles.statusApproved;
+      case "REJECTED": return styles.statusRejected;
+      default: return "";
+    }
+  };
+
+  // Определяем режим отображения: мои отзывы или отзывы обо мне
+  const isMyReview = !!review.target_company;
+  
+  // Источник: для моих отзывов показываем "SafeLogist", для отзывов обо мне - source
+  const source = isMyReview ? "SafeLogist" : review.source;
+  
+  // На кого отзыв
+  const targetName = isMyReview ? review.target_company : review.subject;
+  
+  // Дата
+  const date = isMyReview ? review.created_at : review.review_date;
+  
+  // От кого отзыв
+  const fromName = isMyReview ? review.from_company : review.reviewer;
+  const fromId = isMyReview ? null : review.reviewer_id;
+
   return (
     <div className={styles.reviewCard}>
       <div className={styles.reviewTop}>
-        <div className={styles.reviewSource}>{review.source}</div>
+        <div className={styles.reviewSource}>{source}</div>
         <div className={styles.reviewStarsRow}>
           <div className={styles.reviewStars}>
             {renderStars(review.rating)}
@@ -44,27 +79,42 @@ export function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       <div className={styles.reviewTitleDate}>
-        <div className={styles.reviewTitle}>{review.subject}</div>
-        <div className={styles.reviewDate}>{formatDate(review.review_date)}</div>
+        <div className={styles.reviewTitle}>{targetName}</div>
+        <div className={styles.reviewDate}>{formatDate(date)}</div>
       </div>
 
       <div className={styles.reviewFromRow}>
         <div className={styles.reviewFromLabel}>{t('fromLabel')}</div>
         <div className={styles.reviewAuthor}>
-          {review.reviewer_id ? (
+          {fromId ? (
             <a 
-              href={`/${locale}/reviews/item/${review.reviewer_id}`} 
+              href={`/${locale}/reviews/item/${fromId}`} 
               className={styles.reviewAuthorLink}
             >
-              {review.reviewer}
+              {fromName}
             </a>
           ) : (
-            review.reviewer
+            fromName
           )}
         </div>
       </div>
 
       <div className={styles.reviewBubble}>{review.comment}</div>
+
+      {showStatus && review.status && (
+        <div className={styles.statusRow}>
+          <div className={`${styles.statusBadge} ${getStatusClass(review.status)}`}>
+            {getStatusLabel(review.status)}
+          </div>
+        </div>
+      )}
+
+      {review.admin_comment && (
+        <div className={styles.adminComment}>
+          <div className={styles.adminCommentLabel}>{t("adminCommentLabel")}</div>
+          <div className={styles.adminCommentText}>{review.admin_comment}</div>
+        </div>
+      )}
     </div>
   );
 }

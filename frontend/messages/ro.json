@@ -124,7 +124,11 @@
     "noCompanyText": "Specificați numele companiei în profilul dvs. pentru a vedea recenziile despre aceasta",
     "totalReviews": "Total recenzii",
     "fromLabel": "De la:",
-    "pageLabel": "Pagina"
+    "pageLabel": "Pagina",
+    "statusPending": "În moderare",
+    "statusApproved": "Aprobat",
+    "statusRejected": "Respins",
+    "adminCommentLabel": "Motivul respingerii:"
   },
   "AddReview": {
     "pageTitle": "Adaugă recenzie",
@@ -143,7 +147,10 @@
     "docAct": "Act de lucrări finalizate",
     "docInvoice": "Factură",
     "docOther": "Alt document care confirmă cooperarea",
-    "submitButton": "Trimite recenzia"
+    "submitButton": "Trimite recenzia",
+    "searching": "Căutare...",
+    "noCompaniesFound": "Nu s-au găsit companii",
+    "reviewsCount": "{count} recenzii"
   },
   "Settings": {
     "pageTitle": "Setări",

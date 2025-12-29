@@ -4,6 +4,7 @@ from models.forgot_password import PasswordResetCode
 from models.review import Review
 from models.company import Company
 from models.company_claim import CompanyClaim, ClaimStatus
+from models.review_request import ReviewRequest, ReviewRequestStatus
 
 __all__ = [
     "Base",
@@ -14,4 +15,6 @@ __all__ = [
     "Company",
     "CompanyClaim",
     "ClaimStatus",
+    "ReviewRequest",
+    "ReviewRequestStatus",
 ]

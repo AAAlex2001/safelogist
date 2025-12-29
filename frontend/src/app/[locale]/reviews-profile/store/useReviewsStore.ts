@@ -5,20 +5,28 @@ import { useReducer, useCallback, useMemo } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const ENDPOINTS = {
   companyReviews: `${API_URL}/api/profile/company-reviews`,
+  myReviewRequests: `${API_URL}/api/review-request/my`,
 } as const;
 
 export type ReviewsTab = "about" | "reviews" | "rejected";
 
 export interface ReviewItem {
   id: number;
-  subject: string;
+  // Для отзывов "обо мне" (about tab)
+  subject?: string;
+  reviewer?: string | null;
+  reviewer_id?: number | null;
+  review_date?: string | null;
+  source?: string | null;
+  // Для моих отзывов (reviews/rejected tabs)
+  from_company?: string;
+  target_company?: string;
+  admin_comment?: string | null;
+  created_at?: string;
+  // Общие поля
   comment: string | null;
-  reviewer: string | null;
-  reviewer_id: number | null;
   rating: number | null;
   status: string | null;
-  review_date: string | null;
-  source: string | null;
 }
 
 export interface ReviewsState {
@@ -250,12 +258,100 @@ export function useReviewsStore(): ReviewsStore {
   }, [getAuthHeaders, state.aboutMe.perPage]);
 
   const loadMyReviews = useCallback(async (page: number = 1) => {
-    dispatch({ type: "SET_MY_REVIEWS_PAGE", payload: page });
-  }, []);
+    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch({ type: "SET_ERROR", payload: null });
+
+    try {
+      const headers = getAuthHeaders();
+      if (!headers.Authorization) {
+        throw new Error("Unauthorized");
+      }
+
+      const response = await fetch(
+        `${ENDPOINTS.myReviewRequests}?page=${page}&per_page=${state.myReviews.perPage}`,
+        { headers }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load reviews");
+      }
+
+      const data = await response.json();
+      
+      // API возвращает массив напрямую
+      // Фильтруем только PENDING и APPROVED для вкладки "Мои отзывы"
+      const allReviews = Array.isArray(data) ? data : [];
+      const filteredReviews = allReviews.filter(
+        (r: ReviewItem) => r.status === "PENDING" || r.status === "APPROVED"
+      );
+
+      dispatch({
+        type: "SET_MY_REVIEWS",
+        payload: {
+          reviews: filteredReviews,
+          total: filteredReviews.length,
+          page: page,
+          perPage: state.myReviews.perPage,
+          totalPages: Math.ceil(filteredReviews.length / state.myReviews.perPage),
+        },
+      });
+    } catch (error) {
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error instanceof Error ? error.message : "Unknown error" 
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, [getAuthHeaders, state.myReviews.perPage]);
 
   const loadRejectedReviews = useCallback(async (page: number = 1) => {
-    dispatch({ type: "SET_REJECTED_PAGE", payload: page });
-  }, []);
+    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch({ type: "SET_ERROR", payload: null });
+
+    try {
+      const headers = getAuthHeaders();
+      if (!headers.Authorization) {
+        throw new Error("Unauthorized");
+      }
+
+      const response = await fetch(
+        `${ENDPOINTS.myReviewRequests}?page=${page}&per_page=${state.rejected.perPage}`,
+        { headers }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load reviews");
+      }
+
+      const data = await response.json();
+      
+      // API возвращает массив напрямую
+      // Фильтруем только REJECTED для вкладки "Отклонённые"
+      const allReviews = Array.isArray(data) ? data : [];
+      const filteredReviews = allReviews.filter(
+        (r: ReviewItem) => r.status === "REJECTED"
+      );
+
+      dispatch({
+        type: "SET_REJECTED_REVIEWS",
+        payload: {
+          reviews: filteredReviews,
+          total: filteredReviews.length,
+          page: page,
+          perPage: state.rejected.perPage,
+          totalPages: Math.ceil(filteredReviews.length / state.rejected.perPage),
+        },
+      });
+    } catch (error) {
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: error instanceof Error ? error.message : "Unknown error" 
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, [getAuthHeaders, state.rejected.perPage]);
 
   return useMemo(() => ({
     state,

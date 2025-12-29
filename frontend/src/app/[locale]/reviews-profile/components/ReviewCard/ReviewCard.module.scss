@@ -26,6 +26,7 @@
   font-size: 16px;
   line-height: 19px;
   color: #6b6b6b;
+  text-transform: uppercase;
 }
 
 .reviewStars {
@@ -111,4 +112,56 @@
   font-size: 16px;
   line-height: 24px;
   color: var(--text-primary);
+}
+
+.statusRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.statusPending {
+  background: #FFF3CD;
+  color: #856404;
+}
+
+.statusApproved {
+  background: #D4EDDA;
+  color: #155724;
+}
+
+.statusRejected {
+  background: #F8D7DA;
+  color: #721C24;
+}
+
+.adminComment {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #FFF3CD;
+  border-radius: 10px;
+  border-left: 3px solid #856404;
+}
+
+.adminCommentLabel {
+  font-weight: 500;
+  font-size: 14px;
+  color: #856404;
+  margin-bottom: 4px;
+}
+
+.adminCommentText {
+  font-size: 14px;
+  line-height: 20px;
+  color: #856404;
 }

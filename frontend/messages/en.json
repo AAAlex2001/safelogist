@@ -124,7 +124,11 @@
     "noCompanyText": "Specify your company name in your profile to see reviews about it",
     "totalReviews": "Total reviews",
     "fromLabel": "From:",
-    "pageLabel": "Page"
+    "pageLabel": "Page",
+    "statusPending": "Under moderation",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "adminCommentLabel": "Rejection reason:"
   },
   "AddReview": {
     "pageTitle": "Add Review",
@@ -143,7 +147,10 @@
     "docAct": "Act of completed work",
     "docInvoice": "Waybill",
     "docOther": "Other document confirming cooperation",
-    "submitButton": "Submit Review"
+    "submitButton": "Submit Review",
+    "searching": "Searching...",
+    "noCompaniesFound": "No companies found",
+    "reviewsCount": "{count} reviews"
   },
   "Settings": {
     "pageTitle": "Settings",

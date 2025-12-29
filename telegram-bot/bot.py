@@ -3,9 +3,10 @@ import logging
 import os
 from dotenv import load_dotenv
 
-from aiogram import Bot, Dispatcher, F
+from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton, ChatType
+from aiogram.types import Message, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.enums import ChatType
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 load_dotenv()
@@ -37,32 +38,55 @@ def is_allowed_chat(message: Message) -> bool:
         return True
     return False
 
-# Главная клавиатура с командами
+
+# Главная клавиатура с командами (только для личных чатов)
 main_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="/start")],
+        [KeyboardButton(text="/channel")]
+    ],
+    resize_keyboard=True,
+    persistent=True
+)
+
+
+@dp.message(CommandStart())
+async def cmd_start(message: Message):
+    """Обработчик команды /start"""
     if not is_allowed_chat(message):
         return
     
     user = message.from_user
     
-    # Создаем клавиатуру с Web App
-    builder = InlineKeyboardBuilder()
-    builder.button(
-        text="🚀 Открыть SafeLogist",
-        web_app=WebAppInfo(url=WEBAPP_URL)
-    )
-    
-    await message.answer(
-        f"👋 Привет, {user.first_name}!\n\n"
-        f"Добро пожаловать в <b>SafeLogist</b> — платформу проверки логистических компаний.\n\n"
-        f"🔍 <b>Что вы можете делать:</b>\n"
-        f"• Искать отзывы о компаниях\n"
-        f"• Оставлять свои отзывы\n"
-        f"• Подтверждать владение компанией\n"
-        f"• Управлять профилем\n\n"
-        f"Нажмите кнопку ниже, чтобы открыть приложение:",
-        reply_markup=builder.as_markup(),
-        parse_mode="HTML"
-    )
+    # WebApp кнопки работают только в личных чатах
+    if message.chat.type == ChatType.PRIVATE:
+        # Создаем клавиатуру с Web App
+        builder = InlineKeyboardBuilder()
+        builder.button(
+            text="🚀 Открыть SafeLogist",
+            web_app=WebAppInfo(url=WEBAPP_URL)
+        )
+        
+        await message.answer(
+            f"👋 Привет, {user.first_name}!\n\n"
+            f"Добро пожаловать в <b>SafeLogist</b> — платформу проверки логистических компаний.\n\n"
+            f"🔍 <b>Что вы можете делать:</b>\n"
+            f"• Искать отзывы о компаниях\n"
+            f"• Оставлять свои отзывы\n"
+            f"• Подтверждать владение компанией\n"
+            f"• Управлять профилем\n\n"
+            f"Нажмите кнопку ниже, чтобы открыть приложение:",
+            reply_markup=builder.as_markup(),
+            parse_mode="HTML"
+        )
+    else:
+        # В группе просто отправляем ссылку
+        await message.answer(
+            f"👋 Привет!\n\n"
+            f"<b>SafeLogist</b> — платформа проверки логистических компаний.\n\n"
+            f"🔗 Откройте приложение: {WEBAPP_URL}",
+            parse_mode="HTML"
+        )
 
 
 @dp.message(Command("channel"))
@@ -71,18 +95,6 @@ async def cmd_channel(message: Message):
     if not is_allowed_chat(message):
         return
     
-        f"• Оставлять свои отзывы\n"
-        f"• Подтверждать владение компанией\n"
-        f"• Управлять профилем\n\n"
-        f"Нажмите кнопку ниже, чтобы открыть приложение:",
-        reply_markup=builder.as_markup(),
-        parse_mode="HTML"
-    )
-
-
-@dp.message(Command("channel"))
-async def cmd_channel(message: Message):
-    """Обработчик команды /channel - ссылка на Telegram канал"""
     await message.answer(
         f"📢 <b>Наш Telegram канал</b>\n\n"
         f"Подписывайтесь на наш канал, чтобы быть в курсе всех новостей и обновлений SafeLogist:\n\n"

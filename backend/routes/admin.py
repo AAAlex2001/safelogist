@@ -33,6 +33,15 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class PaginatedUsersResponse(BaseModel):
+    """Список пользователей с пагинацией"""
+    items: List[UserResponse]
+    total: int
+    page: int
+    limit: int
+    pages: int
+
+
 class StatsResponse(BaseModel):
     """Статистика для админки"""
     total_users: int
@@ -73,30 +82,51 @@ async def get_stats(db: AsyncSession = Depends(get_db)):
     )
 
 
-@router.get("/users", response_model=List[UserResponse])
+@router.get("/users", response_model=PaginatedUsersResponse)
 async def list_users(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     search: Optional[str] = None,
     db: AsyncSession = Depends(get_db)
 ):
-    """Список пользователей"""
+    """Список пользователей с пагинацией"""
     offset = (page - 1) * limit
 
+    # Базовый запрос для подсчета
+    count_query = select(func.count(User.id))
+    
+    # Базовый запрос для данных
     query = select(User).order_by(User.created_at.desc())
 
     if search:
         pattern = f"%{search}%"
-        query = query.where(
+        search_filter = (
             (User.email.ilike(pattern)) |
             (User.name.ilike(pattern)) |
             (User.company_name.ilike(pattern))
         )
+        count_query = count_query.where(search_filter)
+        query = query.where(search_filter)
 
+    # Получаем общее количество
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    # Получаем данные с пагинацией
     query = query.limit(limit).offset(offset)
     result = await db.execute(query)
+    users = result.scalars().all()
 
-    return result.scalars().all()
+    # Вычисляем общее количество страниц
+    pages = (total + limit - 1) // limit if total > 0 else 1
+
+    return PaginatedUsersResponse(
+        items=users,
+        total=total,
+        page=page,
+        limit=limit,
+        pages=pages
+    )
 
 
 @router.patch("/users/{user_id}/toggle-active")

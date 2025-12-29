@@ -8,11 +8,20 @@
         const form = document.getElementById('companyClaimFormStep2');
         if (!form) return;
 
+        const companyNameInput = document.getElementById('companyName');
         const submitBtn = form.querySelector('.company-claim-btn-primary');
         const backBtn = form.querySelector('[data-action="back"]');
         const requiredInputs = form.querySelectorAll('.company-claim-input[required]');
         const emailInput = document.getElementById('email');
         const emailErrorMsg = document.getElementById('email-error-msg');
+
+        // Автоматически подставляем название компании и блокируем поле
+        if (companyNameInput && ctx.formData.companyName) {
+            companyNameInput.value = ctx.formData.companyName;
+            companyNameInput.disabled = true;
+            companyNameInput.style.backgroundColor = '#f5f5f5';
+            companyNameInput.style.cursor = 'not-allowed';
+        }
 
         function checkStep2Validity() {
             if (!submitBtn) return;

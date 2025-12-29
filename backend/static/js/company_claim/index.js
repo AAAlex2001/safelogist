@@ -88,11 +88,13 @@
             return;
         }
         
-        // Получаем company_id со страницы
+        // Получаем company_id и company_name со страницы
         const companyData = document.getElementById('companyClaimData');
         if (companyData) {
             const companyId = companyData.getAttribute('data-company-id');
+            const companyName = companyData.getAttribute('data-company-name');
             ctx.formData.targetCompanyId = companyId ? parseInt(companyId) : null;
+            ctx.formData.companyName = companyName || '';
         }
         
         goToStep(1);

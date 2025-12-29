@@ -1,11 +1,10 @@
-/* Mobile menu styles ported from backend/static/css/header.css */
-
 .mobileMenu {
   position: fixed;
   top: 64px;
-  right: 40px;
+  left: max(20px, calc((100vw - 1675px) / 2 + 20px));
+  right: max(20px, calc((100vw - 1675px) / 2 + 20px));
   max-width: 360px;
-  width: calc(100% - 60px);
+  margin-left: auto;
   background: var(--card-bg);
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -169,23 +168,8 @@
   gap: 12px;
 }
 
-@media (min-width: 768px) {
-  .mobileMenu {
-    right: calc((100% - 730px) / 2 + 30px);
-    max-width: 360px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .mobileMenu {
-    right: calc((100% - 1635px) / 2 + 30px);
-    max-width: 360px;
-  }
-}
-
-/* Logged In User Styles */
 .mobileMenu.loggedIn {
-  width: 332px;
+  width: auto;
   max-width: 332px;
   padding: 16px 16px 8px;
 }
@@ -246,6 +230,7 @@
   font-size: 16px;
   line-height: 19px;
   color: var(--text-secondary);
+  word-break: break-word;
 }
 
 .userPlan {
@@ -264,7 +249,6 @@
   margin-top: 6px;
 }
 
-/* Requests Statistics */
 .requestsStats {
   display: flex;
   flex-direction: column;
@@ -277,7 +261,8 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
+  gap: 5px;
 }
 
 .requestsLabel {
@@ -315,7 +300,6 @@
   transition: width 0.3s ease;
 }
 
-/* Menu Tabs */
 .menuTabs {
   display: flex;
   flex-direction: column;
@@ -353,7 +337,6 @@
   color: var(--text-secondary);
 }
 
-/* Logout Button */
 .logoutButton {
   display: flex;
   flex-direction: row;
@@ -381,6 +364,7 @@
 }
 
 .logoutButton span {
+  font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;

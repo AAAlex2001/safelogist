@@ -30,19 +30,12 @@
 
 .reviewStars {
   display: flex;
-  gap: 2px;
-}
+  gap: 0;
+  align-items: center;
 
-.star {
-  color: #d0d0d0;
-  font-size: 18px;
-  line-height: 1;
-}
-
-.starFilled {
-  color: #f5b301;
-  font-size: 18px;
-  line-height: 1;
+  svg {
+    flex-shrink: 0;
+  }
 }
 
 .reviewRatingNumber {

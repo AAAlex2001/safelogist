@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import StarIcon from '@/icons/StarIcon';
 import styles from "./ReviewCard.module.scss";
 import type { ReviewItem } from "../../store";
 
@@ -25,14 +26,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
   const renderStars = (rating: number | null) => {
     const ratingValue = rating ?? 0;
-    return Array.from({ length: 5 }, (_, i) => {
-      const starIndex = i + 1;
-      return (
-        <span key={i} className={ratingValue >= starIndex ? styles.starFilled : styles.star}>
-          {ratingValue >= starIndex ? '★' : '☆'}
-        </span>
-      );
-    });
+    return Array.from({ length: 5 }, (_, i) => (
+      <StarIcon key={i} size={20} filled={i < ratingValue} />
+    ));
   };
 
   return (

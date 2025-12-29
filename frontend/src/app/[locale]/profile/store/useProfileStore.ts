@@ -195,7 +195,7 @@ function reducer(state: ProfileState, action: ProfileAction): ProfileState {
     case "CLEAR_SECURITY_ERRORS":
       return {
         ...state,
-        security: { ...state.security, errors: { current: null, new: null, repeat: null } },
+        security: { ...state.security, errors: { new: null, repeat: null } },
       };
     case "RESET_SECURITY":
       return { ...state, security: initialState.security };

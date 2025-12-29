@@ -139,14 +139,7 @@ class ProfileService:
     # -------------------------------------------------------------
     # 3. Смена пароля
     # -------------------------------------------------------------
-    async def change_password(self, user: User, current_password: str, new_password: str) -> None:
-        # Проверяем текущий пароль
-        if not verify_password(current_password, user.password):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Неверный текущий пароль"
-            )
-
+    async def change_password(self, user: User, new_password: str) -> None:
         # Проверяем длину нового пароля
         if len(new_password) < 8:
             raise HTTPException(

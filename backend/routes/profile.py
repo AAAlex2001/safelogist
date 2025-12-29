@@ -72,7 +72,7 @@ async def change_password(
     db: AsyncSession = Depends(get_db)
 ):
     service = ProfileService(db)
-    await service.change_password(current_user, data.current_password, data.new_password)
+    await service.change_password(current_user, data.new_password)
     return ChangePasswordResponse(message="Пароль успешно изменён")
 
 

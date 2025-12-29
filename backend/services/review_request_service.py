@@ -1,6 +1,5 @@
 import os
 import uuid
-from datetime import datetime, timezone
 from typing import Optional
 from fastapi import UploadFile, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -106,7 +105,13 @@ class ReviewRequestService:
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
-    async def get_user_requests(self, user_id: int, status_filter: Optional[str] = None) -> list[ReviewRequest]:
+    async def get_user_requests(
+        self, 
+        user_id: int, 
+        status_filter: Optional[str] = None,
+        page: int = 1,
+        per_page: int = 10
+    ) -> tuple[list[ReviewRequest], int]:
         query = select(ReviewRequest).where(ReviewRequest.user_id == user_id).order_by(ReviewRequest.created_at.desc())
         
         if status_filter:
@@ -116,8 +121,18 @@ class ReviewRequestService:
             except ValueError:
                 pass
         
+        # Получаем общее количество
+        from sqlalchemy import func
+        count_query = select(func.count()).select_from(query.alias())
+        count_result = await self.db.execute(count_query)
+        total = count_result.scalar() or 0
+        
+        # Применяем пагинацию
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
+        
         result = await self.db.execute(query)
-        return list(result.scalars().all())
+        return list(result.scalars().all()), total
 
     async def approve_request(self, request_id: int, admin_comment: Optional[str] = None) -> Optional[Review]:
         review_request = await self.get_request_by_id(request_id)
@@ -145,7 +160,7 @@ class ReviewRequestService:
         await self.db.commit()
         await self.db.refresh(review)
         
-        await self._update_company_stats(review_request.target_company)
+        await self.update_company_stats(review_request.target_company)
         
         return review
 
@@ -160,7 +175,7 @@ class ReviewRequestService:
         await self.db.commit()
         return True
 
-    async def _update_company_stats(self, company_name: str) -> None:
+    async def update_company_stats(self, company_name: str) -> None:
         count_query = select(Review.id).where(Review.subject == company_name)
         result = await self.db.execute(count_query)
         reviews = list(result.scalars().all())

@@ -278,9 +278,9 @@ export function useReviewsStore(): ReviewsStore {
 
       const data = await response.json();
       
-      // API возвращает массив напрямую
+      // Бэкенд теперь возвращает {reviews, total, page, per_page, total_pages}
+      const allReviews = data.reviews || [];
       // Фильтруем только PENDING и APPROVED для вкладки "Мои отзывы"
-      const allReviews = Array.isArray(data) ? data : [];
       const filteredReviews = allReviews.filter(
         (r: ReviewItem) => r.status === "PENDING" || r.status === "APPROVED"
       );
@@ -289,10 +289,10 @@ export function useReviewsStore(): ReviewsStore {
         type: "SET_MY_REVIEWS",
         payload: {
           reviews: filteredReviews,
-          total: filteredReviews.length,
-          page: page,
-          perPage: state.myReviews.perPage,
-          totalPages: Math.ceil(filteredReviews.length / state.myReviews.perPage),
+          total: data.total || 0,
+          page: data.page || page,
+          perPage: data.per_page || state.myReviews.perPage,
+          totalPages: data.total_pages || 0,
         },
       });
     } catch (error) {
@@ -326,9 +326,9 @@ export function useReviewsStore(): ReviewsStore {
 
       const data = await response.json();
       
-      // API возвращает массив напрямую
+      // Бэкенд теперь возвращает {reviews, total, page, per_page, total_pages}
+      const allReviews = data.reviews || [];
       // Фильтруем только REJECTED для вкладки "Отклонённые"
-      const allReviews = Array.isArray(data) ? data : [];
       const filteredReviews = allReviews.filter(
         (r: ReviewItem) => r.status === "REJECTED"
       );
@@ -337,10 +337,10 @@ export function useReviewsStore(): ReviewsStore {
         type: "SET_REJECTED_REVIEWS",
         payload: {
           reviews: filteredReviews,
-          total: filteredReviews.length,
-          page: page,
-          perPage: state.rejected.perPage,
-          totalPages: Math.ceil(filteredReviews.length / state.rejected.perPage),
+          total: data.total || 0,
+          page: data.page || page,
+          perPage: data.per_page || state.rejected.perPage,
+          totalPages: data.total_pages || 0,
         },
       });
     } catch (error) {

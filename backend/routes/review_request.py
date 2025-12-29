@@ -42,32 +42,42 @@ async def create_review_request(
     )
 
 
-@router.get("/my", response_model=List[ReviewRequestListItem])
+@router.get("/my")
 async def get_my_review_requests(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
     request_status: Optional[str] = Query(None, alias="status", description="Фильтр: PENDING, APPROVED, REJECTED"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     service = ReviewRequestService(db)
-    requests = await service.get_user_requests(current_user.id, request_status)
+    requests, total = await service.get_user_requests(current_user.id, request_status, page, per_page)
     
-    return [
-        ReviewRequestListItem(
-            id=r.id,
-            user_id=r.user_id,
-            from_company=r.from_company,
-            target_company=r.target_company,
-            rating=r.rating,
-            comment=r.comment,
-            attachment_path=r.attachment_path,
-            attachment_name=r.attachment_name,
-            status=r.status.value,
-            admin_comment=r.admin_comment,
-            created_at=r.created_at,
-            updated_at=r.updated_at
-        )
-        for r in requests
-    ]
+    total_pages = (total + per_page - 1) // per_page
+    
+    return {
+        "reviews": [
+            {
+                "id": r.id,
+                "user_id": r.user_id,
+                "from_company": r.from_company,
+                "target_company": r.target_company,
+                "rating": r.rating,
+                "comment": r.comment,
+                "attachment_path": r.attachment_path,
+                "attachment_name": r.attachment_name,
+                "status": r.status.value,
+                "admin_comment": r.admin_comment,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+                "updated_at": r.updated_at.isoformat() if r.updated_at else None
+            }
+            for r in requests
+        ],
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": total_pages
+    }
 
 
 @router.get("", response_model=List[ReviewRequestListItem])

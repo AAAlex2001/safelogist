@@ -92,11 +92,11 @@
 }
 
 .search-button:hover {
-  background-color: #0020cc;
+  background-color: #011993;
 }
 
 .search-button:active {
-  background-color: #0019a3;
+  background-color: #011170;
 }
 
 .autocomplete-results {

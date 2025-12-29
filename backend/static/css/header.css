@@ -345,9 +345,20 @@
 }
 
 .mobile-menu .btn-login:hover {
-    background: #0020CC;
-    border-color: #0020CC;
+    background: #011993;
+    border-color: #011993;
     color: #ffffff;
+}
+
+.mobile-menu .btn-add-review {
+    background: transparent;
+    color: var(--header-text);
+    border: 1px solid var(--header-text);
+}
+
+.mobile-menu .btn-add-review:hover {
+    color: #012AF9;
+    border-color: #012AF9;
 }
 
 .mobile-menu .btn-register {
@@ -357,17 +368,18 @@
 }
 
 .mobile-menu .btn-register:hover {
-    background: #0020CC;
-    border-color: #0020CC;
+    background: #011993;
+    border-color: #011993;
 }
 
 .mobile-menu .btn-register:active {
-    background: #0019A3;
-    border-color: #0019A3;
+    background: #011170;
+    border-color: #011170;
 }
 
 .btn-login,
-.btn-register {
+.btn-register,
+.btn-add-review {
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 600;
@@ -377,6 +389,17 @@
     transition: all 0.2s ease;
 }
 
+.btn-add-review {
+    background: transparent;
+    color: var(--header-text);
+    border: 2px solid var(--header-text);
+}
+
+.btn-add-review:hover {
+    color: #012AF9;
+    border-color: #012AF9;
+}
+
 .btn-login {
     background: #FFFFFF;
     color: #012AF9;
@@ -384,8 +407,8 @@
 }
 
 .btn-login:hover {
-    background: #0020CC;
-    border-color: #0020CC;
+    background: #011993;
+    border-color: #011993;
     color: #ffffff;
 }
 
@@ -396,13 +419,13 @@
 }
 
 .btn-register:hover {
-    background: #0020CC;
-    border-color: #0020CC;
+    background: #011993;
+    border-color: #011993;
 }
 
 .btn-register:active {
-    background: #0019A3;
-    border-color: #0019A3;
+    background: #011170;
+    border-color: #011170;
 }
 
 body {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./admin.module.scss";
+import AdminAuth from "./AdminAuth";
 
 export default function AdminLayout({
   children,
@@ -19,7 +20,7 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className={styles.adminLayout}>
+    <AdminAuth>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>SafeLogist Admin</div>
         <nav className={styles.nav}>
@@ -37,6 +38,6 @@ export default function AdminLayout({
         </nav>
       </aside>
       <main className={styles.main}>{children}</main>
-    </div>
+    </AdminAuth>
   );
 }

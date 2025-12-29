@@ -195,6 +195,7 @@ body::before {
     align-items: center;
     justify-content: center;
     color: var(--accent);
+    white-space: nowrap;
 }
 
 .btn.ghost {
@@ -202,6 +203,7 @@ body::before {
     background: var(--surface);
     height: 40px;
     cursor: pointer;
+    padding: 0 15px 0;
 }
 
 .btn.ghost[type="button"] {
@@ -213,6 +215,7 @@ body::before {
     background: #012AF9;
     border: 2px solid #012AF9;
     height: 40px;
+    padding: 0 5px 0;
 }
 
 .btn.solid:hover {
@@ -249,7 +252,6 @@ body::before {
 
 .actions.dual {
     justify-content: space-between;
-    width: 320px;
     margin: 0 auto 40px;
 }
 
@@ -570,13 +572,20 @@ body::before {
         justify-content: flex-start;
     }
 
+    .company-top-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+    }
+
     .hero-subtitle {
         font-size: 20px;
         line-height: 28px;
     }
 
     .company-card {
-        margin: 0 auto 40px;
+        margin: 0 auto 40px 0;
     }
 
     .actions.dual {
@@ -646,19 +655,8 @@ body::before {
 
 @media (min-width: 1440px) {
 
-    .company-card {
-        margin: 0 auto 40px 0;
-    }
-
     .company-page {
         max-width: 1635px;
-    }
-
-    .company-top-row {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 24px;
     }
 
     .meta-columns {

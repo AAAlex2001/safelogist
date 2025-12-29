@@ -11,6 +11,7 @@ from sqlalchemy import select
 from models.company_claim import CompanyClaim, ClaimStatus
 from models.user import User
 from schemas.company_claim import CompanyClaimRequest
+from services.telegram_notifier import telegram_notifier
 
 
 UPLOAD_DIR = "uploads/company_claims"
@@ -98,6 +99,19 @@ class CompanyClaimService:
         self.db.add(claim)
         await self.db.commit()
         await self.db.refresh(claim)
+        
+        # Отправляем уведомление в Telegram группу
+        user_name = f"{data.last_name} {data.first_name}"
+        if data.middle_name:
+            user_name += f" {data.middle_name}"
+        
+        await telegram_notifier.notify_company_claim(
+            company_name=data.company_name,
+            user_name=user_name,
+            user_email=data.email,
+            user_phone=data.phone,
+            claim_id=claim.id
+        )
         
         return claim
 

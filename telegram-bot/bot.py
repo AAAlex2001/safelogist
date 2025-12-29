@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton, ChatType
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 load_dotenv()
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBAPP_URL = os.getenv("WEBAPP_URL", "https://safelogist.net")
 CHANNEL_URL = "https://t.me/safelogist"
+GROUP_CHAT_ID = os.getenv("TELEGRAM_GROUP_CHAT_ID")
 
 if not BOT_TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN не установлен в переменных окружения")
@@ -25,20 +26,22 @@ if not BOT_TOKEN:
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+
+def is_allowed_chat(message: Message) -> bool:
+    """Проверяет, разрешен ли чат для обработки команд"""
+    # Разрешаем личные сообщения
+    if message.chat.type == ChatType.PRIVATE:
+        return True
+    # Разрешаем чат из .env
+    if GROUP_CHAT_ID and str(message.chat.id) == str(GROUP_CHAT_ID):
+        return True
+    return False
+
 # Главная клавиатура с командами
 main_keyboard = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="/start")],
-        [KeyboardButton(text="/channel")]
-    ],
-    resize_keyboard=True,
-    persistent=True
-)
-
-
-@dp.message(CommandStart())
-async def cmd_start(message: Message):
-    """Обработчик команды /start"""
+    if not is_allowed_chat(message):
+        return
+    
     user = message.from_user
     
     # Создаем клавиатуру с Web App
@@ -60,11 +63,20 @@ async def cmd_start(message: Message):
         reply_markup=builder.as_markup(),
         parse_mode="HTML"
     )
+
+
+@dp.message(Command("channel"))
+async def cmd_channel(message: Message):
+    """Обработчик команды /channel - ссылка на Telegram канал"""
+    if not is_allowed_chat(message):
+        return
     
-    # Отправляем клавиатуру с командами
-    await message.answer(
-        "Используйте кнопки ниже для быстрого доступа:",
-        reply_markup=main_keyboard
+        f"• Оставлять свои отзывы\n"
+        f"• Подтверждать владение компанией\n"
+        f"• Управлять профилем\n\n"
+        f"Нажмите кнопку ниже, чтобы открыть приложение:",
+        reply_markup=builder.as_markup(),
+        parse_mode="HTML"
     )
 
 
@@ -80,33 +92,7 @@ async def cmd_channel(message: Message):
         f"• Советы по проверке компаний\n"
         f"• Важные обновления\n"
         f"• Статистику и аналитику",
-        parse_mode="HTML",
-        reply_markup=main_keyboard
-    )
-
-
-@dp.message(F.text == "📱 Открыть приложение")
-async def open_webapp(message: Message):
-    """Открытие Web App по текстовой команде"""
-    builder = InlineKeyboardBuilder()
-    builder.button(
-        text="🚀 Открыть SafeLogist",
-        web_app=WebAppInfo(url=WEBAPP_URL)
-    )
-    
-    await message.answer(
-        "Нажмите кнопку ниже для открытия приложения:",
-        reply_markup=builder.as_markup()
-    )
-
-
-@dp.message(F.text)
-async def echo_message(message: Message):
-    """Ответ на любые текстовые сообщения"""
-    await message.answer(
-        "Для работы с SafeLogist используйте команду /start\n"
-        "или нажмите кнопку открытия приложения.",
-        reply_markup=main_keyboard
+        parse_mode="HTML"
     )
 
 

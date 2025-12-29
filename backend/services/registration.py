@@ -7,6 +7,7 @@ import re
 from models.user import User
 from schemas.registration import UserRegistration
 from helpers.security import hash_password
+from services.telegram_notifier import telegram_notifier
 
 
 class RegistrationService:
@@ -82,5 +83,13 @@ class RegistrationService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Пользователь с таким email или номером уже существует",
             )
+        
+        # Отправляем уведомление в Telegram группу
+        await telegram_notifier.notify_user_registration(
+            user_name=new_user.name,
+            user_email=new_user.email,
+            user_phone=new_user.phone,
+            user_id=new_user.id
+        )
 
         return new_user

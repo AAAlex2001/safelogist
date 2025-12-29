@@ -51,7 +51,7 @@ async def get_my_review_requests(
     current_user: User = Depends(get_current_user)
 ):
     service = ReviewRequestService(db)
-    requests, total = await service.get_user_requests(current_user.id, request_status, page, per_page)
+    review_list, total = await service.get_user_requests(current_user.id, request_status, page, per_page)
     
     total_pages = (total + per_page - 1) // per_page
     
@@ -71,7 +71,7 @@ async def get_my_review_requests(
                 "created_at": r.created_at.isoformat() if r.created_at else None,
                 "updated_at": r.updated_at.isoformat() if r.updated_at else None
             }
-            for r in requests
+            for r in review_list
         ],
         "total": total,
         "page": page,

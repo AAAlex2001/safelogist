@@ -9,6 +9,7 @@ from models.review_request import ReviewRequest, ReviewRequestStatus
 from models.review import Review
 from models.company import Company
 from models.user import User
+from services.telegram_notifier import telegram_notifier
 
 
 UPLOAD_DIR = "uploads/review_requests"
@@ -84,6 +85,16 @@ class ReviewRequestService:
         self.db.add(review_request)
         await self.db.commit()
         await self.db.refresh(review_request)
+        
+        # Отправляем уведомление в Telegram группу
+        await telegram_notifier.notify_review_request(
+            from_company=user.company_name,
+            target_company=target_company,
+            rating=rating,
+            comment=comment,
+            user_email=user.email,
+            request_id=review_request.id
+        )
         
         return review_request
 

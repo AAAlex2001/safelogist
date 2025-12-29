@@ -6,8 +6,8 @@
   height: 40px;
   border: none;
   border-radius: 10px;
-  background: var(--primary, #012af9);
-  color: #f9fafb;
+  background: var(--primary);
+  color: #ffffff;
   font-size: 18px;
   line-height: 24px;
   font-family: var(--font-base);
@@ -17,7 +17,7 @@
 }
 
 .button:hover {
-  background: var(--primary-dark, #011993);
+  background: var(--primary-dark);
 }
 
 .button:active {
@@ -36,9 +36,9 @@
 }
 
 .outline {
-  background: #f9fafb;
-  color: var(--primary, #012af9);
-  border: 2px solid var(--primary, #012af9);
+  background: var(--card-bg);
+  color: var(--primary);
+  border: 2px solid var(--primary);
 }
 
 .outline:hover {

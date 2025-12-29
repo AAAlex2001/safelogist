@@ -9,7 +9,7 @@
 .label {
   font-size: 16px;
   line-height: 19px;
-  color: #0d0d0d;
+  color: var(--text-primary);
   font-weight: 400;
 }
 
@@ -18,27 +18,27 @@
   max-height: 44px;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid rgba(1, 42, 249, 0.1);
-  background: #f8faff;
-  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  box-shadow: var(--card-shadow);
   font-size: 14px;
   line-height: 17px;
   font-family: var(--font-base);
-  color: #0d0d0d;
+  color: var(--text-primary);
   outline: none;
   font-weight: 400;
 
   &::placeholder {
-    color: #8c8c8c;
+    color: var(--text-muted);
   }
 }
 
 .input:focus {
-  border-color: #012af9;
+  border-color: var(--primary);
 }
 
 .inputWhite {
-  background: #ffffff;
+  background: var(--card-bg);
 }
 
 .inputError {
@@ -67,11 +67,11 @@
 }
 
 .select:hover {
-  border-color: #012af9;
+  border-color: var(--primary);
 }
 
 .selectOpen {
-  border-color: #012af9;
+  border-color: var(--primary);
   border-radius: 10px 10px 0 0;
 }
 
@@ -81,15 +81,15 @@
 }
 
 .selectValue {
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .selectPlaceholder {
-  color: #8c8c8c;
+  color: var(--text-muted);
 }
 
 .selectArrow {
-  color: #8c8c8c;
+  color: var(--text-muted);
   transition: transform 0.2s ease;
 }
 
@@ -104,10 +104,10 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  padding: 30px 16px 18px;
+  padding: 10px;
   gap: 10px;
-  background: #fff;
-  border: 1px solid rgba(1, 42, 249, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--input-border);
   border-top: none;
   border-radius: 0 0 10px 10px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -123,7 +123,7 @@
   border: none;
   font-size: 16px;
   line-height: 125%;
-  color: #8c8c8c;
+  color: var(--text-muted);
   cursor: pointer;
   text-align: left;
   font-family: var(--font-base);
@@ -131,11 +131,11 @@
 }
 
 .selectOption:hover {
-  color: #012af9;
+  color: var(--primary);
 }
 
 .selectOptionActive {
-  color: #012af9;
+  color: var(--primary);
 }
 
 .passwordWrapper {

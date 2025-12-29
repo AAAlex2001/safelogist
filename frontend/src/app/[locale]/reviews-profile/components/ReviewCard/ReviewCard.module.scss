@@ -1,8 +1,8 @@
 .reviewCard {
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   border-radius: 20px;
   padding: 24px;
 }
@@ -47,7 +47,7 @@
 
 .reviewRatingNumber {
   font-weight: 400;
-  color: #0d0d0d;
+  color: var(--text-primary);
   font-size: 16px;
   line-height: 19px;
 }
@@ -64,14 +64,14 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .reviewDate {
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .reviewFromRow {
@@ -92,11 +92,11 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .reviewAuthorLink {
-  color: #012AF9;
+  color: var(--primary);
   text-decoration: none;
   transition: color 0.2s;
   
@@ -117,5 +117,5 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }

@@ -5,9 +5,9 @@
   align-items: flex-start;
   padding: 16px;
   gap: 24px;
-  background: #ffffff;
-  border: 1px solid #012AF91A;
-  box-shadow: 0 2px 12px rgba(1, 42, 249, 0.05);
+  background: var(--card-bg);
+  border: 1px solid var(--input-border);
+  box-shadow: var(--card-shadow);
   border-radius: 22px;
 }
 
@@ -16,7 +16,7 @@
   font-weight: 400;
   font-size: 18px;
   line-height: 21px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .photoSection {
@@ -50,7 +50,7 @@
 .avatarIcon {
   width: 28px;
   height: 28px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .loading {
@@ -60,7 +60,7 @@
   justify-content: center;
   gap: 16px;
   padding: 48px;
-  color: #717182;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
@@ -68,7 +68,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid #e5e5ea;
-  border-top-color: #012af9;
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -90,7 +90,7 @@
 .photoHint {
   font-size: 16px;
   line-height: 19px;
-  color: #717182;
+  color: var(--text-secondary);
 }
 
 .fieldGroup {

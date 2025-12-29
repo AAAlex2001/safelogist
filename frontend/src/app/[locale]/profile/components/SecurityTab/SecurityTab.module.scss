@@ -5,9 +5,9 @@
   align-items: flex-start;
   padding: 24px;
   gap: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(1, 42, 249, 0.1);
-  box-shadow: 0 2px 12px rgba(1, 42, 249, 0.05);
+  background: var(--card-bg);
+  border: 1px solid var(--input-border);
+  box-shadow: var(--card-shadow);
   border-radius: 22px;
 }
 
@@ -16,7 +16,7 @@
   font-weight: 400;
   font-size: 18px;
   line-height: 21px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .fieldGroup {
@@ -34,9 +34,9 @@
   align-items: center;
   padding: 24px;
   gap: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(1, 42, 249, 0.1);
-  box-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
+  background: var(--card-bg);
+  border: 1px solid var(--input-border);
+  box-shadow: var(--card-shadow);
   border-radius: 22px;
 }
 
@@ -60,13 +60,13 @@
 .deleteTitle {
   font-size: 18px;
   line-height: 21px;
-  color: #0d0d0d;
+  color: var(--text-primary);
 }
 
 .deleteHint {
   font-size: 16px;
   line-height: 19px;
-  color: #717182;
+  color: var(--text-secondary);
 }
 
 @media (min-width: 768px) {

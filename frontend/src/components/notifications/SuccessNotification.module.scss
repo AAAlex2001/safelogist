@@ -4,7 +4,7 @@
   right: 20px;
   min-width: 320px;
   max-width: 450px;
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   overflow: hidden;
@@ -53,7 +53,7 @@
   font-weight: 500;
   font-size: 15px;
   line-height: 1.4;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .dark-theme .successMessage {

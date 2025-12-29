@@ -4,8 +4,8 @@ import os
 from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import CommandStart
-from aiogram.types import Message, WebAppInfo
+from aiogram.filters import CommandStart, Command
+from aiogram.types import Message, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 load_dotenv()
@@ -17,12 +17,23 @@ logger = logging.getLogger(__name__)
 # Получение токена и URL из переменных окружения
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBAPP_URL = os.getenv("WEBAPP_URL", "https://safelogist.net")
+CHANNEL_URL = "https://t.me/safelogist"
 
 if not BOT_TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN не установлен в переменных окружения")
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
+
+# Главная клавиатура с командами
+main_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="/start")],
+        [KeyboardButton(text="/channel")]
+    ],
+    resize_keyboard=True,
+    persistent=True
+)
 
 
 @dp.message(CommandStart())
@@ -49,6 +60,29 @@ async def cmd_start(message: Message):
         reply_markup=builder.as_markup(),
         parse_mode="HTML"
     )
+    
+    # Отправляем клавиатуру с командами
+    await message.answer(
+        "Используйте кнопки ниже для быстрого доступа:",
+        reply_markup=main_keyboard
+    )
+
+
+@dp.message(Command("channel"))
+async def cmd_channel(message: Message):
+    """Обработчик команды /channel - ссылка на Telegram канал"""
+    await message.answer(
+        f"📢 <b>Наш Telegram канал</b>\n\n"
+        f"Подписывайтесь на наш канал, чтобы быть в курсе всех новостей и обновлений SafeLogist:\n\n"
+        f"👉 {CHANNEL_URL}\n\n"
+        f"Там мы публикуем:\n"
+        f"• Новости платформы\n"
+        f"• Советы по проверке компаний\n"
+        f"• Важные обновления\n"
+        f"• Статистику и аналитику",
+        parse_mode="HTML",
+        reply_markup=main_keyboard
+    )
 
 
 @dp.message(F.text == "📱 Открыть приложение")
@@ -71,7 +105,8 @@ async def echo_message(message: Message):
     """Ответ на любые текстовые сообщения"""
     await message.answer(
         "Для работы с SafeLogist используйте команду /start\n"
-        "или нажмите кнопку открытия приложения."
+        "или нажмите кнопку открытия приложения.",
+        reply_markup=main_keyboard
     )
 
 

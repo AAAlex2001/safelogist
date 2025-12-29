@@ -151,6 +151,7 @@ class RegistrationService:
             user_name=new_user.name,
             user_email=new_user.email,
             user_phone=new_user.phone,
+            user_role=new_user.role.value,
             user_id=new_user.id
         )
 

@@ -83,16 +83,27 @@ class TelegramNotifier:
         user_name: str,
         user_email: str,
         user_phone: str,
+        user_role: str,
         user_id: int
     ) -> bool:
         """
         Уведомление о новой регистрации пользователя
         """
+        # Переводим роли на русский
+        role_names = {
+            "TRANSPORT_COMPANY": "Транспортная компания",
+            "CARGO_OWNER": "Грузовладелец",
+            "FORWARDER": "Экспедитор",
+            "USER": "Пользователь"
+        }
+        role_display = role_names.get(user_role, user_role)
+        
         text = (
             f"👤 <b>Новая регистрация</b>\n\n"
             f"<b>Имя:</b> {user_name}\n"
             f"<b>Email:</b> {user_email}\n"
             f"<b>Телефон:</b> {user_phone}\n"
+            f"<b>Род деятельности:</b> {role_display}\n"
             f"<b>ID:</b> #{user_id}"
         )
         return await self.send_message(text)

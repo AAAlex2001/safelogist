@@ -9,6 +9,7 @@ import "../globals.css";
 import Header from "../../components/header/Header";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { TelegramWebApp } from "@/components/telegram/TelegramWebApp";
 
 const montserrat = Montserrat({
   variable: "--font-base",
@@ -46,6 +47,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body className={montserrat.variable}>
+        <TelegramWebApp />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <AuthProvider>

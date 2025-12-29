@@ -61,6 +61,20 @@ services:
       - safelogist_network
     restart: unless-stopped
 
+  # Telegram Bot
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+      dockerfile: Dockerfile
+    container_name: safelogist_telegram_bot
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - safelogist_network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local

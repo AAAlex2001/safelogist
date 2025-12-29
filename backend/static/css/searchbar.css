@@ -1,27 +1,27 @@
 :root {
   --search-bg: #ffffff;
   --search-border: #012af9;
-  --search-shadow: 0 0 40px 0 #012af966;
+  --search-shadow: 0 0 40px 0 rgba(1, 42, 249, 0.4);
   --search-input-color: #0d0d0d;
-  --search-placeholder: #6b6b6b;
+  --search-placeholder: #8c8c8c;
   --autocomplete-bg: #ffffff;
   --autocomplete-item-color: #0d0d0d;
-  --autocomplete-hover-bg: #012af914;
-  --autocomplete-scrollbar: #0d0d0d;
+  --autocomplete-hover-bg: rgba(1, 42, 249, 0.08);
+  --autocomplete-scrollbar: #717182;
   --autocomplete-scrollbar-border: #ffffff;
 }
 
 [data-theme="dark"] {
-  --search-bg: #161920;
-  --search-border: #012AF9;
-  --search-shadow: 0 0 40px 0 rgba(1, 42, 249, 0.4);
-  --search-input-color: #f5f7ff;
-  --search-placeholder: #8b8fa3;
-  --autocomplete-bg: #161920;
-  --autocomplete-item-color: #f5f7ff;
-  --autocomplete-hover-bg: rgba(1, 42, 249, 0.2);
-  --autocomplete-scrollbar: #8b8fa3;
-  --autocomplete-scrollbar-border: #2b3040;
+  --search-bg: #252542;
+  --search-border: #3958ff;
+  --search-shadow: 0 0 40px 0 rgba(57, 88, 255, 0.4);
+  --search-input-color: #eaeaea;
+  --search-placeholder: #8080a0;
+  --autocomplete-bg: #252542;
+  --autocomplete-item-color: #eaeaea;
+  --autocomplete-hover-bg: rgba(57, 88, 255, 0.2);
+  --autocomplete-scrollbar: #b0b0c0;
+  --autocomplete-scrollbar-border: #2d2d4a;
 }
 
 @keyframes spin {

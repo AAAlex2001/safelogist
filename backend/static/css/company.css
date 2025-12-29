@@ -1,45 +1,47 @@
 :root {
     --bg-color: #ffffff;
     --text-color: #0d0d0d;
-    --muted-color: #6b6b6b;
+    --text-secondary: #717182;
+    --text-muted: #8c8c8c;
     --surface: #ffffff;
-    --surface-muted: #f5f5f5;
-    --border-color: #e5e5e5;
-    --shadow-color: 0 2px 12px rgba(0, 0, 0, 0.04);
-    --accent: #012AF9;
-    --accent-hover: #0020CC;
-    --accent-active: #0019A3;
+    --surface-muted: #f8faff;
+    --border-color: rgba(1, 42, 249, 0.1);
+    --shadow-color: 0px 2px 12px rgba(1, 42, 249, 0.05);
+    --accent: #012af9;
+    --accent-hover: #011993;
+    --accent-active: #011170;
     --accent-light: rgba(1, 42, 249, 0.1);
     --accent-lighter: rgba(1, 42, 249, 0.08);
     --accent-lightest: rgba(1, 42, 249, 0.05);
     --gradient-top: rgba(1, 42, 249, 0.09);
     --gradient-bottom: rgba(222, 246, 255, 0.039);
-    --avatar-bg: #E5E5EA;
+    --avatar-bg: #e5e7ea;
     --review-bubble-bg: rgba(1, 42, 249, 0.05);
-    --input-border: #012AF91A;
-    --input-shadow: 0px 2px 12px 0px #012AF90D;
+    --input-border: rgba(1, 42, 249, 0.1);
+    --input-shadow: 0px 2px 12px rgba(1, 42, 249, 0.05);
 }
 
 [data-theme="dark"] {
-    --bg-color: #0f1115;
-    --text-color: #f5f7ff;
-    --muted-color: #c8cfde;
-    --surface: #161920;
-    --surface-muted: #1e2230;
-    --border-color: #2b3040;
-    --shadow-color: 0 6px 20px rgba(0, 0, 0, 0.35);
-    --accent: #4d7bff;
-    --accent-hover: #3c66d6;
-    --accent-active: #2d4fb3;
-    --accent-light: rgba(77, 123, 255, 0.15);
-    --accent-lighter: rgba(77, 123, 255, 0.1);
-    --accent-lightest: rgba(77, 123, 255, 0.05);
-    --gradient-top: rgba(77, 123, 255, 0.12);
-    --gradient-bottom: rgba(22, 30, 48, 0.35);
-    --avatar-bg: #2b3040;
-    --review-bubble-bg: rgba(77, 123, 255, 0.1);
-    --input-border: #012AF91A;
-    --input-shadow: 0px 2px 12px 0px #012AF90D;
+    --bg-color: #1a1a2e;
+    --text-color: #eaeaea;
+    --text-secondary: #b0b0c0;
+    --text-muted: #8080a0;
+    --surface: #252542;
+    --surface-muted: #2d2d4a;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --shadow-color: 0px 2px 12px rgba(0, 0, 0, 0.2);
+    --accent: #3958ff;
+    --accent-hover: #2847ee;
+    --accent-active: #1736dd;
+    --accent-light: rgba(57, 88, 255, 0.15);
+    --accent-lighter: rgba(57, 88, 255, 0.1);
+    --accent-lightest: rgba(57, 88, 255, 0.05);
+    --gradient-top: #2a2a4a;
+    --gradient-bottom: #1a1a2e;
+    --avatar-bg: #404060;
+    --review-bubble-bg: rgba(57, 88, 255, 0.1);
+    --input-border: rgba(255, 255, 255, 0.15);
+    --input-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .pagination {

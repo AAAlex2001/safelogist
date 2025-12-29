@@ -2,24 +2,28 @@
     --header-bg: rgba(255, 255, 255, 0.3);
     --header-border: rgba(229, 229, 229, 0.5);
     --header-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    --header-text: #0D0D0D;
-    --mobile-menu-bg: #FFFFFF;
-    --mobile-menu-border: #E5E5E5;
+    --header-text: #0d0d0d;
+    --mobile-menu-bg: #ffffff;
+    --mobile-menu-border: #e5e5e5;
     --mobile-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --theme-btn-bg: #F5F5F5;
-    --theme-btn-hover: #E5E5E5;
+    --theme-btn-bg: #e5e7ea;
+    --theme-btn-hover: #d0d2d5;
+    --primary: #012af9;
+    --primary-dark: #011993;
 }
 
 [data-theme="dark"] {
-    --header-bg: rgba(22, 25, 32, 0.7);
-    --header-border: rgba(43, 48, 64, 0.5);
+    --header-bg: rgba(30, 30, 50, 0.95);
+    --header-border: rgba(100, 100, 140, 0.3);
     --header-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --header-text: #f5f7ff;
-    --mobile-menu-bg: #161920;
-    --mobile-menu-border: #2b3040;
+    --header-text: #eaeaea;
+    --mobile-menu-bg: #252542;
+    --mobile-menu-border: rgba(100, 100, 140, 0.3);
     --mobile-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --theme-btn-bg: #1e2230;
-    --theme-btn-hover: #2b3040;
+    --theme-btn-bg: #404060;
+    --theme-btn-hover: #505070;
+    --primary: #3958ff;
+    --primary-dark: #2847ee;
 }
 
 .main-header {

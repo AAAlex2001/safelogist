@@ -5,9 +5,9 @@
     justify-content: center;
     width: 100%;
     height: 44px;
-    border: 2px solid #012AF9;
+    border: 2px solid #012af9;
     border-radius: 12px;
-    color: #012AF9;
+    color: #012af9;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -22,7 +22,7 @@
     margin-top: 8px;
     font-size: 14px;
     line-height: 20px;
-    color: #8A8A8A;
+    color: #8c8c8c;
 }
 
 .claim-file-pill {
@@ -30,7 +30,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 14px;
-    background: #012AF91A;
+    background: rgba(1, 42, 249, 0.1);
     border-radius: 12px;
 }
 .claim-file-pill.hide { display: none; }
@@ -68,7 +68,7 @@
 .claim-file-remove:active { background: #FFBFB5; }
 .claim-examples-title {
     font-weight: 600;
-    color: #012AF9;
+    color: #012af9;
     margin-bottom: 8px;
 }
 .claim-examples-list {
@@ -93,21 +93,22 @@
 .claim-review-time {
     font-size: 14px;
     line-height: 19px;
-    color: #4D4D4D;
+    color: #717182;
     text-align: center;
 }
 
 [data-theme="dark"] .claim-upload-btn {
-    background: #1e2230;
-    border-color: #4d7bff;
-    color: #4d7bff;
+    background: #252542;
+    border-color: #3958ff;
+    color: #3958ff;
 }
-[data-theme="dark"] .claim-upload-btn:hover { background: rgba(77, 123, 255, 0.1); }
-[data-theme="dark"] .claim-file-pill { background: rgba(77, 123, 255, 0.1); }
-[data-theme="dark"] .claim-file-name { color: #f5f7ff; }
+[data-theme="dark"] .claim-upload-btn:hover { background: rgba(57, 88, 255, 0.1); }
+[data-theme="dark"] .claim-file-pill { background: rgba(57, 88, 255, 0.1); }
+[data-theme="dark"] .claim-file-name { color: #eaeaea; }
 [data-theme="dark"] .claim-file-remove { background: rgba(227, 51, 38, 0.15); }
 [data-theme="dark"] .claim-file-remove:hover { background: rgba(227, 51, 38, 0.22); }
-[data-theme="dark"] .claim-examples-list { color: #f5f7ff; }
+[data-theme="dark"] .claim-examples-list { color: #eaeaea; }
+[data-theme="dark"] .claim-examples-title { color: #3958ff; }
 [data-theme="dark"] .claim-hint,
-[data-theme="dark"] .claim-review-time { color: #c8cfde; }
+[data-theme="dark"] .claim-review-time { color: #b0b0c0; }
 

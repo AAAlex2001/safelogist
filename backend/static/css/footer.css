@@ -1,13 +1,15 @@
 :root {
-  --footer-text: #0D0D0D;
-  --footer-link-hover: #012AF9;
-  --footer-social-hover: #F5F5F5;
+  --footer-text: #0d0d0d;
+  --footer-text-secondary: #717182;
+  --footer-link-hover: #012af9;
+  --footer-social-hover: #e5e7ea;
 }
 
 [data-theme="dark"] {
-  --footer-text: #f5f7ff;
-  --footer-link-hover: #012AF9;
-  --footer-social-hover: rgba(1, 42, 249, 0.2);
+  --footer-text: #eaeaea;
+  --footer-text-secondary: #b0b0c0;
+  --footer-link-hover: #3958ff;
+  --footer-social-hover: rgba(57, 88, 255, 0.2);
 }
 
 .main-footer {

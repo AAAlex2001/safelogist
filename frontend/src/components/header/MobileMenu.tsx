@@ -246,7 +246,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             {t('login')}
           </Button>
         </Link>
-        <Link href="/registration" onClick={onClose}>
+        <Link href="/register" onClick={onClose}>
           <Button fullWidth>
             {t('register')}
           </Button>

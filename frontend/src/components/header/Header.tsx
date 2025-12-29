@@ -66,7 +66,7 @@ export default function Header() {
             <Link href="/login" className={styles.btnLogin}>
               {t('login')}
             </Link>
-            <Link href="/registration" className={styles.btnRegister}>
+            <Link href="/register" className={styles.btnRegister}>
               {t('register')}
             </Link>
           </div>

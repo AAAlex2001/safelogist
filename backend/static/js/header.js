@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loginBtn.textContent = 'Войти';
             
             const registerBtn = document.createElement('a');
-            registerBtn.href = `/${lang}/registration`;
+            registerBtn.href = `/${lang}/register`;
             registerBtn.className = 'btn-register';
             registerBtn.textContent = 'Зарегистрироваться';
             

@@ -97,6 +97,11 @@ TRANSLATIONS = {
         "claim_example_5": "Выписка из реестра",
         "claim_review_time": "Заявка будет рассмотрена в течение 48 часов",
         "claim_aria_remove_file": "Удалить файл",
+        # Авторизация для просмотра отзывов
+        "auth_required_heading": "Чтобы просматривать отзывы полностью, требуется авторизация",
+        "auth_required_text": "Текст отзыва доступен после входа",
+        "register_button": "Зарегистрироваться",
+        "login_button": "Войти",
     },
     "en": {
         "list_title": "All company reviews",
@@ -189,6 +194,11 @@ TRANSLATIONS = {
         "claim_example_5": "Registry extract",
         "claim_review_time": "The application will be reviewed within 48 hours",
         "claim_aria_remove_file": "Remove file",
+        # Authorization for viewing reviews
+        "auth_required_heading": "Authorization is required to view full reviews",
+        "auth_required_text": "Review text available after login",
+        "register_button": "Register",
+        "login_button": "Log in",
     },
     "uk": {
         "list_title": "Усі відгуки компаній",
@@ -281,6 +291,11 @@ TRANSLATIONS = {
         "claim_example_5": "Виписка з реєстру",
         "claim_review_time": "Заявка буде розглянута протягом 48 годин",
         "claim_aria_remove_file": "Видалити файл",
+        # Авторизація для перегляду відгуків
+        "auth_required_heading": "Щоб переглядати відгуки повністю, потрібна авторизація",
+        "auth_required_text": "Текст відгуку доступний після входу",
+        "register_button": "Зареєструватися",
+        "login_button": "Увійти",
     },
     "ro": {
         "list_title": "Toate recenziile companiilor",
@@ -373,6 +388,9 @@ TRANSLATIONS = {
         "claim_example_5": "Extras din registru",
         "claim_review_time": "Cererea va fi examinată în termen de 48 de ore",
         "claim_aria_remove_file": "Ștergeți fișierul",
+        # Autorizare pentru vizualizarea recenziilor        "auth_required_heading": "Pentru a vizualiza recenziile complet, este necesară autentificarea",        "auth_required_text": "Textul recenziei disponibil după autentificare",
+        "register_button": "Înregistrare",
+        "login_button": "Autentificare",
     },
 }
 

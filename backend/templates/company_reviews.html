@@ -164,9 +164,20 @@
         </div>
         {% endif %}
 
+        <!-- Блок авторизации для незалогиненных пользователей (не для ботов) -->
+        {% if not is_search_bot %}
+        <div class="auth-actions">
+            <p class="auth-heading">{{ t.auth_required_heading }}</p>
+            <div class="auth-buttons-wrapper">
+                <a class="btn ghost" href="/{{ lang }}/register">{{ t.register_button }}</a>
+                <a class="btn solid" href="/{{ lang }}/login">{{ t.login_button }}</a>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="reviews">
             {% for review in reviews %}
-            <div class="review-card">
+            <div class="review-card{% if not is_search_bot %} blurred-card{% endif %}">
                 <div class="review-top">
                     <div class="review-source">{{ review.source }}</div>
                     <div class="review-stars-row">
@@ -203,6 +214,16 @@
                 </div>
 
                 <div class="review-bubble">{{ review.comment }}</div>
+                
+                {% if not is_search_bot %}
+                <!-- Текст с замочком для незалогиненных -->
+                <div class="review-auth-hint">
+                    <svg class="lock-icon-small" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 14V16M8 10V8C8 6.93913 8.42143 5.92172 9.17157 5.17157C9.92172 4.42143 10.9391 4 12 4C13.0609 4 14.0783 4.42143 14.8284 5.17157C15.5786 5.92172 16 6.93913 16 8V10M7 19H17C17.2652 19 17.5196 18.8946 17.7071 18.7071C17.8946 18.5196 18 18.2652 18 18V11C18 10.7348 17.8946 10.4804 17.7071 10.2929C17.5196 10.1054 17.2652 10 17 10H7C6.73478 10 6.48043 10.1054 6.29289 10.2929C6.10536 10.4804 6 10.7348 6 11V18C6 18.2652 6.10536 18.5196 6.29289 18.7071C6.48043 18.8946 6.73478 19 7 19Z" stroke="#012AF9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="auth-hint-text">{{ t.auth_required_text }}</span>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -286,6 +307,26 @@
                 }
             });
         });
+
+        // Проверка авторизации
+        const token = localStorage.getItem('authToken') || localStorage.getItem('access_token');
+        if (token) {
+            // Пользователь авторизован - убираем блюр и кнопки
+            const authActions = document.querySelector('.auth-actions');
+            if (authActions) {
+                authActions.style.display = 'none';
+            }
+            
+            // Убираем класс blurred-card со всех карточек
+            document.querySelectorAll('.review-card.blurred-card').forEach(function(card) {
+                card.classList.remove('blurred-card');
+            });
+            
+            // Убираем подсказки с замочком
+            document.querySelectorAll('.review-auth-hint').forEach(function(hint) {
+                hint.style.display = 'none';
+            });
+        }
     });
 </script>
 {% include "partials/footer.html" %}

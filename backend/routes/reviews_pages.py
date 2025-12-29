@@ -27,6 +27,7 @@ MAX_PAGES_FOR_USERS = 100  # Максимальное количество ст�
 
 # User agents поисковых ботов
 SEARCH_ENGINE_BOTS = [
+    # Google
     'Googlebot',
     'Googlebot-Image',
     'Googlebot-News',
@@ -35,22 +36,55 @@ SEARCH_ENGINE_BOTS = [
     'APIs-Google',
     'Mediapartners-Google',
     'AdsBot-Google',
+    'Google-Extended',  # Google AI training
+    # Bing / Microsoft
     'bingbot',
     'BingPreview',
     'msnbot',
-    'Slurp',  # Yahoo
+    # Yahoo
+    'Slurp',
+    # DuckDuckGo
     'DuckDuckBot',
+    # Yandex
     'YandexBot',
     'YandexAccessibilityBot',
     'YandexImages',
+    'YandexMobileBot',
+    # Baidu
     'Baiduspider',
+    # Social Media
     'facebookexternalhit',
     'Twitterbot',
     'LinkedInBot',
     'Pinterestbot',
+    'TelegramBot',
+    'WhatsApp',
+    'Slackbot',
+    'Discordbot',
+    # Apple
     'applebot',
     'Applebot',
+    # Other search engines
     'Sogou',
+    'Exabot',
+    'ia_archiver',  # Alexa
+    'archive.org_bot',
+    'PetalBot',  # Huawei
+    'SemrushBot',
+    'AhrefsBot',
+    'MJ12bot',  # Majestic
+    'DotBot',
+    # AI / LLM crawlers
+    'GPTBot',           # OpenAI ChatGPT
+    'ChatGPT-User',     # OpenAI ChatGPT browsing
+    'OAI-SearchBot',    # OpenAI search
+    'ClaudeBot',        # Anthropic Claude
+    'Claude-Web',       # Anthropic Claude
+    'anthropic-ai',     # Anthropic
+    'PerplexityBot',    # Perplexity AI
+    'Bytespider',       # ByteDance / TikTok
+    'CCBot',            # Common Crawl (used for AI training)
+    'cohere-ai',        # Cohere AI
 ]
 
 
@@ -507,6 +541,7 @@ async def company_reviews_page(
             "og_image": f"{seo['base_url']}/static/safelogist_1.png",
             "is_claimed": is_claimed,
             "owner_data": owner_data,  # Данные владельца
+            "is_search_bot": is_search_bot(request),  # Для показа полных отзывов ботам
             **seo,
         }
     )

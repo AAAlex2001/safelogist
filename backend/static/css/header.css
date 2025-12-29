@@ -326,7 +326,8 @@
 }
 
 .mobile-menu .btn-login,
-.mobile-menu .btn-register {
+.mobile-menu .btn-register,
+.mobile-menu .btn-add-review {
     display: block;
     width: 100%;
     text-align: center;
@@ -351,14 +352,15 @@
 }
 
 .mobile-menu .btn-add-review {
-    background: transparent;
-    color: var(--header-text);
-    border: 1px solid var(--header-text);
+    background: var(--mobile-menu-bg);
+    color: #012AF9;
+    border: 1px solid #012AF9;
 }
 
 .mobile-menu .btn-add-review:hover {
-    color: #012AF9;
-    border-color: #012AF9;
+    background: #011993;
+    border-color: #011993;
+    color: #ffffff;
 }
 
 .mobile-menu .btn-register {
@@ -387,17 +389,21 @@
     padding: 10px 20px;
     border-radius: 8px;
     transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-add-review {
-    background: transparent;
-    color: var(--header-text);
-    border: 2px solid var(--header-text);
+    background: #FFFFFF;
+    color: #012AF9;
+    border: 2px solid #012AF9;
 }
 
 .btn-add-review:hover {
-    color: #012AF9;
-    border-color: #012AF9;
+    background: #011993;
+    border-color: #011993;
+    color: #ffffff;
 }
 
 .btn-login {

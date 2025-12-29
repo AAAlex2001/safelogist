@@ -35,8 +35,8 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 
-    password_reset_codes = relationship(
-        "PasswordResetCode",
+    verification_codes = relationship(
+        "VerificationCode",
         back_populates="user",
         cascade="all, delete-orphan"
     )

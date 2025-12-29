@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import random
 
 from models.user import User
-from models.forgot_password import PasswordResetCode
+from models.codes import VerificationCode
 from helpers.email import send_email_code
 from helpers.security import hash_password
 
@@ -29,12 +29,12 @@ class PasswordResetService:
 
         # Удаляем старые коды
         await self.db.execute(
-            delete(PasswordResetCode).where(PasswordResetCode.user_id == user.id)
+            delete(VerificationCode).where(VerificationCode.user_id == user.id)
         )
 
         code: int = random.randint(100000, 999999)
 
-        reset_code = PasswordResetCode(
+        reset_code = VerificationCode(
             user_id=user.id,
             code=str(code),
             expires_at=datetime.utcnow() + timedelta(minutes=self.CODE_EXPIRE_MINUTES),
@@ -49,7 +49,7 @@ class PasswordResetService:
     # ----------------------------------------------------------------------
     async def verify_code(self, code: str) -> int:
         result = await self.db.execute(
-            select(PasswordResetCode).where(PasswordResetCode.code == code)
+            select(VerificationCode).where(VerificationCode.code == code)
         )
         code_obj = result.scalars().first()
 
@@ -75,7 +75,7 @@ class PasswordResetService:
 
         # чистим одноразовые коды
         await self.db.execute(
-            delete(PasswordResetCode).where(PasswordResetCode.user_id == user.id)
+            delete(VerificationCode).where(VerificationCode.user_id == user.id)
         )
 
         await self.db.commit()

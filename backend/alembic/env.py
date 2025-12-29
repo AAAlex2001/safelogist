@@ -8,33 +8,33 @@ import os
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в путь
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-# Импортируем Base и все модели
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Base пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 from models.base import Base
 from models.user import User
-from models.forgot_password import PasswordResetCode
+from models.codes import VerificationCode
 from models.moldovafinreport import MoldovaFinReport
 from models.review import Review
 from models.company import Company
 from models.company_claim import CompanyClaim
 
-# Загружаем переменные окружения
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 from dotenv import load_dotenv
 load_dotenv()
 
 # this is the Alembic Config object
 config = context.config
 
-# Интерпретируем файл конфигурации для логирования
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Устанавливаем target_metadata из Base
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ target_metadata пїЅпїЅ Base
 target_metadata = Base.metadata
 
-# Получаем DATABASE_URL из переменных окружения или из alembic.ini
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DATABASE_URL пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ alembic.ini
 database_url = os.getenv("DATABASE_URL")
 if database_url:
     config.set_main_option("sqlalchemy.url", database_url)

@@ -8,7 +8,7 @@ import random
 import re
 
 from models.user import User
-from models.forgot_password import PasswordResetCode
+from models.codes import VerificationCode
 from schemas.registration import UserRegistration
 from helpers.security import hash_password
 from helpers.email import send_email_code
@@ -50,12 +50,12 @@ class RegistrationService:
 
         # Удаляем старые коды для этого email
         await self.db.execute(
-            delete(PasswordResetCode).where(PasswordResetCode.email == email)
+            delete(VerificationCode).where(VerificationCode.email == email)
         )
 
         code: int = random.randint(100000, 999999)
 
-        verification_code = PasswordResetCode(
+        verification_code = VerificationCode(
             email=email,
             user_id=None,  # для регистрации user_id не нужен
             code=str(code),
@@ -71,9 +71,9 @@ class RegistrationService:
     # ---------------------------------------------------------
     async def verify_code(self, email: str, code: str) -> bool:
         result = await self.db.execute(
-            select(PasswordResetCode).where(
-                PasswordResetCode.email == email,
-                PasswordResetCode.code == code
+            select(VerificationCode).where(
+                VerificationCode.email == email,
+                VerificationCode.code == code
             )
         )
         code_obj = result.scalars().first()

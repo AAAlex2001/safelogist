@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-language" content="{{ lang }}">
     <title>{{ meta_title }}</title>
     <meta name="description" content="{{ meta_desc }}">
     <link rel="canonical" href="{{ canonical }}">
@@ -50,8 +51,8 @@
     {% include "partials/header.html" %}
     <div class="company-page">
         <div class="hero">
-            <h1 class="hero-title">{{ t.list_title }}</h1>
-            <p class="hero-subtitle">{{ t.list_subtitle }}</p>
+            <h1 class="hero-title">{{ t.reviews_about }} {{ display_name }}</h1>
+            <p class="hero-subtitle">{{ t.reputation_check }} | {{ t.total_reviews }}: {{ total_reviews }}</p>
         </div>
 
         {% set placeholder = t.search_placeholder %}

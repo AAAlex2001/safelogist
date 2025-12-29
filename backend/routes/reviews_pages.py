@@ -183,6 +183,15 @@ async def reviews_list_page(
     companies_data = [c.model_dump() for c in companies]
 
     seo = build_seo_context(request, lang_code)
+    t = get_translations(lang_code)
+
+    # Формируем мета-теги: разные для первой страницы и последующих
+    if page == 1:
+        meta_title = t.get("list_title", "All company reviews") + " | SafeLogist"
+        meta_desc = t.get("list_subtitle", "")
+    else:
+        meta_title = t.get("list_title_page", "All company reviews — page {page}").format(page=page) + " | SafeLogist"
+        meta_desc = t.get("list_subtitle_page", "").format(page=page)
 
     return templates.TemplateResponse(
         "reviews_list.html",
@@ -194,7 +203,9 @@ async def reviews_list_page(
             "total_companies": None,
             "has_next": has_next,
             "lang": lang_code,
-            "t": get_translations(lang_code),
+            "t": t,
+            "meta_title": meta_title,
+            "meta_desc": meta_desc,
             **seo,
         }
     )
@@ -362,9 +373,17 @@ async def company_reviews_page(
     total_pages = (total_reviews + per_page - 1) // per_page
     display_name = reviews[0].subject if reviews else company_name
 
-    # Мета-теги
-    meta_title = t.get("meta_title", "{name}").format(name=display_name, page=page, total_reviews=total_reviews)
-    meta_desc = t.get("meta_desc", "").format(name=display_name, page=page, total_reviews=total_reviews)
+    # Мета-теги: разные для первой страницы и последующих
+    if page == 1:
+        meta_title = t.get("meta_title", "Reviews of {name}").format(name=display_name)
+        meta_desc = t.get("meta_desc", "").format(name=display_name)
+    else:
+        meta_title = t.get("meta_title_page", "Reviews of {name} — page {page}").format(
+            name=display_name, page=page
+        )
+        meta_desc = t.get("meta_desc_page", "").format(
+            name=display_name, page=page, total_pages=total_pages
+        )
 
     # Получаем ID reviewer'ов
     reviewer_names = [r.reviewer for r in reviews if r.reviewer and r.reviewer.strip()]

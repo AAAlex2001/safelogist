@@ -590,7 +590,6 @@ body::before {
 
     .actions.dual {
         justify-content: space-between;
-        width: 425px;
         margin-left: auto;
         margin-right: 0;
     }

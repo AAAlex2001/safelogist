@@ -9,10 +9,11 @@ from dotenv import load_dotenv
 # Загружаем переменные окружения
 load_dotenv()
 
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.ru")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS").lower() == "true"
 
 if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
     raise RuntimeError("EMAIL_HOST_USER or EMAIL_HOST_PASSWORD is not set in environment")
@@ -50,7 +51,7 @@ async def send_email_code(to_email: str, code: str) -> None:
             port=EMAIL_PORT,
             username=EMAIL_HOST_USER,
             password=EMAIL_HOST_PASSWORD,
-            use_tls=True,
+            start_tls=EMAIL_USE_TLS,
             source_address=("0.0.0.0", 0),
         )
 
@@ -113,7 +114,7 @@ If у вас возникли вопросы, свяжитесь с нами: in
             port=EMAIL_PORT,
             username=EMAIL_HOST_USER,
             password=EMAIL_HOST_PASSWORD,
-            use_tls=True,
+            start_tls=EMAIL_USE_TLS,
             source_address=("0.0.0.0", 0),
         )
 

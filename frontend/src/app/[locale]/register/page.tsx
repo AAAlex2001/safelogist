@@ -116,6 +116,7 @@ export default function RegisterPage() {
                       enableSearch={true}
                       searchPlaceholder={t("searchCountry")}
                       preferredCountries={["ru", "ua", "md", "by", "kz"]}
+                      disableDropdown={true}
                     />
                   </div>
                   {state.fieldErrors.phone && (

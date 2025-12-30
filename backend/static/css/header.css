@@ -136,9 +136,10 @@
 .mobile-menu {
     position: fixed;
     top: 64px;
-    right: 40px;
+    right: 20px;
     max-width: 360px;
-    width: calc(100% - 60px);
+    width: calc(100% - 40px);
+    max-height: calc(100vh - 84px);
     background: var(--mobile-menu-bg);
     border-bottom: 1px solid var(--mobile-menu-border);
     border-radius: 0 0 20px 20px;
@@ -148,6 +149,9 @@
     padding: 20px;
     gap: 16px;
     z-index: 999;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu.active {
@@ -445,8 +449,7 @@ body {
 @media (min-width: 768px) {
 
     .mobile-menu {
-        right: calc((100% - 730px) / 2 + 30px);
-        max-width: 360px;
+        right: 20px;
     }
 }
 
@@ -456,8 +459,7 @@ body {
     }
 
     .mobile-menu {
-        right: calc((100% - 1635px) / 2 + 30px);
-        max-width: 360px;
+        right: max(20px, calc((100vw - 1635px) / 2 + 20px));
     }
 }
 

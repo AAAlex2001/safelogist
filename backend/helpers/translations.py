@@ -336,7 +336,7 @@ TRANSLATIONS = {
         "source_label": "Sursă",
         "from_label": "De la:",
         "back_button": "Înapoi",
-        "my_company_button": "Aceasta este compania mea",
+        "my_company_button": "Compania mea",
         "add_review_button": "Adaugă recenzie",
         "company_info_title": "Informații despre companie",
         "section_main": "Informații principale",

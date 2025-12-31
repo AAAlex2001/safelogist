@@ -17,6 +17,7 @@
     padding: 0 20px;
     width: 100%;
     margin: 40px auto 0;
+    max-width: 1200px;
 }
 
 .footer-container {
@@ -155,9 +156,6 @@
 }
 
 @media (min-width: 1440px) {
-    .main-footer {
-        max-width: 1635px;
-    }
 
     .footer-description {
         min-width: 350px;
@@ -165,7 +163,7 @@
 
     .footer-top {
         flex-direction: row;
-        gap: 230px;
+        gap: 53px;
     }
 
     .footer-links {

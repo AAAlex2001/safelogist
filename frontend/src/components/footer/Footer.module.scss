@@ -3,6 +3,7 @@
   width: 100%;
   margin: 130px auto 0;
   font-family: var(--font-base);
+  max-width: 1200px;
 }
 
 .footerContainer {
@@ -142,9 +143,6 @@
 }
 
 @media (min-width: 1440px) {
-  .mainFooter {
-    max-width: 1635px;
-  }
 
   .footerDescription {
     min-width: 350px;
@@ -152,7 +150,7 @@
 
   .footerTop {
     flex-direction: row;
-    gap: 230px;
+    gap: 53px;
   }
 
   .footerLinks {

@@ -60,6 +60,7 @@ body::before {
     margin: 0 auto;
     padding: 20px;
     background: transparent;
+    max-width: 1200px;
 }
 
 .header {
@@ -83,7 +84,6 @@ body::before {
     font-weight: 400;
 }
 
-/* Поиск */
 .search-input-wrapper {
     display: flex;
     align-items: center;
@@ -306,12 +306,6 @@ body::before {
 
     .review-card {
         padding: 20px;
-    }
-}
-
-@media (min-width: 1440px) {
-    .container {
-        max-width: 1635px;
     }
 }
 

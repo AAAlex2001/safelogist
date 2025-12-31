@@ -13,9 +13,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 1200px;
 }
 
-/* Header */
 .header {
   display: flex;
   flex-direction: column;
@@ -110,7 +110,6 @@
   overflow-wrap: break-word;
 }
 
-/* Empty state */
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -320,11 +319,5 @@
   .subtitle {
     font-size: 20px;
     line-height: 28px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container {
-    max-width: 1635px;
   }
 }

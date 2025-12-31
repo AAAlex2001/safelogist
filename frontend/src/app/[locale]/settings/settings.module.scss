@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 1200px;
 }
 
 .header {
@@ -44,7 +45,6 @@
   gap: 16px;
 }
 
-/* Card */
 .card {
   display: flex;
   flex-direction: column;
@@ -55,7 +55,6 @@
   border-radius: 22px;
 }
 
-/* Notifications */
 .notificationsList {
   display: flex;
   flex-direction: column;
@@ -91,22 +90,14 @@
   color: var(--text-secondary);
 }
 
-/* Interface */
 .interfaceSettings {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Responsive */
 @media (min-width: 768px) {
   .page {
     padding: 160px 20px 0;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container {
-    max-width: 1635px;
   }
 }

@@ -29,10 +29,14 @@ async def log_requests(request: Request, call_next):
     real_ip = request.headers.get("X-Forwarded-For", request.client.host if request.client else "unknown")
     if "," in real_ip:  # Если несколько IP через запятую
         real_ip = real_ip.split(",")[0].strip()
+
+    user_agent = request.headers.get("user-agent", "-")
+    # защитимся от log injection и переносов строк
+    user_agent = user_agent.replace("\r", " ").replace("\n", " ").strip() or "-"
     
     # Логируем только не-статические запросы
     if not request.url.path.startswith("/static") and not request.url.path.startswith("/uploads"):
-        print(f"[{real_ip}] {request.method} {request.url.path}")
+        print(f"[{real_ip}] {request.method} {request.url.path} ua=\"{user_agent}\"")
     
     response = await call_next(request)
     return response

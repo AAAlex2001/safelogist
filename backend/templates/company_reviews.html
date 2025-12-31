@@ -165,8 +165,8 @@
         </div>
         {% endif %}
 
-        <!-- Блок авторизации для незалогиненных пользователей (не для ботов) -->
-        {% if not is_search_bot %}
+        <!-- Блок авторизации для незалогиненных пользователей -->
+        {% if show_locked_ui %}
         <div class="auth-actions">
             <p class="auth-heading">{{ t.auth_required_heading }}</p>
             <div class="auth-buttons-wrapper">
@@ -178,7 +178,7 @@
 
         <div class="reviews">
             {% for review in reviews %}
-            <div class="review-card{% if not is_search_bot %} blurred-card{% endif %}">
+            <div class="review-card{% if show_locked_ui %} blurred-card{% endif %}">
                 <div class="review-top">
                     <div class="review-source">{{ review.source }}</div>
                     <div class="review-stars-row">
@@ -216,7 +216,7 @@
 
                 <div class="review-bubble">{{ review.comment }}</div>
                 
-                {% if not is_search_bot %}
+                {% if show_locked_ui %}
                 <!-- Текст с замочком для незалогиненных -->
                 <div class="review-auth-hint">
                     <svg class="lock-icon-small" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

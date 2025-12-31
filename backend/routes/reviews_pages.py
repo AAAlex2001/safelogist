@@ -22,76 +22,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["reviews_pages"])
 templates = Jinja2Templates(directory="templates")
 
-# Константы для защиты от парсинга
-MAX_PAGES_FOR_USERS = 100  # Максимальное количество страниц для обычных пользователей
 
-# User agents поисковых ботов
-SEARCH_ENGINE_BOTS = [
-    # Google
-    'Googlebot',
-    'Googlebot-Image',
-    'Googlebot-News',
-    'Googlebot-Video',
-    'Google-InspectionTool',
-    'APIs-Google',
-    'Mediapartners-Google',
-    'AdsBot-Google',
-    'Google-Extended',  # Google AI training
-    # Bing / Microsoft
-    'bingbot',
-    'BingPreview',
-    'msnbot',
-    # Yahoo
-    'Slurp',
-    # DuckDuckGo
-    'DuckDuckBot',
-    # Yandex
-    'YandexBot',
-    'YandexAccessibilityBot',
-    'YandexImages',
-    'YandexMobileBot',
-    # Baidu
-    'Baiduspider',
-    # Social Media
-    'facebookexternalhit',
-    'Twitterbot',
-    'LinkedInBot',
-    'Pinterestbot',
-    'TelegramBot',
-    'WhatsApp',
-    'Slackbot',
-    'Discordbot',
-    # Apple
-    'applebot',
-    'Applebot',
-    # Other search engines
-    'Sogou',
-    'Exabot',
-    'ia_archiver',  # Alexa
-    'archive.org_bot',
-    'PetalBot',  # Huawei
-    'SemrushBot',
-    'AhrefsBot',
-    'MJ12bot',  # Majestic
-    'DotBot',
-    # AI / LLM crawlers
-    'GPTBot',           # OpenAI ChatGPT
-    'ChatGPT-User',     # OpenAI ChatGPT browsing
-    'OAI-SearchBot',    # OpenAI search
-    'ClaudeBot',        # Anthropic Claude
-    'Claude-Web',       # Anthropic Claude
-    'anthropic-ai',     # Anthropic
-    'PerplexityBot',    # Perplexity AI
-    'Bytespider',       # ByteDance / TikTok
-    'CCBot',            # Common Crawl (used for AI training)
-    'cohere-ai',        # Cohere AI
-]
-
-
-def is_search_bot(request: Request) -> bool:
-    """Проверяет, является ли запрос от поискового бота"""
-    user_agent = request.headers.get('user-agent', '').lower()
-    return any(bot.lower() in user_agent for bot in SEARCH_ENGINE_BOTS)
 
 
 # === Вспомогательные функции для SEO ===
@@ -152,30 +83,6 @@ async def reviews_list_page(
     db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
-    
-    # Защита от парсинга: ограничиваем обычных пользователей
-    if not is_search_bot(request) and page > MAX_PAGES_FOR_USERS:
-        user_agent = request.headers.get('user-agent', 'Unknown')
-        client_ip = request.client.host if request.client else 'Unknown'
-        logger.warning(
-            f"Anti-parsing: Blocked access to page {page} | "
-            f"IP: {client_ip} | User-Agent: {user_agent}"
-        )
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html lang="{lang_code}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Страница недоступна</title>
-            </head>
-            <body style="font-family: 'Montserrat', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">← Назад к списку</a>
-            <h1>Страница недоступна</h1>
-            <p>Для просмотра большего количества компаний воспользуйтесь поиском.</p>
-            </body></html>""",
-            status_code=403
-        )
     
     service = ReviewsService(db)
 
@@ -291,31 +198,6 @@ async def company_reviews_page(
     lang_code = normalize_lang(lang)
     t = get_translations(lang_code)
     seo = build_seo_context(request, lang_code)
-    
-    # Защита от парсинга: ограничиваем обычных пользователей
-    if not is_search_bot(request) and page > MAX_PAGES_FOR_USERS:
-        user_agent = request.headers.get('user-agent', 'Unknown')
-        client_ip = request.client.host if request.client else 'Unknown'
-        logger.warning(
-            f"Anti-parsing: Blocked reviews page {page} for company {company_id} | "
-            f"IP: {client_ip} | User-Agent: {user_agent}"
-        )
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html lang="{lang_code}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Страница недоступна</title>
-                <link rel="canonical" href="{seo['canonical']}">
-            </head>
-            <body style="font-family: 'Montserrat', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <a href="/{lang_code}/reviews" style="color: #007bff; text-decoration: none;">← {t.get("back_to_list")}</a>
-            <h1>Страница недоступна</h1>
-            <p>Для просмотра большего количества отзывов воспользуйтесь поиском.</p>
-            </body></html>""",
-            status_code=403
-        )
     
     service = ReviewsService(db)
     per_page = 10
@@ -560,7 +442,7 @@ async def company_reviews_page(
             "og_image": f"{seo['base_url']}/static/safelogist_1.png",
             "is_claimed": is_claimed,
             "owner_data": owner_data,  # Данные владельца
-            "is_search_bot": is_search_bot(request),  # Для показа полных отзывов ботам
+            "show_locked_ui": True,
             **seo,
         }
     )

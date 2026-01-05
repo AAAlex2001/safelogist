@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
 import styles from "./SearchBar.module.scss";
 import SearchIcon from "../../icons/SearchIcon";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
 type SearchBarProps = {
   placeholder?: string;
-  basePath?: string;
+  /** Optional override for the reviews base path (e.g. "https://api.example.com/ru/reviews") */
+  reviewsBasePath?: string;
 };
 
 type Company = {
@@ -18,8 +20,16 @@ type Company = {
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Регистрационный / налоговый номер",
-  basePath = "/ru/reviews",
+  reviewsBasePath,
 }) => {
+  const params = useParams<{ locale?: string }>();
+  const localeFromParams = typeof params?.locale === "string" ? params.locale : undefined;
+  const localeFromPath = typeof window !== "undefined" ? window.location.pathname.split("/")[1] : undefined;
+  const locale = localeFromParams || localeFromPath || "ru";
+
+  const resolvedReviewsBasePath =
+    reviewsBasePath ?? (API_URL ? `${API_URL}/${locale}/reviews` : `/${locale}/reviews`);
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Company[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -95,7 +105,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSubmit = () => {
     if (query.trim()) {
-      window.location.href = `${basePath}/search?q=${encodeURIComponent(query.trim())}`;
+      window.location.href = `${resolvedReviewsBasePath}/search?q=${encodeURIComponent(query.trim())}`;
     }
   };
 
@@ -107,7 +117,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleResultClick = (companyId: number) => {
-    window.location.href = `${basePath}/item/${companyId}`;
+    window.location.href = `${resolvedReviewsBasePath}/item/${companyId}`;
   };
 
   return (

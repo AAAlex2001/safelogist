@@ -1,0 +1,38 @@
+.functions {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  padding-bottom: 244px;
+  @media (min-width: 768px) {
+    padding-bottom: 196px;
+  }
+  @media (min-width: 1440px) {
+    padding-bottom: 234px;
+  }
+}
+
+.headings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+}
+
+.TabsContainer {
+  width: 100%;
+  max-width: none;
+}
+
+.FunctionsContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  justify-content: center;
+  @media (min-width: 768px) {
+    gap: 60px;
+  }
+}

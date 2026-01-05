@@ -14,6 +14,7 @@ export type TypographyProps = {
   blue?: boolean;
   highlight?: string;
   className?: string;
+  brown?: boolean;
 };
 
 export function Typography({
@@ -24,11 +25,12 @@ export function Typography({
   blue = false,
   highlight,
   className,
+  brown = false,
 }: TypographyProps) {
 
   const Tag = as;
   const baseClass = as === "h1" ? styles.h1 : styles.h2;
-  const combinedClassName = cx(baseClass, { [styles.blue]: blue }, className);
+  const combinedClassName = cx(baseClass, { [styles.blue]: blue, [styles.brown]: brown }, className);
 
   const style: TypographyStyleVars = {};
   if (size) style["--typo-size"] = `${size}px`;

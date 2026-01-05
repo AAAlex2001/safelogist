@@ -1,10 +1,12 @@
 "use client";
 
 import styles from "./Tabs.module.scss";
+import React from "react";
 
 export interface Tab {
   id: string;
   label: string;
+  icon?: boolean;
 }
 
 interface TabsProps {

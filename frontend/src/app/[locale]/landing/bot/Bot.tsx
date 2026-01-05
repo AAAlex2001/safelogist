@@ -32,25 +32,30 @@ export default function Bot() {
             <span className={styles.listIcon}>
               <CheckIconTG size={24} />
             </span>
-            <span className={styles.listText}>Проверка компании</span>
+            <div className={styles.listText}>
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Веб-приложение внутри Telegram" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} text="Полный доступ к SafeLogist без браузера" />
+            </div>
           </div>
+
           <div className={styles.listItem}>
             <span className={styles.listIcon}>
               <CheckIconTG size={24} />
             </span>
-            <span className={styles.listText}>Финансовый отчет</span>
+            <div className={styles.listText}>
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Быстрый поиск компании" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} text="Введите регистрационный или налоговый номер" />
+            </div>
           </div>
+
           <div className={styles.listItem}>
             <span className={styles.listIcon}>
               <CheckIconTG size={24} />
             </span>
-            <span className={styles.listText}>Отзывы и рейтинг</span>
-          </div>
-          <div className={styles.listItem}>
-            <span className={styles.listIcon}>
-              <CheckIconTG size={24} />
-            </span>
-            <span className={styles.listText}>Проверка гос. данных</span>
+            <div className={styles.listText}>
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Удобно на телефоне" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} text="Проверяйте компании в дороге и на встречах" />
+            </div>
           </div>
         </div>
 

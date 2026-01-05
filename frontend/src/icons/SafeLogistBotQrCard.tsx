@@ -11,8 +11,7 @@ export default function SafeLogistBotQrCard({ className, size = 200 }: SafeLogis
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className} >
-        <rect width="190" height="190" transform="translate(6 6)" fill="#0433FF"/>
-        <rect width="190" height="190" transform="translate(6 6)" fill="#0433FF"/>
+        {/* background rectangles removed to make SVG transparent */}
         <path d="M6.63281 57.9336H12.3328V52.2336H9.48281C9.10855 52.2336 8.73794 52.3073 8.39216 52.4505C8.04639 52.5938 7.7322 52.8037 7.46756 53.0683C7.20291 53.333 6.99298 53.6472 6.84976 53.9929C6.70653 54.3387 6.63281 54.7093 6.63281 55.0836" fill="white"/>
         <path d="M12.3328 57.9336H6.63281V63.6336H12.3328V57.9336Z" fill="white"/>
         <path d="M12.3359 69.332V63.632H6.63594L6.63594 66.482C6.63594 66.8563 6.70965 67.2269 6.85288 67.5727C6.99611 67.9185 7.20604 68.2326 7.47068 68.4973C7.73533 68.7619 8.04951 68.9719 8.39529 69.1151C8.74107 69.2583 9.11167 69.332 9.48594 69.332" fill="white"/>

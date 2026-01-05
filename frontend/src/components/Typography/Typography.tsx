@@ -16,6 +16,7 @@ export type TypographyProps = {
   className?: string;
   brown?: boolean;
   weight?: "normal" | "bold";
+  white?: boolean;
 };
 
 export function Typography({
@@ -28,6 +29,7 @@ export function Typography({
   className,
   brown = false,
   weight,
+  white = false,
 }: TypographyProps) {
 
   const Tag = as;
@@ -35,7 +37,7 @@ export function Typography({
   const effectiveWeight = weight ?? (as === "h1" || as === "h3" ? "bold" : "normal");
   const combinedClassName = cx(
     baseClass,
-    { [styles.blue]: blue, [styles.brown]: brown, [styles.bold]: effectiveWeight === "bold", [styles.normal]: effectiveWeight === "normal" },
+    { [styles.blue]: blue, [styles.brown]: brown, [styles.white]: white, [styles.bold]: effectiveWeight === "bold", [styles.normal]: effectiveWeight === "normal" },
     className
   );
 

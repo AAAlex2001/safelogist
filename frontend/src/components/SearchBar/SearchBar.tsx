@@ -9,7 +9,6 @@ const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
 type SearchBarProps = {
   placeholder?: string;
-  /** Optional override for the reviews base path (e.g. "https://api.example.com/ru/reviews") */
   reviewsBasePath?: string;
 };
 

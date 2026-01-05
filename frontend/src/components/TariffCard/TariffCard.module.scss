@@ -12,20 +12,20 @@
 
 .popular {
   background: var(--primary);
-  color: var(--card-bg);
+  color: var(--color-white);
   width: 292px;
   min-height: 294px;
   padding-top: 40px;
 
   button {
-    background: var(--card-bg);
+    background: var(--color-white);
     color: var(--primary);
     border: none;
     border-radius: 100px;
 
     &:hover {
       background: var(--primary-dark);
-      color: var(--card-bg);
+      color: var(--color-white);
     }
   }
 }
@@ -36,7 +36,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.2);
-  color: var(--card-bg);
+  color: var(--color-white);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;

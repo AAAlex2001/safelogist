@@ -11,6 +11,7 @@
   --text-primary: #0d0d0d;
   --text-secondary: #717182;
   --text-muted: #8c8c8c;
+  --color-white: #ffffff;
   --page-gradient: linear-gradient(0deg, rgba(222, 246, 255, 0.039) 0%, rgba(1, 42, 249, 0.09) 100%);
   --header-bg: rgba(255, 255, 255, 0.3);
   --header-border: rgba(229, 229, 229, 0.5);

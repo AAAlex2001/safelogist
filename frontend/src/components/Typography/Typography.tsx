@@ -2,7 +2,7 @@ import React from "react";
 import cx from "classnames";
 import styles from "./Typography.module.scss";
 
-type TypographyAs = "h1" | "h2";
+type TypographyAs = "h1" | "h2" | "h3" | "h4";
 
 type TypographyStyleVars = React.CSSProperties & Record<`--${string}`, string>;
 
@@ -31,8 +31,8 @@ export function Typography({
 }: TypographyProps) {
 
   const Tag = as;
-  const baseClass = as === "h1" ? styles.h1 : styles.h2;
-  const effectiveWeight = weight ?? (as === "h1" ? "bold" : "normal");
+  const baseClass = as === "h1" || as === "h3" ? styles.h1 : styles.h2;
+  const effectiveWeight = weight ?? (as === "h1" || as === "h3" ? "bold" : "normal");
   const combinedClassName = cx(
     baseClass,
     { [styles.blue]: blue, [styles.brown]: brown, [styles.bold]: effectiveWeight === "bold", [styles.normal]: effectiveWeight === "normal" },

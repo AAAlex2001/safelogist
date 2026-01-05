@@ -21,16 +21,14 @@ export function AssessmentCard() {
 
         <div className={styles.ratingRow}>
           <div className={styles.ratingLabel}>Рейтинг</div>
-          <div className={styles.ratingValue}>
-            <div className={styles.stars} aria-hidden="true">
-              <StarIcon filled />
-              <StarIcon filled />
-              <StarIcon filled />
-              <StarIcon filled />
-              <StarIcon filled />
-            </div>
-            <div className={styles.ratingNumber}>5,0</div>
+          <div className={styles.stars} aria-hidden="true">
+            <StarIcon filled />
+            <StarIcon filled />
+            <StarIcon filled />
+            <StarIcon filled />
+            <StarIcon filled />
           </div>
+          <div className={styles.ratingNumber}>5,0</div>
         </div>
       </div>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { Typography } from "@/components/Typography";
@@ -5,10 +7,15 @@ import styles from "./Steps.module.scss";
 import { SearchBar } from "@/components/SearchBar";
 import { AssessmentCard } from "@/components/AssessmentCard";
 import { ReviewCard } from "@/components/ReviewCard";
+import { DesktopStepsSwitcher } from "@/components/DesktopStepsSwitcher";
+
+type Step = 1 | 2 | 3;
 
 export function Steps() {
+  const [activeStep, setActiveStep] = React.useState<Step>(1);
+
   return (
-    <section className={styles.steps}>
+    <section className={styles.steps} data-active-step={activeStep}>
       <div className={styles.headings}>
         <Typography
           as="h1"
@@ -26,7 +33,9 @@ export function Steps() {
         />
       </div>
 
-      <div className={styles.step}>
+      <DesktopStepsSwitcher activeStep={activeStep} onChange={setActiveStep} />
+
+      <div className={styles.step} data-step={1}>
         <Typography
           as="h3"
           size={20}
@@ -51,7 +60,7 @@ export function Steps() {
         <SearchBar disabled={true} />
       </div>
 
-      <div className={styles.step}>
+      <div className={styles.step} data-step={2}>
         <Typography
           as="h3"
           size={20}
@@ -78,7 +87,7 @@ export function Steps() {
         </div>
       </div>
 
-      <div className={styles.step}>
+      <div className={styles.step} data-step={3}>
         <Typography
           as="h3"
           size={20}

@@ -1,5 +1,7 @@
 .steps {
   margin: 0 auto;
+  position: relative;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,6 +9,17 @@
   padding-bottom: 254px;
   @media (min-width: 768px) {
     padding-bottom: 244px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .steps[data-active-step="1"] .step[data-step="2"],
+  .steps[data-active-step="1"] .step[data-step="3"],
+  .steps[data-active-step="2"] .step[data-step="1"],
+  .steps[data-active-step="2"] .step[data-step="3"],
+  .steps[data-active-step="3"] .step[data-step="1"],
+  .steps[data-active-step="3"] .step[data-step="2"] {
+    display: none;
   }
 }
 

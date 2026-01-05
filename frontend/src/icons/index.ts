@@ -7,4 +7,7 @@ export { default as InternationalIcon } from './InternationalIcon';
 export { default as DossierIcon } from './DossierIcon';
 export { default as FastIcon } from './FastIcon';
 export { default as logoSmall } from './logoSmall';
+export { default as Step1Icon } from './Step1Icon';
+export { default as Step2Icon } from './Step2Icon';
+export { default as Step3Icon } from './Step3Icon';
 export { default as TruckIcon } from './TruckIcon';

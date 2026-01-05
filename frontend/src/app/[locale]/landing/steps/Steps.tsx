@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Typography } from "@/components/Typography";
 import styles from "./Steps.module.scss";
@@ -12,7 +12,7 @@ import { DesktopStepsSwitcher } from "@/components/DesktopStepsSwitcher";
 type Step = 1 | 2 | 3;
 
 export function Steps() {
-  const [activeStep, setActiveStep] = React.useState<Step>(1);
+  const [activeStep, setActiveStep] = useState<Step>(1);
 
   return (
     <section className={styles.steps}>

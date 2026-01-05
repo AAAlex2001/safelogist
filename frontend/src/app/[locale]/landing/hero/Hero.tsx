@@ -1,4 +1,3 @@
-import React from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { Typography } from "@/components/Typography";
 import StatsCompaniesIcon from "@/icons/StatsCompaniesIcon";

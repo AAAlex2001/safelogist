@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styles from "./Reviews.module.scss";
 import { Typography } from "@/components/Typography";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";

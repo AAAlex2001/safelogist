@@ -57,18 +57,33 @@
   border-radius: 100px;
   cursor: pointer;
   position: relative;
-  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
   svg {
     display: block;
     width: 10px;
     height: 18px;
     color: var(--primary);
-    margin: 0 auto;
+    margin: 0;
+    transition: color 150ms ease, transform 150ms ease;
   }
-  
+
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
+    background: var(--primary);
+    border-color: var(--primary);
+
+    svg {
+      color: var(--background);
+    }
   }
 }
 

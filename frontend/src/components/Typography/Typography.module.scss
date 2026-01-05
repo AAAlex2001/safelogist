@@ -39,12 +39,12 @@
 
 @media (min-width: 768px) {
   .h1 {
-    font-size: var(--typo-size-desktop, 48px);
-    line-height: 56px;
+    font-size: var(--typo-size-desktop);
+    line-height: 32px;
   }
 
   .h2 {
-    font-size: var(--typo-size-desktop, 24px);
-    line-height: 32px;
+    font-size: var(--typo-size-desktop);
+    line-height: 28px;
   }
 }

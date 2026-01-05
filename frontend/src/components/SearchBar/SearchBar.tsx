@@ -10,6 +10,7 @@ const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 type SearchBarProps = {
   placeholder?: string;
   reviewsBasePath?: string;
+  disabled?: boolean;
 };
 
 type Company = {
@@ -20,6 +21,7 @@ type Company = {
 export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Регистрационный / налоговый номер",
   reviewsBasePath,
+  disabled = false,
 }) => {
   const params = useParams<{ locale?: string }>();
   const localeFromParams = typeof params?.locale === "string" ? params.locale : undefined;
@@ -36,8 +38,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   const clearResultsTimeout = useRef<NodeJS.Timeout | null>(null);
+  // `disabled` comes from props; when true the search is non-interactive
 
-  // Клик вне компонента - закрыть dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
@@ -66,7 +68,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       return;
     }
 
-    // Показываем лоадер сразу
     setLoading(true);
     setShowDropdown(true);
 
@@ -87,6 +88,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
     const value = e.target.value;
     setQuery(value);
 
@@ -103,6 +105,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleSubmit = () => {
+    if (disabled) return;
     if (query.trim()) {
       window.location.href = `${resolvedReviewsBasePath}/search?q=${encodeURIComponent(query.trim())}`;
     }
@@ -134,10 +137,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             value={query}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
+            disabled={disabled}
+            readOnly={disabled}
           />
           <button 
             className={styles.searchButton}
             onClick={handleSubmit}
+            disabled={disabled}
           >
             Поиск
           </button>

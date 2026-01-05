@@ -44,6 +44,9 @@ export function Steps() {
                 desktopSize={18}
                 text="Укажите интересующую организацию — мы начнём поиск по официальным источникам"
             />
+            <SearchBar
+                disabled={true}
+            />
         </div>
       </div>
     </section>

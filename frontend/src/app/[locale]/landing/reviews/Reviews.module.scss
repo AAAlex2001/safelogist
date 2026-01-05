@@ -1,9 +1,12 @@
 .reviews {
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 244px;
+  padding-left: 20px;
+  padding-right: 20px;
   @media (min-width: 1440px) {
     padding-bottom: 172px;
   }
@@ -30,7 +33,7 @@
 .slide {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: auto !important;
 }
 
 .slideBtns {

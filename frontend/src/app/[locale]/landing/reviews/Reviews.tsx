@@ -39,6 +39,7 @@ export default function Reviews() {
           spaceBetween={24}
           slidesPerView='auto'
           className={styles.swiper}
+          loop={true}
         >
           {[...Array(15)].map((_, i) => (
             <SwiperSlide key={i} className={styles.slide}>

@@ -13,10 +13,14 @@
   position: relative;
   background: var(--card-bg);
   border: 1px solid var(--primary);
-  border-radius: 20px;
+  border-radius: 50px;
   box-shadow: 0 0 40px 0 rgba(1, 42, 249, 0.4);
   z-index: 100;
   overflow: hidden;
+}
+
+.expanded {
+  border-radius: 20px 20px 20px 20px;
 }
 
 :global([data-theme="dark"]) .searchBox {

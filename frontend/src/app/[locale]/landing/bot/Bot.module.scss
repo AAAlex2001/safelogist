@@ -37,13 +37,14 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 16px;
+  width: 100%;
 }
 
 .listItem {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 15px;
 }
 
 .listIcon {
@@ -78,8 +79,8 @@
 
 .handle {
   font-family: var(--font-base);
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 600;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
   color: #ffffff;
 }

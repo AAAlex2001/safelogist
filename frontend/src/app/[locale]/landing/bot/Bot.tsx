@@ -33,8 +33,8 @@ export default function Bot() {
               <CheckIconTG size={24} />
             </span>
             <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Веб-приложение внутри Telegram" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} text="Полный доступ к SafeLogist без браузера" />
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Веб-приложение внутри Telegram" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Полный доступ к SafeLogist без браузера" />
             </div>
           </div>
 
@@ -43,8 +43,8 @@ export default function Bot() {
               <CheckIconTG size={24} />
             </span>
             <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Быстрый поиск компании" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} text="Введите регистрационный или налоговый номер" />
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Быстрый поиск компании" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Введите регистрационный или налоговый номер" />
             </div>
           </div>
 
@@ -53,8 +53,8 @@ export default function Bot() {
               <CheckIconTG size={24} />
             </span>
             <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} text="Удобно на телефоне" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} text="Проверяйте компании в дороге и на встречах" />
+              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Удобно на телефоне" />
+              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Проверяйте компании в дороге и на встречах" />
             </div>
           </div>
         </div>

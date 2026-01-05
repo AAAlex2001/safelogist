@@ -23,25 +23,25 @@
 }
 
 .title {
-  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-family: var(--font-base);
   font-weight: 700;
   font-size: 28px;
   line-height: 33px;
   letter-spacing: -0.015em;
-  color: #0D0D0D;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .highlight {
-  color: #012AF9;
+  color: var(--primary);
 }
 
 .subtitle {
-  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-family: var(--font-base);
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;
-  color: #4A4F5A;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -70,36 +70,28 @@
 }
 
 .statNumber {
-  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-family: var(--font-base);
   font-weight: 700;
   font-size: 24px;
   line-height: 29px;
-  color: #012AF9;
+  color: var(--primary);
   text-align: center;
 }
 
 .statText {
-  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-family: var(--font-base);
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  color: #505050;
+  color: var(--text-secondary);
   text-align: center;
 }
 
 // ===== ТЕМНАЯ ТЕМА =====
 :global([data-theme="dark"]) {
-  .title {
-    color: #EAEAEA;
-  }
-
-  .subtitle {
-    color: #B0B0C0;
-  }
-
-  .statText {
-    color: #B0B0C0;
-  }
+  .title { color: var(--text-primary); }
+  .subtitle { color: var(--text-secondary); }
+  .statText { color: var(--text-secondary); }
 }
 
 // ===== АДАПТИВ =====

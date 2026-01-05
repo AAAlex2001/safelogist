@@ -20,12 +20,16 @@ const stepLabel: Record<Step, string> = {
 export function DesktopStepsSwitcher({ activeStep, onChange }: Props) {
   const Icon = activeStep === 1 ? Step1Icon : activeStep === 2 ? Step2Icon : Step3Icon;
 
+  const pillPositionClass = 
+    activeStep === 1 ? styles.pillPos1 : 
+    activeStep === 2 ? styles.pillPos2 : 
+    styles.pillPos3;
+
   return (
     <div className={styles.root} aria-label="Переключатель шагов">
       <button
         type="button"
-        className={styles.pill}
-        onClick={() => onChange(activeStep)}
+        className={`${styles.pill} ${pillPositionClass}`}
         aria-current="step"
       >
         <span className={styles.pillText}>{stepLabel[activeStep]}</span>
@@ -34,27 +38,33 @@ export function DesktopStepsSwitcher({ activeStep, onChange }: Props) {
         </span>
       </button>
 
-      <button
-        type="button"
-        className={`${styles.stepText} ${styles.step1} ${activeStep === 1 ? styles.activeText : ""}`}
-        onClick={() => onChange(1)}
-      >
-        Шаг 1
-      </button>
-      <button
-        type="button"
-        className={`${styles.stepText} ${styles.step2} ${activeStep === 2 ? styles.activeText : ""}`}
-        onClick={() => onChange(2)}
-      >
-        Шаг 2
-      </button>
-      <button
-        type="button"
-        className={`${styles.stepText} ${styles.step3} ${activeStep === 3 ? styles.activeText : ""}`}
-        onClick={() => onChange(3)}
-      >
-        Шаг 3
-      </button>
+      {activeStep !== 1 && (
+        <button
+          type="button"
+          className={`${styles.stepText} ${styles.step1}`}
+          onClick={() => onChange(1)}
+        >
+          Шаг 1
+        </button>
+      )}
+      {activeStep !== 2 && (
+        <button
+          type="button"
+          className={`${styles.stepText} ${styles.step2}`}
+          onClick={() => onChange(2)}
+        >
+          Шаг 2
+        </button>
+      )}
+      {activeStep !== 3 && (
+        <button
+          type="button"
+          className={`${styles.stepText} ${styles.step3}`}
+          onClick={() => onChange(3)}
+        >
+          Шаг 3
+        </button>
+      )}
     </div>
   );
 }

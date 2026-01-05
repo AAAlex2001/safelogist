@@ -15,7 +15,7 @@ export function Steps() {
   const [activeStep, setActiveStep] = React.useState<Step>(1);
 
   return (
-    <section className={styles.steps} data-active-step={activeStep}>
+    <section className={styles.steps}>
       <div className={styles.headings}>
         <Typography
           as="h1"
@@ -32,85 +32,93 @@ export function Steps() {
           brown={true}
         />
       </div>
+      <div className={styles.stepsWrapper} data-active-step={activeStep}>
+        <DesktopStepsSwitcher activeStep={activeStep} onChange={setActiveStep} />
 
-      <DesktopStepsSwitcher activeStep={activeStep} onChange={setActiveStep} />
+        <div className={styles.stepsContent}>
+          <div className={`${styles.step} ${activeStep === 1 ? styles.active : ""}`} data-step={1}>
+            <Typography
+              as="h3"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              weight={"normal"}
+              text="Шаг 1 из 3."
+              className={styles.stepCounter}
+            />
+            <Typography
+              as="h1"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              text="Введите регистрационный/налоговый номер"
+            />
+            <Typography
+              as="h2"
+              size={18}
+              desktopSize={18}
+              text="Укажите интересующую организацию — мы начнём поиск по официальным источникам"
+            />
+            <SearchBar disabled={true} />
+          </div>
 
-      <div className={styles.step} data-step={1}>
-        <Typography
-          as="h3"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          weight={"normal"}
-          text="Шаг 1 из 3."
-        />
-        <Typography
-          as="h1"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          text="Введите регистрационный/налоговый номер"
-        />
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text="Укажите интересующую организацию — мы начнём поиск по официальным источникам"
-        />
-        <SearchBar disabled={true} />
-      </div>
+          <div className={`${styles.step} ${activeStep === 2 ? styles.active : ""}`} data-step={2}>
+            <Typography
+              as="h3"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              weight={"normal"}
+              text="Шаг 2 из 3."
+              className={styles.stepCounter}
+            />
+            <Typography
+              as="h1"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              text="Изучите ключевую информацию об организации"
+            />
+            <Typography
+              as="h2"
+              size={18}
+              desktopSize={18}
+              text="Мы собираем судебные дела, отзывы, финансовые показатели и регистрационные данные в одном досье"
+            />
+            <div className={styles.stepImage}>
+              <Image src="/step.png" alt="Иллюстрация шага 2" width={340} height={200} />
+            </div>
+          </div>
 
-      <div className={styles.step} data-step={2}>
-        <Typography
-          as="h3"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          weight={"normal"}
-          text="Шаг 2 из 3."
-        />
-        <Typography
-          as="h1"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          text="Изучите ключевую информацию об организации"
-        />
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text="Мы собираем судебные дела, отзывы, финансовые показатели и регистрационные данные в одном досье"
-        />
-        <div className={styles.stepImage}>
-          <Image src="/step.png" alt="Иллюстрация шага 2" width={340} height={200} />
+          <div className={`${styles.step} ${activeStep === 3 ? styles.active : ""}`} data-step={3}>
+            <Typography
+              as="h3"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              weight={"normal"}
+              text="Шаг 3 из 3."
+              className={styles.stepCounter}
+            />
+            <Typography
+              as="h1"
+              size={20}
+              desktopSize={20}
+              blue={true}
+              text="Оцените надёжность и примите взвешенное решение"
+            />
+            <Typography
+              as="h2"
+              size={18}
+              desktopSize={18}
+              text="Просматривайте готовое досье, чтобы быстро понять, можно ли доверять компании"
+            />
+            <div className={styles.cards}>
+              <AssessmentCard />
+              <ReviewCard />
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className={styles.step} data-step={3}>
-        <Typography
-          as="h3"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          weight={"normal"}
-          text="Шаг 3 из 3."
-        />
-        <Typography
-          as="h1"
-          size={20}
-          desktopSize={20}
-          blue={true}
-          text="Оцените надёжность и примите взвешенное решение"
-        />
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text="Просматривайте готовое досье, чтобы быстро понять, можно ли доверять компании"
-        />
-        <AssessmentCard />
-        <ReviewCard />
       </div>
     </section>
   );

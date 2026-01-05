@@ -4,6 +4,7 @@
   flex-direction: column;
   align-items: center;
   gap: 110px;
+  padding-bottom: 100px;
 }
 
 .headings {
@@ -68,8 +69,11 @@
 }
 
 .statIconSources {
-  --icon-x: 60px;
-  top: -30px;
+  --icon-x: 40px;
+  top: -40px;
+  @media (min-width: 1440px) {
+    --icon-x: 60px;
+  }
 }
 
 .statNumber {

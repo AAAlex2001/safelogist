@@ -4,6 +4,7 @@ import styles from "./landing.module.scss";
 import Footer from "@/components/footer/Footer";
 import { Functions } from "./functions/Functions";
 import { Steps } from "./steps/Steps";
+import Reviews from "./reviews/Reviews";
 
 export default function LandingPage() {
   return (
@@ -11,6 +12,7 @@ export default function LandingPage() {
       <Hero />
       <Functions />
       <Steps />
+      <Reviews />
       <Footer />
     </main>
   );

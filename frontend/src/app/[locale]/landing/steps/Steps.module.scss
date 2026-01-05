@@ -11,6 +11,9 @@
   @media (min-width: 768px) {
     padding-bottom: 244px;
   }
+  @media (min-width: 1440px) {
+    padding-bottom: 300px;
+  }
 }
 
 .headings {
@@ -44,7 +47,6 @@
   @media (min-width: 1440px) {
     position: relative;
     flex: 1;
-    min-height: 420px;
     gap: 0;
   }
 }

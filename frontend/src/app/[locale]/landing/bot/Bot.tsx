@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import styles from "./Bot.module.scss";
 import { Typography } from "@/components/Typography";
@@ -17,13 +15,18 @@ export default function Bot() {
           text="Проверяйте компании прямо в Telegram"
         />
 
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text={"Откройте веб-приложение SafeLogist\nв один клик — без лишних шагов"}
-          brown={true}
-        />
+        <h2 className={styles.subtitle}>
+          Откройте веб-приложение{" "}
+          <a
+            href="https://t.me/safelogist_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.subtitleLink}
+          >
+            SafeLogist
+          </a>
+          {" "}в один клик — без лишних шагов
+        </h2>
       </div>
 
       <div className={styles.card}>
@@ -61,7 +64,14 @@ export default function Bot() {
 
         <div className={styles.qrWrap}>
           <SafeLogistBotQrCard className={styles.qr} size={200} />
-            <div className={styles.handle}>@safelogist_bot</div>
+          <a
+            href="https://t.me/safelogist_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.handle}
+          >
+            @safelogist_bot
+          </a>
         </div>
       </div>
     </section>

@@ -18,6 +18,20 @@
   margin-bottom: 60px;
 }
 
+.subtitle {
+  font-family: var(--font-base);
+  font-weight: 400;
+  color: var(--text-accent);
+  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.subtitleLink {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .card {
   max-width: 100%;
   display: flex;
@@ -83,4 +97,5 @@
   line-height: 28px;
   font-weight: 400;
   color: #ffffff;
+  text-decoration: underline;
 }

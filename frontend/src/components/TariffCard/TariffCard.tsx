@@ -15,6 +15,9 @@ export interface TariffCardProps {
   features: string[];
   ctaText: string;
   onCtaClick?: () => void;
+  active?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export function TariffCard({
@@ -27,9 +30,22 @@ export function TariffCard({
   features,
   ctaText,
   onCtaClick,
+  active = false,
+  onMouseEnter,
+  onMouseLeave,
 }: TariffCardProps) {
+  const cardClasses = [
+    styles.card,
+    popular ? styles.popular : "",
+    active ? styles.active : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <div className={`${styles.card} ${popular ? styles.popular : ""}`}>
+    <div 
+      className={cardClasses}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {popular && badgeText && (
         <span className={styles.badge}>{badgeText}</span>
       )}
@@ -44,7 +60,7 @@ export function TariffCard({
           <li key={idx} className={styles.featureItem}>
             <CheckCircleIcon
               size={20}
-              variant={popular ? "white" : "normal"}
+              variant={active ? "white" : "normal"}
               className={styles.featureIcon}
             />
             <span>{feature}</span>
@@ -53,7 +69,7 @@ export function TariffCard({
       </ul>
       <Button
         onClick={onCtaClick}
-        variant={popular ? "primary" : "tariff"}
+        variant={active ? "primary" : "tariff"}
         fullWidth
       >
         {ctaText}

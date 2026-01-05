@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Tariffs.module.scss";
 import { Typography } from "@/components/Typography";
 import { TariffCard } from "@/components/TariffCard";
 
 export function Tariffs() {
+  const [hoveredCard, setHoveredCard] = useState<"base" | "pro" | null>(null);
+
   const baseFeatures = [
     "Проверка компаний",
     "Финансовые отчеты",
@@ -18,6 +20,12 @@ export function Tariffs() {
     "Приоритетная поддержка",
     "API доступ",
   ];
+
+  // Если ничего не наведено - популярный активен
+  // Если наведен base - base активен, popular не активен
+  // Если наведен pro - pro активен
+  const isBaseActive = hoveredCard === "base";
+  const isProActive = hoveredCard === null || hoveredCard === "pro";
 
   return (
     <section className={styles.tariffs}>
@@ -44,6 +52,9 @@ export function Tariffs() {
           note="Для большинства бизнесов"
           features={baseFeatures}
           ctaText="Выбрать"
+          active={isBaseActive}
+          onMouseEnter={() => setHoveredCard("base")}
+          onMouseLeave={() => setHoveredCard(null)}
         />
         <TariffCard
           popular
@@ -54,6 +65,9 @@ export function Tariffs() {
           note="Для растущих компаний"
           features={proFeatures}
           ctaText="Выбрать"
+          active={isProActive}
+          onMouseEnter={() => setHoveredCard("pro")}
+          onMouseLeave={() => setHoveredCard(null)}
         />
       </div>
     </section>

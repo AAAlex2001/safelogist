@@ -28,6 +28,7 @@
   box-shadow: 0 4px 10px 0 #0000001A;
   border-radius: 100px;
   color: var(--primary);
+  transition: color 160ms ease;
 }
 
 .info {
@@ -113,4 +114,28 @@
   width: 44px;
   height: 27px;
   display: block;
+}
+
+/* Make small logo slightly muted by default and fully visible on card hover */
+.badge svg {
+  opacity: 0.6;
+  transition: opacity 160ms ease, filter 160ms ease;
+}
+
+.card:hover .badge svg {
+  opacity: 1;
+  filter: none;
+}
+
+/* Hover on card: make truck icon fully blue like heading */
+.card:hover .userBadge {
+  color: var(--primary);
+}
+
+.card .userBadge svg path {
+  transition: stroke-opacity 160ms ease, stroke 160ms ease;
+}
+
+.card:hover .userBadge svg path {
+  stroke-opacity: 1;
 }

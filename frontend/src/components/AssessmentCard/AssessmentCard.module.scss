@@ -54,7 +54,20 @@
   background: var(--card-bg);
   box-shadow: 0 4px 10px 0 #0000001A;
   border-radius: 100px;
-  color: var(--text-primary);
+  color: var(--primary);
+  transition: color 160ms ease;
+}
+
+.card:hover .userBadge {
+  color: var(--primary);
+}
+
+.card .userBadge svg path {
+  transition: stroke-opacity 160ms ease, stroke 160ms ease;
+}
+
+.card:hover .userBadge svg path {
+  stroke-opacity: 1;
 }
 
 .contractorInfo {

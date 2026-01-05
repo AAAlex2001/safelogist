@@ -31,8 +31,8 @@ export default function LogoSmall({ className, width = 44, height = 27 }: LogoSm
           y2="26.9975"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#012AF9" />
-          <stop offset="1" stopColor="#011993" />
+          <stop stopColor="var(--primary)" />
+          <stop offset="1" stopColor="var(--primary-dark, var(--primary))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_3717_40133"
@@ -42,8 +42,8 @@ export default function LogoSmall({ className, width = 44, height = 27 }: LogoSm
           y2="26.7475"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#012AF9" />
-          <stop offset="1" stopColor="#011993" />
+          <stop stopColor="var(--primary)" />
+          <stop offset="1" stopColor="var(--primary-dark, var(--primary))" />
         </linearGradient>
       </defs>
     </svg>

@@ -56,9 +56,8 @@ export default function Bot() {
 
         <div className={styles.qrWrap}>
           <SafeLogistBotQrCard className={styles.qr} size={200} />
+            <div className={styles.handle}>@safelogist_bot</div>
         </div>
-
-        <div className={styles.handle}>@safelogist_bot</div>
       </div>
     </section>
   );

@@ -66,10 +66,12 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 
 .qr {
   display: block;
+  width: 100%;
 }
 
 .handle {

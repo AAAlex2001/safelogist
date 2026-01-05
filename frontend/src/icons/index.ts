@@ -6,3 +6,5 @@ export { default as OfficialSourcesIcon } from './OfficialSourcesIcon';
 export { default as InternationalIcon } from './InternationalIcon';
 export { default as DossierIcon } from './DossierIcon';
 export { default as FastIcon } from './FastIcon';
+export { default as logoSmall } from './logoSmall';
+export { default as TruckIcon } from './TruckIcon';

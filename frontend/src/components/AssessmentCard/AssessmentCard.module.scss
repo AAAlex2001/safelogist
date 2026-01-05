@@ -1,0 +1,170 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  gap: 10px;
+
+  width: 340px;
+  height: 323px;
+
+  background: linear-gradient(0deg, var(--input-border), var(--input-border)), var(--input-bg);
+  border-radius: 24px;
+}
+
+.contractorCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+
+  width: 320px;
+  height: 165px;
+
+  background: var(--card-bg);
+  border-radius: 15px;
+}
+
+.contractorCardSmall {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+
+  width: 320px;
+  height: 128px;
+
+  background: var(--card-bg);
+  border-radius: 15px;
+}
+
+.contractorHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px 5px;
+  gap: 16px;
+
+  width: 320px;
+  height: 83px;
+}
+
+.userBadge {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 100px;
+  color: var(--text-primary);
+}
+
+.contractorInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 5px;
+
+  width: 206px;
+  height: 62px;
+}
+
+.contractorName {
+  width: 206px;
+  height: 19px;
+
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
+.contractorTagline {
+  width: 206px;
+  height: 38px;
+
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-muted);
+}
+
+.reviewsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 24px;
+  gap: 10px;
+
+  width: 320px;
+  height: 39px;
+
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
+.contractorCardSmall .reviewsRow {
+  padding: 10px 24px 16px;
+  height: 45px;
+}
+
+.ratingRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 24px 16px;
+
+  width: 320px;
+  height: 43px;
+}
+
+.ratingLabel {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
+.ratingValue {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.stars {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 24px;
+}
+
+.stars svg {
+  width: 24px;
+  height: 24px;
+}
+
+.stars svg + svg {
+  margin-left: -4px;
+}
+
+.ratingNumber {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}

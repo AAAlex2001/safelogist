@@ -5,6 +5,7 @@ import Footer from "@/components/footer/Footer";
 import { Functions } from "./functions/Functions";
 import { Steps } from "./steps/Steps";
 import Reviews from "./reviews/Reviews";
+import Bot from "./bot/Bot";
 
 export default function LandingPage() {
   return (
@@ -13,6 +14,7 @@ export default function LandingPage() {
       <Functions />
       <Steps />
       <Reviews />
+      <Bot />
       <Footer />
     </main>
   );

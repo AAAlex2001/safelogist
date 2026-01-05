@@ -3,7 +3,6 @@
   position: relative;
   width: 220px;
   height: 180px;
-  flex-shrink: 0;
 }
 
 @media (min-width: 1440px) {
@@ -16,39 +15,38 @@
   position: absolute;
   width: 179px;
   height: 40px;
-  padding: 0;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  background: var(--steps-pill-bg);
-  box-shadow: var(--steps-pill-shadow);
+  background: var(--primary);
+  box-shadow: var(--card-shadow);
   border: none;
   border-radius: 12px;
   cursor: default;
-  color: var(--on-primary);
+  color: var(--background);
   transition: top 0.3s ease, left 0.3s ease, transform 0.3s ease;
 }
 
 .pillPos1 {
-  left: 0;
-  top: 130px;
-  transform: rotate(38.58deg);
+  left: 45px;
+  top: 8px;
+  transform: rotate(0deg);
   transform-origin: left center;
 }
 
 .pillPos2 {
   left: 30px;
-  top: 75px;
-  transform: rotate(19.63deg);
+  top: 55px;
+  transform: rotate(15deg);
   transform-origin: left center;
 }
 
 .pillPos3 {
-  left: 50px;
-  top: 20px;
-  transform: rotate(0deg);
+  left: 10px;
+  top: 100px;
+  transform: rotate(30deg);
   transform-origin: left center;
 }
 
@@ -73,13 +71,12 @@
   height: 24px;
 }
 
-/* Step text buttons */
 .stepText {
   position: absolute;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 8px;
   font-size: 20px;
   line-height: 24px;
   font-weight: 400;
@@ -92,26 +89,23 @@
   color: var(--primary);
 }
 
-/* Step 1 - bottom, most rotated */
 .step1 {
-  left: 0;
-  top: 130px;
-  transform: rotate(38.58deg);
+  left: 45px;
+  top: 0;
+  transform: rotate(0deg);
   transform-origin: left center;
 }
 
-/* Step 2 - middle */
 .step2 {
   left: 30px;
-  top: 75px;
-  transform: rotate(19.63deg);
+  top: 55px;
+  transform: rotate(15deg);
   transform-origin: left center;
 }
 
-/* Step 3 - top, horizontal */
 .step3 {
-  left: 50px;
-  top: 20px;
-  transform: rotate(0deg);
+  left: 10px;
+  top: 100px;
+  transform: rotate(30deg);
   transform-origin: left center;
 }

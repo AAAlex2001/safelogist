@@ -5,7 +5,7 @@ import { Typography } from "@/components/Typography";
 import styles from "./Functions.module.scss";
 import {Tabs} from "@/components/tabs/Tabs";
 import { useTranslations } from "next-intl";
-import {InputField} from "@/components/input/InputField";
+import { SearchCheckIcon, DocumentStarIcon, AwardIcon, UserSearchIcon } from '@/icons';
 
 type TabId = "WhatYouGet" | "WhyWe";
 
@@ -44,64 +44,84 @@ export function Functions() {
         {activeTab === "WhatYouGet" && (
           <div className={styles.FunctionsContent}>
             <div className={styles.FunctionsItem}>
-              <Typography
-                as="h1"
-                size={18}
-                desktopSize={18}
-                blue={true}
-                text="Проверка компаний"
-              />
-              <Typography
-                as="h2"
-                size={16}
-                desktopSize={16}
-                text="Судебные дела, регистрация и ключевые показатели за минуту"
-              />
+              <div className={styles.FunctionsIcon}>
+                <SearchCheckIcon />
+              </div>
+              <div className={styles.text}>
+                <Typography
+                  as="h1"
+                  size={18}
+                  desktopSize={18}
+                  blue={true}
+                  text="Проверка компаний"
+                />
+                <Typography
+                  as="h2"
+                  size={16}
+                  desktopSize={16}
+                  text="Судебные дела, регистрация и ключевые показатели за минуту"
+                />
+              </div>
             </div>
             <div className={styles.FunctionsItem}>
-              <Typography
-                as="h1"
-                size={18}
-                desktopSize={18}
-                blue={true}
-                text="Репутация и отзывы"
-              />
-              <Typography
-                as="h2"
-                size={16}
-                desktopSize={16}
-                text="13M+ модерируемых отзывов для оценки надёжности"
-              />
+              <div className={styles.FunctionsIcon}>
+                <DocumentStarIcon />
+              </div>
+              <div className={styles.text}>
+                <Typography
+                  as="h1"
+                  size={18}
+                  desktopSize={18}
+                  blue={true}
+                  text="Репутация и отзывы"
+                />
+                <Typography
+                  as="h2"
+                  size={16}
+                  desktopSize={16}
+                  text="13M+ модерируемых отзывов для оценки надёжности"
+                />
+              </div>
             </div>
             <div className={styles.FunctionsItem}>
-              <Typography
-                as="h1"
-                size={18}
-                desktopSize={18}
-                blue={true}
-                text="Риски и судебные дела"
+              <div className={styles.FunctionsIcon}>
+                <AwardIcon />
+              </div>
+              <div className={styles.text}>
+                <Typography
+                  as="h1"
+                  size={18}
+                  desktopSize={18}
+                  blue={true}
+                  text="Риски и судебные дела"
                 />
-              <Typography
-                as="h2"
-                size={16}
-                desktopSize={16}
-                text="Активные процессы, производства и финансовые сигналы"
+                <Typography
+                  as="h2"
+                  size={16}
+                  desktopSize={16}
+                  text="Активные процессы, производства и финансовые сигналы"
                 />
+              </div>
             </div>
             <div className={styles.FunctionsItem}>
-              <Typography
-                as="h1"
-                size={18}
-                desktopSize={18}
-                blue={true}
-                text="Связанные лица"
+              <div className={styles.FunctionsIcon}>
+                <UserSearchIcon />
+              </div>
+              <div className={styles.text}>
+                <Typography
+                  as="h1"
+                  size={18}
+                  desktopSize={18}
+                  blue={true}
+                  text="Связанные лица"
                 />
-              <Typography
-                as="h2"
-                size={16}
-                desktopSize={16}
-                text="Бенефициары, аффилированность и структура собственности"
+                <Typography
+                  as="h2"
+                  size={16}
+                  desktopSize={16}
+                  text="Бенефициары, аффилированность и структура собственности"
                 />
+              </div>
             </div>
           </div>
         )}

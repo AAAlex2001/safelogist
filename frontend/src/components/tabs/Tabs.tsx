@@ -6,7 +6,7 @@ import React from "react";
 export interface Tab {
   id: string;
   label: string;
-  icon?: boolean;
+  icon?: React.ReactNode;
 }
 
 interface TabsProps {
@@ -24,6 +24,7 @@ export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
           className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ""}`}
           onClick={() => onTabChange(tab.id)}
         >
+          {tab.icon && <span className={styles.iconWrapper}>{tab.icon}</span>}
           {tab.label}
         </button>
       ))}

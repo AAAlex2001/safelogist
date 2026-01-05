@@ -29,6 +29,14 @@
   color: var(--text-accent);
 }
 
+.normal {
+  font-weight: 400;
+}
+
+.bold {
+  font-weight: 700;
+}
+
 @media (min-width: 768px) {
   .h1 {
     font-size: var(--typo-size-desktop, 48px);

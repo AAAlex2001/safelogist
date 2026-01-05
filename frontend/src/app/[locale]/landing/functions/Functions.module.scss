@@ -34,5 +34,48 @@
   justify-content: center;
   @media (min-width: 768px) {
     gap: 60px;
+    flex-wrap: wrap;
+    flex-direction: row;
   }
+}
+
+.FunctionsItem {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--bg-secondary);
+  border-radius: 22px;
+  box-sizing: border-box;
+  padding: 16px;
+  @media (min-width: 768px) {
+    flex: 1 1 calc((100% - 60px)/2);
+  }
+}
+
+.FunctionsIcon {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.FunctionsItem > .text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  text-align: center;
+}
+
+.FunctionsItem > .text h1,
+.FunctionsItem > .text h2 {
+  width: 100%;
+  margin: 0;
 }

@@ -15,6 +15,7 @@ export type TypographyProps = {
   highlight?: string;
   className?: string;
   brown?: boolean;
+  weight?: "normal" | "bold";
 };
 
 export function Typography({
@@ -26,11 +27,17 @@ export function Typography({
   highlight,
   className,
   brown = false,
+  weight,
 }: TypographyProps) {
 
   const Tag = as;
   const baseClass = as === "h1" ? styles.h1 : styles.h2;
-  const combinedClassName = cx(baseClass, { [styles.blue]: blue, [styles.brown]: brown }, className);
+  const effectiveWeight = weight ?? (as === "h1" ? "bold" : "normal");
+  const combinedClassName = cx(
+    baseClass,
+    { [styles.blue]: blue, [styles.brown]: brown, [styles.bold]: effectiveWeight === "bold", [styles.normal]: effectiveWeight === "normal" },
+    className
+  );
 
   const style: TypographyStyleVars = {};
   if (size) style["--typo-size"] = `${size}px`;

@@ -1,14 +1,8 @@
 .card {
-  box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px;
-
-  width: 340px;
-  height: 316px;
-
+  max-width: 340px;
   background: var(--card-bg);
   border: 2px solid var(--input-border);
   border-radius: 23px;
@@ -21,21 +15,17 @@
   align-items: center;
   padding: 16px 20px;
   gap: 16px;
-
-  width: 340px;
-  height: 97px;
 }
 
 .userBadge {
   width: 50px;
   height: 50px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
+  padding: 12px;
   background: var(--card-bg);
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 4px 10px 0 #0000001A;
   border-radius: 100px;
   color: var(--text-primary);
 }
@@ -44,17 +34,11 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0px;
   gap: 8px;
-
-  width: 234px;
-  height: 65px;
+  text-align: left;
 }
 
 .label {
-  width: 234px;
-  height: 19px;
-
   font-weight: 700;
   font-size: 16px;
   line-height: 19px;
@@ -62,9 +46,6 @@
 }
 
 .contractor {
-  width: 234px;
-  height: 38px;
-
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
@@ -77,35 +58,24 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0px 20px 16px;
+  padding: 0 20px 16px;
   gap: 10px;
-
-  width: 340px;
-  height: 149px;
 }
 
 .reviewText {
-  width: 300px;
-  height: 133px;
-
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
   color: var(--text-primary);
+  text-align: left;
 }
 
 .footer {
-  box-sizing: border-box;
-
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   padding: 16px 20px;
   gap: 24px;
-
-  width: 340px;
-  height: 70px;
-
   border-top: 2px solid var(--input-border);
 }
 
@@ -113,16 +83,9 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 0px;
-
-  width: 232px;
-  height: 38px;
 }
 
 .fromLabel {
-  width: 29px;
-  height: 19px;
-
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
@@ -130,19 +93,17 @@
 }
 
 .fromName {
-  width: 203px;
-  height: 38px;
-
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
   color: var(--text-secondary);
+  text-align: left;
+  margin-left: 5px;
 }
 
 .badge {
   width: 44px;
   height: 27px;
-
   display: flex;
   align-items: center;
   justify-content: center;

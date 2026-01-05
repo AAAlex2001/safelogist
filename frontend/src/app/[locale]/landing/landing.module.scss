@@ -1,0 +1,137 @@
+.landing {
+  min-height: 100vh;
+  background: var(--background);
+  padding-top: 120px; // отступ под хедер
+}
+
+.hero {
+  max-width: 340px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 0 20px;
+}
+
+// ===== ЗАГОЛОВКИ =====
+.headings {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: center;
+}
+
+.title {
+  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 33px;
+  letter-spacing: -0.015em;
+  color: #0D0D0D;
+  margin: 0;
+}
+
+.highlight {
+  color: #012AF9;
+}
+
+.subtitle {
+  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  color: #4A4F5A;
+  margin: 0;
+}
+
+// ===== СТАТИСТИКА =====
+.statistics {
+  width: 100%;
+  max-width: 323px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-top: 60px;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.statItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.statNumber {
+  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  color: #012AF9;
+  text-align: center;
+}
+
+.statText {
+  font-family: 'BlinkMacSystemFont', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #505050;
+  text-align: center;
+}
+
+// ===== ТЕМНАЯ ТЕМА =====
+:global([data-theme="dark"]) {
+  .title {
+    color: #EAEAEA;
+  }
+
+  .subtitle {
+    color: #B0B0C0;
+  }
+
+  .statText {
+    color: #B0B0C0;
+  }
+}
+
+// ===== АДАПТИВ =====
+@media (min-width: 768px) {
+  .hero {
+    max-width: 600px;
+    gap: 60px;
+  }
+
+  .title {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .subtitle {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .statistics {
+    max-width: 500px;
+    margin-top: 80px;
+  }
+
+  .statNumber {
+    font-size: 32px;
+    line-height: 38px;
+  }
+
+  .statText {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+    

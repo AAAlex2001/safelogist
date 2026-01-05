@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import ArrowSwiper from "@/icons/Arrow";
 
 export default function Reviews() {
   return (
@@ -24,7 +25,7 @@ export default function Reviews() {
           as="h2"
           size={18}
           desktopSize={18}
-          text="Узнайте, как компании ведут себя на деле — по опыту других"
+          text="Узнайте, как компании ведут себя на деле — по опыту других"
           brown={true}
         />
       </div>
@@ -49,8 +50,12 @@ export default function Reviews() {
         </Swiper>
 
         <div className={styles.slideBtns}>
-          <button type="button" className={styles.btnPrev} aria-label="Назад" />
-          <button type="button" className={styles.btnNext} aria-label="Вперёд" />
+          <button type="button" className={styles.btnPrev} aria-label="Назад">
+            <ArrowSwiper className={styles.arrow} />
+          </button>
+          <button type="button" className={styles.btnNext} aria-label="Вперёд">
+            <ArrowSwiper className={styles.arrow} />
+          </button>
         </div>
       </div>
     </section>

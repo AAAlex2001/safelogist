@@ -6,6 +6,7 @@ import { Functions } from "./functions/Functions";
 import { Steps } from "./steps/Steps";
 import Reviews from "./reviews/Reviews";
 import Bot from "./bot/Bot";
+import { Tariffs } from "./tariffs";
 
 export default function LandingPage() {
   return (
@@ -15,6 +16,7 @@ export default function LandingPage() {
       <Steps />
       <Reviews />
       <Bot />
+      <Tariffs />
       <Footer />
     </main>
   );

@@ -1,6 +1,7 @@
 export { default as SearchCheckIcon } from './SearchCheckIcon';
 export { default as DocumentStarIcon } from './DocumentStarIcon';
 export { default as AwardIcon } from './AwardIcon';
+export { default as CheckCircleIcon } from './CheckCircleIcon';
 export { default as UserSearchIcon } from './UserSearchIcon';
 export { default as OfficialSourcesIcon } from './OfficialSourcesIcon';
 export { default as InternationalIcon } from './InternationalIcon';

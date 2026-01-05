@@ -42,7 +42,21 @@
 }
 
 .outline:hover {
-  background: rgba(1, 42, 249, 0.05);
+  background: var(--primary-dark);
+  color: #ffffff;
+  border-color: var(--primary-dark);
+}
+
+.tariff {
+  background: linear-gradient(0deg, rgba(1, 42, 249, 0.2), rgba(1, 42, 249, 0.2));
+  color: var(--primary);
+  border: none;
+  border-radius: 100px;
+}
+
+.tariff:hover {
+  background: var(--primary-dark);
+  color: #ffffff;
 }
 
 .spinner {

@@ -9,7 +9,7 @@ type ButtonProps = {
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "tariff";
   as?: "button" | "label";
 };
 
@@ -29,6 +29,7 @@ export function Button({
     styles.button,
     fullWidth ? styles.fullWidth : "",
     variant === "outline" ? styles.outline : "",
+    variant === "tariff" ? styles.tariff : "",
   ].filter(Boolean).join(" ");
 
   const content = loading ? (

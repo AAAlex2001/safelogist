@@ -44,20 +44,15 @@
   position: absolute;
   top: -30px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% + var(--icon-x, 0px)));
   color: #012AF933;
   pointer-events: none;
   z-index: 0;
 }
 
-.statIconPinned {
-  position: fixed;
-}
-
 .statIconCompanies {
   top: -40px;
-  left: -40px;
-  transform: translateX(50%);
+  --icon-x: -60px;
 }
 
 .statIconReviews {
@@ -65,9 +60,16 @@
 }
 
 .statIconCountries {
+  --icon-x: -30px;
+  top: -30px;
+  @media (min-width: 1440px) {
+    --icon-x: 30px;
+  }
 }
 
 .statIconSources {
+  --icon-x: 60px;
+  top: -30px;
 }
 
 .statNumber {

@@ -36,13 +36,16 @@
 }
 
 .stepImage {
+  width: 100%;
   border-radius: 20px;
+  overflow: hidden;
   margin-top: 28px;
 }
 
 .stepImage img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   display: block;
+  border-radius: 20px;
 }

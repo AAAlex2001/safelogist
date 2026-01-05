@@ -46,7 +46,8 @@
   top: -30px;
   left: 50%;
   transform: translateX(calc(-50% + var(--icon-x, 0px)));
-  color: #012AF933;
+  /* made even lighter per request */
+  color: rgba(1, 42, 249, 0.08);
   pointer-events: none;
   z-index: 0;
 }

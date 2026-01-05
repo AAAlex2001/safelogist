@@ -1,0 +1,18 @@
+.steps {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  padding-bottom: 254px;
+  @media (min-width: 768px) {
+    padding-bottom: 244px;
+  }
+}
+
+.headings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}

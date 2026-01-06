@@ -7,6 +7,7 @@ import { Steps } from "./steps/Steps";
 import Reviews from "./reviews/Reviews";
 import Bot from "./bot/Bot";
 import { Tariffs } from "./tariffs";
+import { FAQ } from "./faq";
 
 export default function LandingPage() {
   return (
@@ -17,6 +18,7 @@ export default function LandingPage() {
       <Reviews />
       <Bot />
       <Tariffs />
+      <FAQ />
       <Footer />
     </main>
   );

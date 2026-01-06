@@ -30,9 +30,10 @@ async function getHeroContent(locale: string): Promise<HeroContent | null> {
 export default async function Page({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const heroContent = await getHeroContent(params.locale);
+  const { locale } = await params;
+  const heroContent = await getHeroContent(locale);
 
   return (
     <div className={styles.landingWrap}>

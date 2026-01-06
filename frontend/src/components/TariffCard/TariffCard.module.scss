@@ -8,6 +8,7 @@
   position: relative;
   transition: all 0.3s ease;
   cursor: pointer;
+  height: 100%;
 }
 
 .active {
@@ -60,6 +61,10 @@
   align-items: baseline;
   margin-bottom: 15px;
   justify-content: space-between;
+  gap: 20px;
+  @media (min-width: 1440px) {
+    flex-direction: column;
+  }
 }
 
 .priceContent {

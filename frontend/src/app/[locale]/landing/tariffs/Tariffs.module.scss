@@ -43,4 +43,18 @@
       flex: 0 0 calc(50% - 60px);
     }
   }
+
+  @media (min-width: 1440px) {
+    flex-wrap: nowrap;
+    gap: 24px;
+
+    > :global(.popular) {
+      flex: 1;
+      order: 0;
+    }
+
+    > *:not(:global(.popular)) {
+      flex: 1;
+    }
+  }
 }

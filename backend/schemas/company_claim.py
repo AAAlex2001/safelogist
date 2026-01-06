@@ -12,7 +12,7 @@ class CompanyClaimRequest(BaseModel):
     # Шаг 1: Контактное лицо
     last_name: str = Field(..., min_length=1, max_length=100, description="Фамилия")
     first_name: str = Field(..., min_length=1, max_length=100, description="Имя")
-    middle_name: Optional[str] = Field(None, max_length=100, description="Отчество")
+    # middle_name removed
     phone: str = Field(..., min_length=10, max_length=20, description="Номер телефона")
     
     # Шаг 2: Данные о компании
@@ -41,7 +41,6 @@ class ClaimListItem(BaseModel):
     company_name: str
     last_name: str
     first_name: str
-    middle_name: Optional[str]
     phone: str
     email: str
     position: str

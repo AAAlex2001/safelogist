@@ -27,7 +27,6 @@ class CompanyClaim(Base):
     # Шаг 1: Контактное лицо
     last_name = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
-    middle_name = Column(String, nullable=True)
     phone = Column(String, nullable=False)
     
     # Шаг 2: Данные о компании

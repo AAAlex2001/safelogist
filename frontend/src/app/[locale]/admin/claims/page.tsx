@@ -10,7 +10,6 @@ type Claim = {
   company_name: string;
   last_name: string;
   first_name: string;
-  middle_name: string | null;
   phone: string;
   email: string;
   position: string;
@@ -110,9 +109,7 @@ export default function ClaimsPage() {
   };
 
   const getFullName = (claim: Claim) => {
-    return [claim.last_name, claim.first_name, claim.middle_name]
-      .filter(Boolean)
-      .join(" ");
+    return [claim.last_name, claim.first_name].filter(Boolean).join(" ");
   };
 
   const getStatusLabel = (status: string) => {

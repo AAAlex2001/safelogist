@@ -13,7 +13,6 @@
         formData: {
             lastName: '',
             firstName: '',
-            middleName: '',
             phone: '',
             companyName: '',
             position: '',

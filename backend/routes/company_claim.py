@@ -27,7 +27,6 @@ router = APIRouter(prefix="/api/company-claim", tags=["company_claim"])
 async def create_company_claim(
     last_name: str = Form(..., description="Фамилия"),
     first_name: str = Form(..., description="Имя"),
-    middle_name: str | None = Form(None, description="Отчество"),
     phone: str = Form(..., description="Номер телефона"),
     company_name: str = Form(..., description="Название компании"),
     position: str = Form(..., description="Должность"),
@@ -46,7 +45,6 @@ async def create_company_claim(
         claim_data = CompanyClaimRequest(
             last_name=last_name,
             first_name=first_name,
-            middle_name=middle_name,
             phone=phone,
             company_name=company_name,
             position=position,
@@ -108,7 +106,6 @@ async def list_claims(
             "company_name": claim.company_name,
             "last_name": claim.last_name,
             "first_name": claim.first_name,
-            "middle_name": claim.middle_name,
             "phone": claim.phone,
             "email": claim.email,
             "position": claim.position,

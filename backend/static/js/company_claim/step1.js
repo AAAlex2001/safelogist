@@ -108,7 +108,7 @@
             
             const lastName = document.getElementById('lastName').value.trim();
             const firstName = document.getElementById('firstName').value.trim();
-            const middleName = document.getElementById('middleName').value.trim();
+            // middle name removed
             
             if (!lastName || !firstName) {
                 alert('Пожалуйста, заполните все обязательные поля');
@@ -151,7 +151,6 @@
             // Сохраняем данные
             ctx.formData.lastName = lastName;
             ctx.formData.firstName = firstName;
-            ctx.formData.middleName = middleName;
             ctx.formData.phone = phoneNumber;
             
             ctx.goToStep(2);

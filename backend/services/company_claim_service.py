@@ -86,7 +86,6 @@ class CompanyClaimService:
             target_company_id=target_company_id,
             last_name=data.last_name,
             first_name=data.first_name,
-            middle_name=data.middle_name,
             phone=data.phone,
             company_name=data.company_name,
             position=data.position,
@@ -102,8 +101,6 @@ class CompanyClaimService:
         
         # Отправляем уведомление в Telegram группу
         user_name = f"{data.last_name} {data.first_name}"
-        if data.middle_name:
-            user_name += f" {data.middle_name}"
         
         await telegram_notifier.notify_company_claim(
             company_name=data.company_name,

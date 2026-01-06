@@ -126,9 +126,7 @@
                 const formData = new FormData();
                 formData.append('last_name', ctx.formData.lastName);
                 formData.append('first_name', ctx.formData.firstName);
-                if (ctx.formData.middleName) {
-                    formData.append('middle_name', ctx.formData.middleName);
-                }
+                // middle_name removed
                 formData.append('phone', ctx.formData.phone);
                 formData.append('company_name', ctx.formData.companyName);
                 formData.append('position', ctx.formData.position);

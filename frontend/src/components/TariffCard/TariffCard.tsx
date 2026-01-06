@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import styles from "./TariffCard.module.scss";
 import { Button } from "@/components/button/Button";
 import { CheckCircleIcon } from "@/icons";
@@ -49,10 +46,12 @@ export function TariffCard({
       {popular && badgeText && (
         <span className={styles.badge}>{badgeText}</span>
       )}
-      <h3 className={styles.title}>{title}</h3>
       <div className={styles.priceRow}>
+        <h3 className={styles.title}>{title}</h3>
+        <div className={styles.priceContent}>
         <span className={styles.price}>{price}</span>
         <span className={styles.period}>{period}</span>
+        </div>
       </div>
       {note && <p className={styles.note}>{note}</p>}
       <ul className={styles.features}>

@@ -6,7 +6,7 @@ import { Typography } from "@/components/Typography";
 import { TariffCard } from "@/components/TariffCard";
 
 export function Tariffs() {
-  const [hoveredCard, setHoveredCard] = useState<"base" | "pro" | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<"base" | "photo" | "pro" | null>(null);
 
   const baseFeatures = [
     "Проверка компаний",
@@ -21,10 +21,14 @@ export function Tariffs() {
     "API доступ",
   ];
 
-  // Если ничего не наведено - популярный активен
-  // Если наведен base - base активен, popular не активен
-  // Если наведен pro - pro активен
+  const photoFeatures = [
+    "Проверка по фото",
+    "Сопоставление изображений",
+    "Анализ документов",
+  ];
+
   const isBaseActive = hoveredCard === "base";
+  const isPhotoActive = hoveredCard === "photo";
   const isProActive = hoveredCard === null || hoveredCard === "pro";
 
   return (
@@ -57,8 +61,19 @@ export function Tariffs() {
           onMouseLeave={() => setHoveredCard(null)}
         />
         <TariffCard
+          title="По фото"
+          price="$54"
+          period="/месяц"
+          note="Проверка по изображению"
+          features={photoFeatures}
+          ctaText="Выбрать"
+          active={isPhotoActive}
+          onMouseEnter={() => setHoveredCard("photo")}
+          onMouseLeave={() => setHoveredCard(null)}
+        />
+        <TariffCard
           popular
-          badgeText="ПОПУЛЯРНЫЙ"
+          badgeText="Популярный"
           title="Pro"
           price="$100"
           period="/месяц"

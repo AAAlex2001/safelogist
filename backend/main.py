@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
-from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo, admin, company_claim, review_request
+from routes import registration, login, forgot_password, profile, openapi, legat, offdata, reviews_pages, seo, admin, company_claim, review_request, landing
 import time
 
 # Создание приложения FastAPI
@@ -67,6 +67,7 @@ app.include_router(seo.router)
 app.include_router(company_claim.router)
 app.include_router(review_request.router)
 app.include_router(admin.router)
+app.include_router(landing.router)
 
 
 @app.get("/")

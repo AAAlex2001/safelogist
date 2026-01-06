@@ -12,6 +12,25 @@ import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 
 type StatFormat = "int" | "comma";
 
+export type HeroContent = {
+  locale: string;
+  title: string;
+  title_highlight?: string | null;
+  subtitle: string;
+  stat_companies_label: string;
+  stat_companies_value: number;
+  stat_companies_suffix?: string | null;
+  stat_reviews_label: string;
+  stat_reviews_value: number;
+  stat_reviews_suffix?: string | null;
+  stat_countries_label: string;
+  stat_countries_value: number;
+  stat_countries_suffix?: string | null;
+  stat_sources_label: string;
+  stat_sources_value: number;
+  stat_sources_suffix?: string | null;
+};
+
 function AnimatedStatNumber({
   to,
   format,
@@ -42,7 +61,11 @@ function AnimatedStatNumber({
   return <motion.span>{text}</motion.span>;
 }
 
-export function Hero() {
+function getStatFormat(value: number): StatFormat {
+  return value >= 1000 ? "comma" : "int";
+}
+
+export function Hero({ content }: { content: HeroContent }) {
   return (
     <section className={styles.hero}>
       <div className={styles.headings}>
@@ -50,14 +73,14 @@ export function Hero() {
           as="h1"
           size={28}
           desktopSize={32}
-          text="Проверь репутацию любой компании всего за минуту"
-          highlight="любой компании"
+          text={content.title}
+          highlight={content.title_highlight ?? undefined}
         />
         <Typography
           as="h2"
           size={20}
           desktopSize={20}
-          text="Просматривайте и анализируйте досье, чтобы быстро оценить надёжность компании и принимать обоснованные решения"
+          text={content.subtitle}
         />
       </div>
       <SearchBar />
@@ -68,18 +91,26 @@ export function Hero() {
               className={`${styles.statIcon} ${styles.statIconCompanies}`}
             />
             <div className={styles.statNumber}>
-              <AnimatedStatNumber to={15000} format="comma" suffix="+" />
+              <AnimatedStatNumber
+                to={content.stat_companies_value}
+                format={getStatFormat(content.stat_companies_value)}
+                suffix={content.stat_companies_suffix ?? undefined}
+              />
             </div>
-            <div className={styles.statText}>Проверенных компаний</div>
+            <div className={styles.statText}>{content.stat_companies_label}</div>
           </div>
           <div className={styles.statItem}>
             <StatsReviewsIcon
               className={`${styles.statIcon} ${styles.statIconReviews}`}
             />
             <div className={styles.statNumber}>
-              <AnimatedStatNumber to={13} format="int" suffix="M" />
+              <AnimatedStatNumber
+                to={content.stat_reviews_value}
+                format={getStatFormat(content.stat_reviews_value)}
+                suffix={content.stat_reviews_suffix ?? undefined}
+              />
             </div>
-            <div className={styles.statText}>Отзывов клиентов</div>
+            <div className={styles.statText}>{content.stat_reviews_label}</div>
           </div>
         </div>
         <div className={styles.statsRow}>
@@ -88,18 +119,26 @@ export function Hero() {
               className={`${styles.statIcon} ${styles.statIconCountries}`}
             />
             <div className={styles.statNumber}>
-              <AnimatedStatNumber to={18} format="int" />
+              <AnimatedStatNumber
+                to={content.stat_countries_value}
+                format={getStatFormat(content.stat_countries_value)}
+                suffix={content.stat_countries_suffix ?? undefined}
+              />
             </div>
-            <div className={styles.statText}>Стран охвата</div>
+            <div className={styles.statText}>{content.stat_countries_label}</div>
           </div>
           <div className={styles.statItem}>
             <StatsSourcesIcon
               className={`${styles.statIcon} ${styles.statIconSources}`}
             />
             <div className={styles.statNumber}>
-              <AnimatedStatNumber to={100} format="int" suffix="%" />
+              <AnimatedStatNumber
+                to={content.stat_sources_value}
+                format={getStatFormat(content.stat_sources_value)}
+                suffix={content.stat_sources_suffix ?? undefined}
+              />
             </div>
-            <div className={styles.statText}>Проверенные источники</div>
+            <div className={styles.statText}>{content.stat_sources_label}</div>
           </div>
         </div>
       </div>

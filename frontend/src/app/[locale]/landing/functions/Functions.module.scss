@@ -16,30 +16,37 @@
 
 .functions::before,
 .functions::after {
-  content: "";
-  position: absolute;
-  background: var(--primary);
-  pointer-events: none;
-  z-index: 0;
+  content: none;
 }
 
-/* Ellipse 63 */
-.functions::before {
-  width: 93px;
-  height: 94px;
-  left: calc(50% - 93px / 2 + 294.5px);
-  top: 120px;
-  filter: blur(100px);
-}
+@media (min-width: 768px) {
+  .functions::before,
+  .functions::after {
+    content: "";
+    position: absolute;
+    background: var(--primary);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* Ellipse 62 */
-.functions::after {
-  width: 200px;
-  height: 200px;
-  left: calc(50% - 200px / 2 + 447px);
-  top: 220px;
-  opacity: 0.3;
-  filter: blur(75px);
+  /* Ellipse 63 */
+  .functions::before {
+    width: 93px;
+    height: 94px;
+    left: calc(50% - 93px / 2 + 294.5px);
+    top: 0px;
+    filter: blur(100px);
+  }
+
+  /* Ellipse 62 */
+  .functions::after {
+    width: 200px;
+    height: 200px;
+    left: calc(50% - 200px / 2 + 447px);
+    top: 440px;
+    opacity: 0.3;
+    filter: blur(75px);
+  }
 }
 
 .functions > * {

@@ -14,6 +14,9 @@ from models.user import User, UserRole
 from models.company_claim import CompanyClaim, ClaimStatus
 from models.review_request import ReviewRequest, ReviewRequestStatus
 from services.review_request_service import ReviewRequestService
+from services.landing.hero_service import HeroService
+from schemas.landing import HeroContentOut, HeroContentUpsert
+from fastapi import HTTPException
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -94,7 +97,7 @@ async def list_users(
 
     # Базовый запрос для подсчета
     count_query = select(func.count(User.id))
-    
+
     # Базовый запрос для данных
     query = select(User).order_by(User.created_at.desc())
 
@@ -170,18 +173,18 @@ async def list_review_requests(
 ):
     offset = (page - 1) * limit
     query = select(ReviewRequest).order_by(ReviewRequest.created_at.desc())
-    
+
     if status:
         try:
             status_enum = ReviewRequestStatus(status.upper())
             query = query.where(ReviewRequest.status == status_enum)
         except ValueError:
             pass
-    
+
     query = query.limit(limit).offset(offset)
     result = await db.execute(query)
     requests = result.scalars().all()
-    
+
     return [
         ReviewRequestResponse(
             id=r.id,
@@ -205,10 +208,10 @@ async def list_review_requests(
 async def get_review_request(request_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(ReviewRequest).where(ReviewRequest.id == request_id))
     r = result.scalar()
-    
+
     if not r:
         return {"error": "Request not found"}
-    
+
     return ReviewRequestResponse(
         id=r.id,
         user_id=r.user_id,
@@ -233,10 +236,10 @@ async def approve_review_request(
 ):
     service = ReviewRequestService(db)
     review = await service.approve_request(request_id, admin_comment)
-    
+
     if not review:
         return {"error": "Request not found"}
-    
+
     return {"message": "Отзыв одобрен и опубликован", "review_id": review.id}
 
 
@@ -248,10 +251,10 @@ async def reject_review_request(
 ):
     service = ReviewRequestService(db)
     success = await service.reject_request(request_id, admin_comment)
-    
+
     if not success:
         return {"error": "Request not found"}
-    
+
     return {"message": "Заявка отклонена"}
 
 
@@ -259,8 +262,35 @@ async def reject_review_request(
 async def delete_review_request(request_id: int, db: AsyncSession = Depends(get_db)):
     service = ReviewRequestService(db)
     success = await service.delete_request(request_id)
-    
+
     if not success:
         return {"error": "Request not found"}
-    
+
     return {"message": "Заявка удалена"}
+
+
+# ===================== LANDING HERO =====================
+
+@router.get("/landing/hero", response_model=HeroContentOut)
+async def admin_get_hero(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    """Получить Hero контент для локали."""
+    service = HeroService(db)
+    hero = await service.get_by_locale(lang)
+    if not hero:
+        raise HTTPException(status_code=404, detail="Hero content not found")
+    return hero
+
+
+@router.put("/landing/hero", response_model=HeroContentOut)
+async def admin_upsert_hero(
+    payload: HeroContentUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    """Создать или обновить Hero контент."""
+    service = HeroService(db)
+    hero = await service.upsert(lang, payload)
+    return hero

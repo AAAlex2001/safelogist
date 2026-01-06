@@ -1,7 +1,7 @@
 """add landing_hero table
 
 Revision ID: d3e4f5a6b7c8
-Revises: c2d_add_industry_to_company_claims
+Revises: c2d_add_industry
 Create Date: 2026-01-06
 
 """
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 revision: str = "d3e4f5a6b7c8"
-down_revision: Union[str, None] = "c2d_add_industry_to_company_claims"
+down_revision: Union[str, None] = "c2d_add_industry"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

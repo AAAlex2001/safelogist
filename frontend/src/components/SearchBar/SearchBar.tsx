@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import styles from "./SearchBar.module.scss";
 import SearchIcon from "../../icons/SearchIcon";
 
@@ -19,10 +20,11 @@ type Company = {
 };
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = "Регистрационный / налоговый номер",
+  placeholder,
   reviewsBasePath,
   disabled = false,
 }) => {
+  const t = useTranslations("SearchBar");
   const params = useParams<{ locale?: string }>();
   const localeFromParams = typeof params?.locale === "string" ? params.locale : undefined;
   const localeFromPath = typeof window !== "undefined" ? window.location.pathname.split("/")[1] : undefined;
@@ -133,7 +135,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <input 
             type="text" 
             className={styles.searchInput}
-            placeholder={placeholder}
+            placeholder={placeholder ?? t("placeholder")}
             value={query}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
@@ -145,7 +147,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             onClick={handleSubmit}
             disabled={disabled}
           >
-            Поиск
+            {t("button")}
           </button>
         </div>
 

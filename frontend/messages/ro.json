@@ -1,4 +1,8 @@
 {
+  "SearchBar": {
+    "placeholder": "Număr de înregistrare / fiscal",
+    "button": "Căutare"
+  },
   "Header": {
     "about": "Despre serviciu",
     "features": "Funcții",

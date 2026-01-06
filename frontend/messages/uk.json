@@ -1,4 +1,8 @@
 {
+  "SearchBar": {
+    "placeholder": "Реєстраційний / податковий номер",
+    "button": "Пошук"
+  },
   "Header": {
     "about": "Про сервіс",
     "features": "Функції",

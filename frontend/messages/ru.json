@@ -1,4 +1,8 @@
 {
+  "SearchBar": {
+    "placeholder": "Регистрационный / налоговый номер",
+    "button": "Поиск"
+  },
   "Header": {
     "about": "О сервисе",
     "features": "Функции",

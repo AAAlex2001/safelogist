@@ -1,4 +1,8 @@
 {
+  "SearchBar": {
+    "placeholder": "Registration / Tax number",
+    "button": "Search"
+  },
   "Header": {
     "about": "About",
     "features": "Features",

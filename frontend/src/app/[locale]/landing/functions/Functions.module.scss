@@ -29,23 +29,22 @@
     z-index: 0;
   }
 
-  /* Ellipse 63 */
   .functions::before {
-    width: 93px;
-    height: 94px;
-    left: calc(50% - 93px / 2 + 294.5px);
-    top: 0px;
-    filter: blur(100px);
+    width: 200px;
+    height: 200px;
+    left: calc(50% - 200px / 2 + -750px);
+    top: 0;
+    opacity: 0.4;
+    filter: blur(50px);
   }
 
-  /* Ellipse 62 */
   .functions::after {
     width: 200px;
     height: 200px;
-    left: calc(50% - 200px / 2 + 447px);
-    top: 440px;
+    left: calc(50% - 200px / 2 + 700px);
+    top: 550px;
     opacity: 0.3;
-    filter: blur(75px);
+    filter: blur(50px);
   }
 }
 

@@ -2,7 +2,7 @@
 
 import styles from "./ReviewCta.module.scss";
 import { Link } from "@/i18n/navigation";
-import ArrowSwiper from "@/icons/Arrow";
+import { ArrowRightCtaIcon } from "@/icons";
 
 export function ReviewCta() {
   return (
@@ -11,7 +11,7 @@ export function ReviewCta() {
         <span className={styles.text}>
           Работали с компанией и есть чем поделиться? <strong>Оставьте отзыв</strong>
         </span>
-        <ArrowSwiper className={styles.arrow} />
+        <ArrowRightCtaIcon className={styles.arrow} />
       </Link>
     </section>
   );

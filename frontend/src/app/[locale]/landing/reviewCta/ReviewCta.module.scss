@@ -4,6 +4,7 @@
   justify-content: center;
   max-width: 360px;
   margin: 0 auto;
+  padding-bottom: 244px;
 }
 
 .ctaLink {
@@ -21,8 +22,14 @@
   font-size: 14px;
   line-height: 17px;
 
+  transition: border-color 180ms ease;
+
   cursor: pointer;
   user-select: none;
+}
+
+.ctaLink:hover {
+  border-color: var(--primary);
 }
 
 .text {
@@ -37,13 +44,20 @@
 
 .arrow {
   display: block;
-  width: 10px;
-  height: 18px;
-  color: currentColor;
+  width: 32px;
+  height: 32px;
+  color: var(--primary);
   flex: 0 0 auto;
+  transition: transform 300ms ease;
+}
+
+.ctaLink:hover .arrow,
+.ctaLink:focus-visible .arrow {
+  transform: translateX(5px);
 }
 
 .ctaLink:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+  border-color: var(--primary);
 }

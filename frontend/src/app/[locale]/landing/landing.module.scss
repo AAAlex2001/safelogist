@@ -1,6 +1,42 @@
+.landingWrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--background);
+}
+
+.landingWrap::before,
+.landingWrap::after {
+  content: "";
+  position: absolute;
+  top: 440px;
+  width: 16vw;
+  height: 100vh;
+  background: var(--primary);
+  filter: blur(70px);
+  opacity: 1;
+  pointer-events: none;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.landingWrap::before {
+  left: -15vw;
+}
+
+.landingWrap::after {
+  right: -15vw;
+}
+
+@media (max-width: 768px) {
+  .landingWrap::before,
+  .landingWrap::after {
+    display: none;
+  }
+}
+
 .landing {
   min-height: 100vh;
-  background: var(--background);
+  background: transparent;
   padding: 204px 20px 0 20px;
   @media (min-width: 768px) {
     padding: 244px 20px 0 20px;
@@ -8,5 +44,7 @@
   }
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 

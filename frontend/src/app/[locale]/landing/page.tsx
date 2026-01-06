@@ -11,15 +11,17 @@ import { FAQ } from "./faq";
 
 export default function LandingPage() {
   return (
-    <main className={styles.landing}>
-      <Hero />
-      <Functions />
-      <Steps />
-      <Reviews />
-      <Bot />
-      <Tariffs />
-      <FAQ />
-      <Footer />
-    </main>
+    <div className={styles.landingWrap}>
+      <main className={styles.landing}>
+        <Hero />
+        <Functions />
+        <Steps />
+        <Reviews />
+        <Bot />
+        <Tariffs />
+        <FAQ />
+        <Footer />
+      </main>
+    </div>
   );
 }

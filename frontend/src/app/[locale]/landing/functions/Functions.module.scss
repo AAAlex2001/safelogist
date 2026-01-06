@@ -1,5 +1,6 @@
 .functions {
   margin: 0 auto;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,6 +12,39 @@
   @media (min-width: 1440px) {
     padding-bottom: 234px;
   }
+}
+
+.functions::before,
+.functions::after {
+  content: "";
+  position: absolute;
+  background: var(--primary);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ellipse 63 */
+.functions::before {
+  width: 93px;
+  height: 94px;
+  left: calc(50% - 93px / 2 + 294.5px);
+  top: 120px;
+  filter: blur(100px);
+}
+
+/* Ellipse 62 */
+.functions::after {
+  width: 200px;
+  height: 200px;
+  left: calc(50% - 200px / 2 + 447px);
+  top: 220px;
+  opacity: 0.3;
+  filter: blur(75px);
+}
+
+.functions > * {
+  position: relative;
+  z-index: 1;
 }
 
 .headings {

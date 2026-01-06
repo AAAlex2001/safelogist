@@ -29,6 +29,7 @@
   --text-primary: #eaeaea;
   --text-secondary: #b0b0c0;
   --text-muted: #8080a0;
+  --color-white: #f9faff;
   --page-gradient: linear-gradient(0deg, #1a1a2e 0%, #2a2a4a 100%);
   --header-bg: rgba(30, 30, 50, 0.95);
   --header-border: rgba(100, 100, 140, 0.3);

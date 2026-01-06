@@ -7,6 +7,7 @@
   box-shadow: var(--card-shadow);
   position: relative;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .active {
@@ -38,7 +39,7 @@
 .badge {
   position: absolute;
   top: 12px;
-  left: calc(75% + 15px);
+  right: -50px;
   transform: translateX(-50%);
   background: var(--color-white);
   color: var(--primary);

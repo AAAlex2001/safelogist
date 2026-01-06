@@ -45,6 +45,7 @@ export function Tariffs() {
           as="h2"
           size={18}
           desktopSize={18}
+          brown={true}
           text="Выберите подходящий план"
         />
       </div>

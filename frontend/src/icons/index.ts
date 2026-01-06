@@ -15,3 +15,4 @@ export { default as SafeLogistBotQrCard } from './SafeLogistBotQrCard';
 export { default as Step2Icon } from './Step2Icon';
 export { default as Step3Icon } from './Step3Icon';
 export { default as TruckIcon } from './TruckIcon';
+export { default as PlusIcon } from './PlusIcon';

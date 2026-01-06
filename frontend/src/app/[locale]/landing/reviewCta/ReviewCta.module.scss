@@ -1,0 +1,49 @@
+.reviewCta {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.ctaLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 24px;
+  border: 1px solid var(--input-border);
+  border-color: color-mix(in srgb, var(--primary) 15%, transparent);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--foreground);
+  font-family: var(--font-base);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.text {
+  display: block;
+  text-align: center;
+
+  strong {
+    font-weight: 400;
+    color: var(--primary);
+  }
+}
+
+.arrow {
+  display: block;
+  width: 10px;
+  height: 18px;
+  color: currentColor;
+  flex: 0 0 auto;
+}
+
+.ctaLink:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}

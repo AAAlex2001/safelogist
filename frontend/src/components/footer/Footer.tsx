@@ -92,13 +92,8 @@ export default function Footer() {
               <h3 className={styles.footerTitle}>{t("contacts")}</h3>
               <ul className={styles.footerList}>
                 <li>
-                  <a href="mailto:hello@example.com" className={styles.footerLink}>
-                    hello@example.com
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+18005550100" className={styles.footerLink}>
-                    +1 (800) 555-0100
+                  <a href="mailto:info@safelogist.net" className={styles.footerLink}>
+                    info@safelogist.net
                   </a>
                 </li>
               </ul>

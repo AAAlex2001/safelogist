@@ -69,7 +69,7 @@ TRANSLATIONS = {
         "footer_personal_data_policy": "Политика обработки персональных данных",
         "footer_offer_agreement": "Договор-оферта",
         "footer_contacts": "КОНТАКТЫ",
-        "footer_copyright": "© 2025 Safelogist. Все права защищены.",
+        "footer_copyright": "© 2026 Safelogist. Все права защищены.",
         # Модальное окно подтверждения компании
         "claim_modal_title": "Подтвердите, что вы представляете компанию",
         "claim_step1_title": "Шаг 1 из 3. Контактное лицо",
@@ -178,7 +178,7 @@ TRANSLATIONS = {
         "footer_personal_data_policy": "Personal Data Processing Policy",
         "footer_offer_agreement": "Offer Agreement",
         "footer_contacts": "CONTACTS",
-        "footer_copyright": "© 2025 Safelogist. All rights reserved.",
+        "footer_copyright": "© 2026 Safelogist. All rights reserved.",
         # Company claim modal
         "claim_modal_title": "Confirm that you represent the company",
         "claim_step1_title": "Step 1 of 3. Contact person",
@@ -287,7 +287,7 @@ TRANSLATIONS = {
         "footer_personal_data_policy": "Політика обробки персональних даних",
         "footer_offer_agreement": "Договір-оферта",
         "footer_contacts": "КОНТАКТИ",
-        "footer_copyright": "© 2025 Safelogist. Всі права захищені.",
+        "footer_copyright": "© 2026 Safelogist. Всі права захищені.",
         # Модальне вікно підтвердження компанії
         "claim_modal_title": "Підтвердіть, що ви представляєте компанію",
         "claim_step1_title": "Крок 1 з 3. Контактна особа",
@@ -396,7 +396,7 @@ TRANSLATIONS = {
         "footer_personal_data_policy": "Politica de procesare a datelor personale",
         "footer_offer_agreement": "Contract-ofertă",
         "footer_contacts": "CONTACTE",
-        "footer_copyright": "© 2025 Safelogist. Toate drepturile rezervate.",
+        "footer_copyright": "© 2026 Safelogist. Toate drepturile rezervate.",
         # Fereastra modală de confirmare a companiei
         "claim_modal_title": "Confirmați că reprezentați compania",
         "claim_step1_title": "Pasul 1 din 3. Persoana de contact",

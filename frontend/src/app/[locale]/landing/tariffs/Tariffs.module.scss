@@ -6,6 +6,7 @@
   padding-bottom: 244px;
   @media (min-width: 768px) {
     padding-bottom: 196px;
+    max-width: 729px;
   }
   @media (min-width: 1440px) {
     padding-bottom: 234px;
@@ -23,6 +24,23 @@
 
 .cards {
   display: flex;
-  gap: 60px;
   flex-direction: column;
+  gap: 60px;
+  width: 100%;
+  background: var(--color-white);
+  border-radius: 26px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    > :global(.popular) {
+      flex: 0 0 100%;
+      order: -1;
+    }
+
+    > *:not(:global(.popular)) {
+      flex: 0 0 calc(50% - 60px);
+    }
+  }
 }

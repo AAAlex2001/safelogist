@@ -34,6 +34,7 @@ export function TariffCard({
   const cardClasses = [
     styles.card,
     popular ? styles.popular : "",
+    popular ? "popular" : "",
     active ? styles.active : "",
   ].filter(Boolean).join(" ");
 

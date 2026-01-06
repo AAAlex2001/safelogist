@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   padding: 15px;
+  padding-top: 60px;
   border-radius: 26px;
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
@@ -29,8 +30,6 @@
 }
 
 .popular {
-  padding-top: 60px;
-
   button {
     border: none;
     border-radius: 100px;
@@ -40,8 +39,7 @@
 .badge {
   position: absolute;
   top: 12px;
-  right: -50px;
-  transform: translateX(-50%);
+  right: 12px;
   background: var(--color-white);
   color: var(--primary);
   font-size: 14px;
@@ -96,6 +94,7 @@
   flex-direction: row;
   gap: 10px;
   margin-bottom: 30px;
+  flex-grow: 1;
 }
 
 .featureItem {

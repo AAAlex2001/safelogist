@@ -51,6 +51,7 @@ export function Tariffs() {
       </div>
       <div className={styles.cards}>
         <TariffCard
+          badgeText="Базовый"
           title="Base"
           price="$50"
           period="/месяц"
@@ -59,17 +60,6 @@ export function Tariffs() {
           ctaText="Выбрать"
           active={isBaseActive}
           onMouseEnter={() => setHoveredCard("base")}
-          onMouseLeave={() => setHoveredCard(null)}
-        />
-        <TariffCard
-          title="По фото"
-          price="$54"
-          period="/месяц"
-          note="Проверка по изображению"
-          features={photoFeatures}
-          ctaText="Выбрать"
-          active={isPhotoActive}
-          onMouseEnter={() => setHoveredCard("photo")}
           onMouseLeave={() => setHoveredCard(null)}
         />
         <TariffCard
@@ -83,6 +73,18 @@ export function Tariffs() {
           ctaText="Выбрать"
           active={isProActive}
           onMouseEnter={() => setHoveredCard("pro")}
+          onMouseLeave={() => setHoveredCard(null)}
+        />
+        <TariffCard
+          badgeText="Новинка"
+          title="По фото"
+          price="$54"
+          period="/месяц"
+          note="Проверка по изображению"
+          features={photoFeatures}
+          ctaText="Выбрать"
+          active={isPhotoActive}
+          onMouseEnter={() => setHoveredCard("photo")}
           onMouseLeave={() => setHoveredCard(null)}
         />
       </div>

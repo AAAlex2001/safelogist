@@ -44,7 +44,7 @@ export function TariffCard({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {popular && badgeText && (
+      {badgeText && (
         <span className={styles.badge}>{badgeText}</span>
       )}
       <div className={styles.priceRow}>

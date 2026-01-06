@@ -10,6 +10,7 @@ type Claim = {
   company_name: string;
   last_name: string;
   first_name: string;
+  industry: string | null;
   phone: string;
   email: string;
   position: string;
@@ -121,6 +122,17 @@ export default function ClaimsPage() {
     return labels[status] || status;
   };
 
+  const getIndustryLabel = (industry: string | null) => {
+    if (!industry) return "—";
+    const labels: Record<string, string> = {
+      TRANSPORT_COMPANY: "Transport Company",
+      CARGO_OWNER: "Cargo Owner",
+      FORWARDER: "Forwarder",
+      USER: "User",
+    };
+    return labels[industry] || industry;
+  };
+
   return (
     <div>
       <h1 className={styles.pageTitle}>Company Claims</h1>
@@ -149,6 +161,7 @@ export default function ClaimsPage() {
               <th>ID</th>
               <th>Target Company</th>
               <th>Applicant Company</th>
+              <th>Industry</th>
               <th>Name</th>
               <th>Position</th>
               <th>Contact</th>
@@ -179,6 +192,7 @@ export default function ClaimsPage() {
                 <td>
                   <strong>{claim.company_name}</strong>
                 </td>
+                <td>{getIndustryLabel(claim.industry)}</td>
                 <td>{getFullName(claim)}</td>
                 <td>{claim.position}</td>
                 <td>

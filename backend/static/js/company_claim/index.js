@@ -15,6 +15,7 @@
             firstName: '',
             phone: '',
             companyName: '',
+            industry: '',
             position: '',
             email: '',
             documentName: '',
@@ -63,6 +64,11 @@
         if (targetStep) {
             targetStep.style.display = 'block';
             currentStep = step;
+            
+            // Активируем шаг 2 при переходе на него
+            if (step === 2 && window.CompanyClaimSteps && window.CompanyClaimSteps.activateStep2) {
+                window.CompanyClaimSteps.activateStep2();
+            }
             
             setTimeout(() => {
                 const form = targetStep.querySelector('form');

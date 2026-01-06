@@ -129,6 +129,9 @@
                 // middle_name removed
                 formData.append('phone', ctx.formData.phone);
                 formData.append('company_name', ctx.formData.companyName);
+                if (ctx.formData.industry) {
+                    formData.append('industry', ctx.formData.industry);
+                }
                 formData.append('position', ctx.formData.position);
                 formData.append('email', ctx.formData.email);
                 if (ctx.formData.targetCompanyId) {

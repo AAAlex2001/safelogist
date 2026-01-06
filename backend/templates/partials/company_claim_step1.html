@@ -30,7 +30,23 @@
             >
         </div>
 
-        <!-- middle name field removed -->
+        <div class="company-claim-form-group">
+            <label class="company-claim-label">{{ t.claim_label_industry }}</label>
+            <div class="company-claim-dropdown" id="industryDropdown">
+                <input type="hidden" id="industry" name="industry" value="">
+                <button type="button" class="company-claim-dropdown-toggle">
+                    <span class="company-claim-dropdown-text" data-placeholder="{{ t.claim_placeholder_industry }}">{{ t.claim_placeholder_industry }}</span>
+                    <svg class="company-claim-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="company-claim-dropdown-menu">
+                    <button type="button" class="company-claim-dropdown-item" data-value="TRANSPORT_COMPANY">{{ t.industryTransport }}</button>
+                    <button type="button" class="company-claim-dropdown-item" data-value="CARGO_OWNER">{{ t.industryCargoOwner }}</button>
+                    <button type="button" class="company-claim-dropdown-item" data-value="FORWARDER">{{ t.industryForwarder }}</button>
+                </div>
+            </div>
+        </div>
 
         <div class="company-claim-form-group">
             <label for="phone" class="company-claim-label">{{ t.claim_label_phone }}</label>

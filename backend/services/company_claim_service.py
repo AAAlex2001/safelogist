@@ -88,6 +88,7 @@ class CompanyClaimService:
             first_name=data.first_name,
             phone=data.phone,
             company_name=data.company_name,
+            industry=data.industry,
             position=data.position,
             email=data.email,
             document_path=document_path,

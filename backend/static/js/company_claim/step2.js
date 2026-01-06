@@ -4,7 +4,11 @@
 (function() {
     'use strict';
 
+    let step2Ctx = null;
+    let checkStep2Validity = null;
+
     function initStep2(ctx) {
+        step2Ctx = ctx;
         const form = document.getElementById('companyClaimFormStep2');
         if (!form) return;
 
@@ -15,21 +19,16 @@
         const emailInput = document.getElementById('email');
         const emailErrorMsg = document.getElementById('email-error-msg');
 
-        // Автоматически подставляем название компании и блокируем поле
-        if (companyNameInput && ctx.formData.companyName) {
-            companyNameInput.value = ctx.formData.companyName;
-            companyNameInput.disabled = true;
-            companyNameInput.style.backgroundColor = '#f5f5f5';
-            companyNameInput.style.cursor = 'not-allowed';
-        }
-
-        function checkStep2Validity() {
+        checkStep2Validity = function() {
             if (!submitBtn) return;
             
             let allFilled = true;
             
             requiredInputs.forEach(input => {
-                if (input.value.trim() === '') {
+                // Для disabled полей проверяем что есть значение
+                if (!input.disabled && input.value.trim() === '') {
+                    allFilled = false;
+                } else if (input.disabled && input.value.trim() === '') {
                     allFilled = false;
                 }
             });
@@ -48,7 +47,7 @@
                 submitBtn.classList.remove('active');
                 submitBtn.disabled = true;
             }
-        }
+        };
         
         requiredInputs.forEach(input => {
             input.addEventListener('input', checkStep2Validity);
@@ -97,8 +96,28 @@
 
         checkStep2Validity();
     }
+    
+    // Вызывается при переходе на шаг 2
+    function activateStep2() {
+        if (!step2Ctx) return;
+        
+        const companyNameInput = document.getElementById('companyName');
+        
+        // Автоматически подставляем название компании и блокируем поле
+        if (companyNameInput && step2Ctx.formData.companyName) {
+            companyNameInput.value = step2Ctx.formData.companyName;
+            companyNameInput.disabled = true;
+            companyNameInput.classList.add('disabled');
+        }
+        
+        // Перепроверяем валидность после установки значения
+        if (checkStep2Validity) {
+            checkStep2Validity();
+        }
+    }
 
     window.CompanyClaimSteps = window.CompanyClaimSteps || {};
     window.CompanyClaimSteps.initStep2 = initStep2;
+    window.CompanyClaimSteps.activateStep2 = activateStep2;
 })();
 

@@ -6,6 +6,7 @@ from enum import Enum as PyEnum
 from sqlalchemy import Column, Integer, String, DateTime, Enum, Text
 
 from models.base import Base
+from models.user import UserRole
 
 
 class ClaimStatus(str, PyEnum):
@@ -31,6 +32,7 @@ class CompanyClaim(Base):
     
     # Шаг 2: Данные о компании
     company_name = Column(String, nullable=False, index=True)
+    industry = Column(Enum(UserRole), nullable=True)
     position = Column(String, nullable=False)
     email = Column(String, nullable=False, index=True)
     

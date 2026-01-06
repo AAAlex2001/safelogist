@@ -14,6 +14,46 @@
         const submitBtn = form.querySelector('.company-claim-btn-primary');
         const requiredInputs = form.querySelectorAll('.company-claim-input[required]');
 
+        const industryDropdown = document.getElementById('industryDropdown');
+        const industryInput = document.getElementById('industry');
+        if (industryDropdown && industryInput) {
+            const toggle = industryDropdown.querySelector('.company-claim-dropdown-toggle');
+            const textEl = industryDropdown.querySelector('.company-claim-dropdown-text');
+            const items = industryDropdown.querySelectorAll('.company-claim-dropdown-item');
+            const placeholder = textEl.getAttribute('data-placeholder');
+
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                industryDropdown.classList.toggle('open');
+            });
+
+            items.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const value = this.getAttribute('data-value');
+                    const label = this.textContent;
+                    
+                    industryInput.value = value;
+                    textEl.textContent = label;
+                    textEl.classList.remove('placeholder');
+                    
+                    items.forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    industryDropdown.classList.remove('open');
+                    
+                    // Перепроверяем валидность формы
+                    checkStep1Validity();
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!industryDropdown.contains(e.target)) {
+                    industryDropdown.classList.remove('open');
+                }
+            });
+        }
+
         // Инициализация intl-tel-input
         if (phoneInput && window.intlTelInput) {
             // Находим модальное окно для правильного позиционирования dropdown
@@ -76,6 +116,11 @@
                 }
             });
             
+            // Проверка dropdown (род деятельности)
+            if (industryInput && !industryInput.value) {
+                allFilled = false;
+            }
+            
             if (phoneInput && phoneInput.intlTelInputInstance) {
                 const iti = phoneInput.intlTelInputInstance;
                 if (!phoneInput.value.trim() || !iti.isValidNumber()) {
@@ -108,7 +153,7 @@
             
             const lastName = document.getElementById('lastName').value.trim();
             const firstName = document.getElementById('firstName').value.trim();
-            // middle name removed
+            const industry = document.getElementById('industry').value;
             
             if (!lastName || !firstName) {
                 alert('Пожалуйста, заполните все обязательные поля');
@@ -151,6 +196,7 @@
             // Сохраняем данные
             ctx.formData.lastName = lastName;
             ctx.formData.firstName = firstName;
+            ctx.formData.industry = industry;
             ctx.formData.phone = phoneNumber;
             
             ctx.goToStep(2);

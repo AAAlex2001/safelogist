@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 from models.company_claim import ClaimStatus
+from models.user import UserRole
 
 
 class CompanyClaimRequest(BaseModel):
@@ -17,6 +18,7 @@ class CompanyClaimRequest(BaseModel):
     
     # Шаг 2: Данные о компании
     company_name: str = Field(..., min_length=1, max_length=200, description="Название компании")
+    industry: Optional[UserRole] = Field(None, description="Род деятельности")
     position: str = Field(..., min_length=1, max_length=100, description="Должность")
     email: EmailStr = Field(..., description="Электронная почта")
 
@@ -41,6 +43,7 @@ class ClaimListItem(BaseModel):
     company_name: str
     last_name: str
     first_name: str
+    industry: Optional[UserRole]
     phone: str
     email: str
     position: str

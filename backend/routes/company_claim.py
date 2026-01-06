@@ -29,6 +29,7 @@ async def create_company_claim(
     first_name: str = Form(..., description="Имя"),
     phone: str = Form(..., description="Номер телефона"),
     company_name: str = Form(..., description="Название компании"),
+    industry: str | None = Form(None, description="Род деятельности"),
     position: str = Form(..., description="Должность"),
     email: str = Form(..., description="Электронная почта"),
     target_company_id: Optional[int] = Form(None, description="ID компании из отзывов"),
@@ -42,11 +43,21 @@ async def create_company_claim(
     Заявка будет рассмотрена в течение 48 часов.
     """
     try:
+        # Конвертируем industry из строки в enum
+        from models.user import UserRole
+        industry_enum = None
+        if industry:
+            try:
+                industry_enum = UserRole(industry)
+            except ValueError:
+                pass  # Игнорируем неверные значения
+        
         claim_data = CompanyClaimRequest(
             last_name=last_name,
             first_name=first_name,
             phone=phone,
             company_name=company_name,
+            industry=industry_enum,
             position=position,
             email=email
         )
@@ -106,6 +117,7 @@ async def list_claims(
             "company_name": claim.company_name,
             "last_name": claim.last_name,
             "first_name": claim.first_name,
+            "industry": claim.industry,
             "phone": claim.phone,
             "email": claim.email,
             "position": claim.position,

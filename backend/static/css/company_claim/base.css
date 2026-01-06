@@ -178,6 +178,158 @@
     color: var(--text-muted, #8c8c8c);
 }
 
+.company-claim-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23012af9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px;
+}
+
+.company-claim-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.company-claim-dropdown-toggle {
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--input-border, rgba(1, 42, 249, 0.1));
+    border-radius: 12px;
+    background: var(--bg-color, #ffffff);
+    color: var(--text-color, #0d0d0d);
+    font-size: 16px;
+    line-height: 24px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    padding: 0 16px;
+    box-shadow: var(--input-shadow, 0px 2px 12px rgba(1, 42, 249, 0.05));
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.company-claim-dropdown-toggle:hover {
+    border-color: var(--accent, #012af9);
+}
+
+.company-claim-dropdown-toggle:focus {
+    outline: none;
+    border-color: var(--accent, #012af9);
+}
+
+.company-claim-dropdown.open .company-claim-dropdown-toggle {
+    border-color: var(--accent, #012af9);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.company-claim-dropdown-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.company-claim-dropdown-text.placeholder {
+    color: var(--text-muted, #8c8c8c);
+}
+
+.company-claim-dropdown-arrow {
+    flex-shrink: 0;
+    color: var(--accent, #012af9);
+    transition: transform 0.2s ease;
+}
+
+.company-claim-dropdown.open .company-claim-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.company-claim-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-color, #ffffff);
+    border: 1px solid var(--accent, #012af9);
+    border-top: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0px 8px 24px rgba(1, 42, 249, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.company-claim-dropdown.open .company-claim-dropdown-menu {
+    display: block;
+}
+
+.company-claim-dropdown-item {
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--text-color, #0d0d0d);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.company-claim-dropdown-item:hover {
+    background: rgba(1, 42, 249, 0.05);
+}
+
+.company-claim-dropdown-item.selected {
+    background: rgba(1, 42, 249, 0.1);
+    color: var(--accent, #012af9);
+    font-weight: 500;
+}
+
+[data-theme="dark"] .company-claim-dropdown-toggle {
+    background: var(--surface-muted, #2d2d4a);
+    border-color: var(--input-border, rgba(255, 255, 255, 0.15));
+    box-shadow: var(--input-shadow, 0px 2px 12px rgba(0, 0, 0, 0.2));
+}
+
+[data-theme="dark"] .company-claim-dropdown-menu {
+    background: var(--surface-muted, #2d2d4a);
+    border-color: var(--accent, #012af9);
+}
+
+/* Disabled input state */
+.company-claim-input.disabled,
+.company-claim-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .company-claim-input.disabled,
+[data-theme="dark"] .company-claim-input:disabled {
+    background: var(--surface-muted, #2d2d4a);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+[data-theme="dark"] .company-claim-dropdown-arrow {
+    color: #f5f5f5;
+}
+
+[data-theme="dark"] .company-claim-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 /* intl-tel-input */
 .iti { width: 100%; }
 .iti__flag-container {

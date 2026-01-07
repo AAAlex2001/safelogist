@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import TiptapEditor from "@/components/TiptapEditor/TiptapEditor";
 import styles from "./faq.module.scss";
 
 type FaqItem = {
@@ -155,7 +156,10 @@ export default function FaqAdminPage() {
               </div>
               <div className={styles.formGroup}>
                 <label>Ответ</label>
-                <textarea rows={3} value={item.answer} onChange={(e) => updateItem(index, "answer", e.target.value)} />
+                <TiptapEditor
+                  content={item.answer}
+                  onChange={(html) => updateItem(index, "answer", html)}
+                />
               </div>
             </div>
           ))}

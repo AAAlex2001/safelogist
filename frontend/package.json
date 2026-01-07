@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@tiptap/react": "^3.15.3",
+    "@tiptap/starter-kit": "^3.15.3",
     "classnames": "^2.5.1",
     "framer-motion": "^12.23.12",
     "next": "^16.0.7",

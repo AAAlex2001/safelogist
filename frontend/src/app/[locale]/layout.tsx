@@ -47,11 +47,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        <link rel="alternate" hrefLang="ru" href="https://safelogist.com/ru" />
-        <link rel="alternate" hrefLang="en" href="https://safelogist.com/en" />
-        <link rel="alternate" hrefLang="uk" href="https://safelogist.com/uk" />
-        <link rel="alternate" hrefLang="ro" href="https://safelogist.com/ro" />
-        <link rel="alternate" hrefLang="x-default" href="https://safelogist.com/en" />
+        <link rel="canonical" href={`https://safelogist.net/${locale}`} />
+        <link rel="alternate" hrefLang="ru" href="https://safelogist.net/ru" />
+        <link rel="alternate" hrefLang="en" href="https://safelogist.net/en" />
+        <link rel="alternate" hrefLang="uk" href="https://safelogist.net/uk" />
+        <link rel="alternate" hrefLang="ro" href="https://safelogist.net/ro" />
+        <link rel="alternate" hrefLang="x-default" href="https://safelogist.net/en" />
       </head>
       <body className={montserrat.variable}>
         <TelegramWebApp />

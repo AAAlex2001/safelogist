@@ -1,0 +1,82 @@
+.container {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+
+  button {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: var(--font-base);
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #e9ecef;
+      border-color: #012af9;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background: #012af9;
+      color: #fff;
+      border-color: #012af9;
+    }
+  }
+
+  .divider {
+    width: 1px;
+    background: #ddd;
+    margin: 0 4px;
+  }
+}
+
+.editor {
+  min-height: 150px;
+  padding: 12px;
+  font-family: var(--font-base);
+  font-size: 14px;
+  line-height: 1.6;
+  outline: none;
+
+  :global(p) {
+    margin: 0 0 8px 0;
+  }
+
+  :global(h2) {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+  }
+
+  :global(h3) {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 12px 0 8px 0;
+  }
+
+  :global(ul),
+  :global(ol) {
+    padding-left: 24px;
+    margin: 8px 0;
+  }
+
+  :global(strong) {
+    font-weight: 600;
+  }
+}

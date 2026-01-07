@@ -1,6 +1,6 @@
 {
   "SearchBar": {
-    "placeholder": "Registration / Tax number",
+    "placeholder": "Company registration or tax number",
     "button": "Search"
   },
   "Header": {
@@ -94,7 +94,7 @@
     "saveButton": "Save changes"
   },
   "Footer": {
-    "description": "SafeLogist is a platform for searching and analyzing information about companies, courts and individuals in Moldova.",
+    "description": "Verified information about logistics companies to support your confident decisions",
     "quickLinks": "Quick Links",
     "chatGrok": "Grok Chat",
     "searchReviews": "Search Reviews",

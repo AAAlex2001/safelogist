@@ -90,15 +90,10 @@
 
 .features {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 30px;
   flex-grow: 1;
-  @media (min-width: 1440px) {
-    flex-wrap: nowrap;
-    flex-direction: column;
-  }
 }
 
 .featureItem {
@@ -106,10 +101,25 @@
   align-items: flex-start;
   gap: 10px;
   font-size: 14px;
-  flex: 1 1 calc((100% - 10px)/2);
-  max-width: 180px;
+}
+
+.popular .features {
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+  .featureItem {
+    flex: 1 1 calc((100% - 10px) / 2);
+    max-width: 180px;
+  }
+  
   @media (min-width: 1440px) {
-    flex: 1 1 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    
+    .featureItem {
+      flex: 1 1 auto;
+      max-width: none;
+    }
   }
 }
 

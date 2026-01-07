@@ -318,13 +318,13 @@ class TariffsUpsert(BaseModel):
     card2_features: Optional[str] = None
     card2_cta: Optional[str] = None
     card2_popular: Optional[bool] = True
-    card3_badge: str = Field(..., min_length=1)
-    card3_title: str = Field(..., min_length=1)
-    card3_price: str = Field(..., min_length=1)
-    card3_period: str = Field(..., min_length=1)
-    card3_note: str = Field(..., min_length=1)
-    card3_features: str = Field(..., min_length=1)
-    card3_cta: str = Field(..., min_length=1)
+    card3_badge: Optional[str] = None
+    card3_title: Optional[str] = None
+    card3_price: Optional[str] = None
+    card3_period: Optional[str] = None
+    card3_note: Optional[str] = None
+    card3_features: Optional[str] = None
+    card3_cta: Optional[str] = None
 
 
 class FaqItemOut(BaseModel):

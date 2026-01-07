@@ -1,6 +1,6 @@
 {
   "SearchBar": {
-    "placeholder": "Număr de înregistrare / fiscal",
+    "placeholder": "Număr de înregistrare sau fiscal al companiei",
     "button": "Căutare"
   },
   "Header": {
@@ -94,7 +94,7 @@
     "saveButton": "Salvează modificările"
   },
   "Footer": {
-    "description": "SafeLogist este o platformă pentru căutarea și analiza informațiilor despre companii, instanțe și persoane din Moldova.",
+    "description": "Informații verificate despre companii de logistică pentru deciziile dumneavoastră încrezătoare",
     "quickLinks": "Link-uri rapide",
     "chatGrok": "Chat Grok",
     "searchReviews": "Căutare recenzii",

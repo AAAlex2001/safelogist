@@ -7,6 +7,25 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   output: 'standalone',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'safelogist.net',
+        pathname: '/static/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/static/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'backend',
+        pathname: '/static/**',
+      },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);

@@ -59,7 +59,13 @@ export function Steps({ content }: Props) {
             <Typography as="h2" size={18} desktopSize={18} text={data.steps[1].text} />
             <div className={styles.stepImage}>
               {data.step2_image ? (
-                <Image src={data.step2_image} alt="Step 2" width={340} height={200} />
+                <img 
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${data.step2_image}`} 
+                  alt="Step 2" 
+                  width={340} 
+                  height={200}
+                  style={{ objectFit: "cover" }}
+                />
               ) : (
                 <Image src="/step.png" alt="Step 2" width={340} height={200} />
               )}

@@ -183,6 +183,35 @@ export default function ReviewsAdminPage() {
     }
   };
 
+  const handleUploadAvatar = async (itemId: number, file: File) => {
+    try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items/${itemId}/upload-avatar`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to upload");
+      
+      const data = await res.json();
+      // Обновляем локальный стейт
+      const newItems = content.items.map(i => 
+        i.id === itemId ? { ...i, author_avatar: data.image_url } : i
+      );
+      setContent({ ...content, items: newItems });
+      setMessage({ type: "success", text: "Аватар загружен!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось загрузить аватар" });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Reviews секция</h1>
@@ -276,15 +305,24 @@ export default function ReviewsAdminPage() {
                     />
                   </div>
                   <div className={styles.formGroup}>
-                    <label>Аватар (URL)</label>
+                    <label>Аватар</label>
+                    {item.author_avatar && (
+                      <div style={{ marginBottom: "8px" }}>
+                        <img 
+                          src={`${process.env.NEXT_PUBLIC_API_URL}${item.author_avatar}`} 
+                          alt="Avatar" 
+                          style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
+                        />
+                      </div>
+                    )}
                     <input
-                      type="text"
-                      value={item.author_avatar || ""}
+                      type="file"
+                      accept="image/*"
                       onChange={(e) => {
-                        const newItems = content.items.map(i => 
-                          i.id === item.id ? { ...i, author_avatar: e.target.value } : i
-                        );
-                        setContent({ ...content, items: newItems });
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleUploadAvatar(item.id, file);
+                        }
                       }}
                     />
                   </div>

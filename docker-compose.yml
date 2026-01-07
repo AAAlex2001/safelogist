@@ -40,6 +40,7 @@ services:
       - ./backend/uploads:/app/uploads  # Для хранения загруженных файлов
       - ./backend/static/sitemaps:/app/static/sitemaps  # Для хранения sitemap файлов
       - ./backend/static/user_photos:/app/static/user_photos  # Для хранения фото пользователей
+      - ./backend/static/landing:/app/static/landing  # Для хранения изображений landing страницы
     networks:
       - safelogist_network
     restart: unless-stopped

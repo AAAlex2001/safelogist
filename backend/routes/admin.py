@@ -509,6 +509,39 @@ async def delete_review_item(
     return {"message": "Review item deleted successfully"}
 
 
+@router.post("/landing/reviews/items/{item_id}/upload-avatar")
+async def upload_review_avatar(
+    item_id: int,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Загрузить аватар для отзыва"""
+    # Проверяем тип файла
+    allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Only JPG, PNG, WEBP images are allowed")
+
+    # Создаём директорию если не существует
+    upload_dir = Path("static/landing/reviews")
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    # Генерируем уникальное имя файла
+    file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    unique_filename = f"avatar_{item_id}_{uuid.uuid4().hex[:8]}.{file_ext}"
+    file_path = upload_dir / unique_filename
+
+    # Сохраняем файл
+    content = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(content)
+
+    # Обновляем запись в БД
+    image_url = f"/static/landing/reviews/{unique_filename}"
+    service = LandingService(db)
+    await service.update_review_item(item_id, ReviewItemUpdate(author_avatar=image_url))
+
+    return {"image_url": image_url}
+
 @router.get("/landing/bot", response_model=BotOut)
 async def admin_get_bot(
     lang: str = Query(..., min_length=2, max_length=10),

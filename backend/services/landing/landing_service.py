@@ -414,7 +414,23 @@ class LandingService:
         )
         steps = result.scalar_one_or_none()
         if not steps:
-            raise ValueError(f"Steps not found for locale {locale}")
+            # Создаём запись автоматически если её нет
+            steps = LandingSteps(
+                locale=locale,
+                title="Как это работает",
+                subtitle="Три простых шага",
+                step1_counter="Шаг 1",
+                step1_title="Заголовок",
+                step1_text="Текст",
+                step2_counter="Шаг 2",
+                step2_title="Заголовок",
+                step2_text="Текст",
+                step3_counter="Шаг 3",
+                step3_title="Заголовок",
+                step3_text="Текст",
+            )
+            self.db.add(steps)
+            await self.db.flush()
         
         card = LandingStepsCard(steps_id=steps.id, **data.model_dump())
         self.db.add(card)
@@ -455,7 +471,10 @@ class LandingService:
         )
         reviews = result.scalar_one_or_none()
         if not reviews:
-            raise ValueError(f"Reviews not found for locale {locale}")
+            # Создаём запись автоматически если её нет
+            reviews = LandingReviews(locale=locale, title="Отзывы", subtitle="Что говорят о нас")
+            self.db.add(reviews)
+            await self.db.flush()
         
         item = LandingReviewItem(reviews_id=reviews.id, **data.model_dump())
         self.db.add(item)

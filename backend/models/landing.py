@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, UniqueConstraint, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, UniqueConstraint, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
 from models.base import Base
@@ -265,6 +265,8 @@ class LandingStepsCard(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     icon = Column(String, nullable=True)  # URL или название иконки
+    reviews_count = Column(Integer, nullable=True)  # Количество отзывов
+    rating = Column(Float, nullable=True)  # Рейтинг (например, 5.0)
     order = Column(Integer, default=0, nullable=False)
     
     created_at = Column(

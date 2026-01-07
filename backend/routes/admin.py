@@ -4,16 +4,20 @@ API для админки
 from typing import List, Optional
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from pydantic import BaseModel
+import os
+import uuid
+from pathlib import Path
 
 from database import get_db
 from models.user import User, UserRole
 from models.company_claim import CompanyClaim, ClaimStatus
 from models.review_request import ReviewRequest, ReviewRequestStatus
 from services.review_request_service import ReviewRequestService
+from services.landing.hero_service import HeroService
 from services.landing import LandingService
 from schemas.landing import (
     HeroContentOut,
@@ -24,8 +28,14 @@ from schemas.landing import (
     FunctionsUpsert,
     StepsOut,
     StepsUpsert,
+    StepsCardOut,
+    StepsCardCreate,
+    StepsCardUpdate,
     ReviewsOut,
     ReviewsUpsert,
+    ReviewItemOut,
+    ReviewItemCreate,
+    ReviewItemUpdate,
     BotOut,
     BotUpsert,
     TariffsOut,
@@ -286,15 +296,16 @@ async def delete_review_request(request_id: int, db: AsyncSession = Depends(get_
     return {"message": "Заявка удалена"}
 
 
-# ===================== LANDING =====================
+# ===================== LANDING HERO =====================
 
 @router.get("/landing/hero", response_model=HeroContentOut)
 async def admin_get_hero(
     lang: str = Query(..., min_length=2, max_length=10),
     db: AsyncSession = Depends(get_db),
 ):
-    service = LandingService(db)
-    hero = await service.get_hero(lang)
+    """Получить Hero контент для локали."""
+    service = HeroService(db)
+    hero = await service.get_by_locale(lang)
     if not hero:
         raise HTTPException(status_code=404, detail="Hero content not found")
     return hero
@@ -306,9 +317,13 @@ async def admin_upsert_hero(
     lang: str = Query(..., min_length=2, max_length=10),
     db: AsyncSession = Depends(get_db),
 ):
-    service = LandingService(db)
-    return await service.upsert_hero(lang, payload)
+    """Создать или обновить Hero контент."""
+    service = HeroService(db)
+    hero = await service.upsert(lang, payload)
+    return hero
 
+
+# ===================== LANDING SECTIONS =====================
 
 @router.get("/landing/review-cta", response_model=ReviewCtaOut)
 async def admin_get_review_cta(
@@ -376,6 +391,70 @@ async def admin_upsert_steps(
     return await service.upsert_steps(lang, payload)
 
 
+@router.post("/landing/steps/upload-image")
+async def upload_steps_image(
+    file: UploadFile = File(...),
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    """Загрузить изображение для step2"""
+    # Проверяем тип файла
+    allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Only JPG, PNG, WEBP images are allowed")
+
+    # Создаём директорию если не существует
+    upload_dir = Path("static/landing/steps")
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    # Генерируем уникальное имя файла
+    file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    unique_filename = f"step2_{lang}_{uuid.uuid4().hex[:8]}.{file_ext}"
+    file_path = upload_dir / unique_filename
+
+    # Сохраняем файл
+    content = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(content)
+
+    # Возвращаем URL изображения
+    image_url = f"/static/landing/steps/{unique_filename}"
+
+    return {"image_url": image_url, "message": "Image uploaded successfully"}
+
+
+# ===== Steps Cards CRUD =====
+
+@router.post("/landing/steps/cards", response_model=StepsCardOut)
+async def create_steps_card(
+    payload: StepsCardCreate,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.create_steps_card(lang, payload)
+
+
+@router.put("/landing/steps/cards/{card_id}", response_model=StepsCardOut)
+async def update_steps_card(
+    card_id: int,
+    payload: StepsCardUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.update_steps_card(card_id, payload)
+
+
+@router.delete("/landing/steps/cards/{card_id}")
+async def delete_steps_card(
+    card_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    await service.delete_steps_card(card_id)
+    return {"message": "Card deleted successfully"}
+
+
 @router.get("/landing/reviews", response_model=ReviewsOut)
 async def admin_get_reviews(
     lang: str = Query(..., min_length=2, max_length=10),
@@ -396,6 +475,38 @@ async def admin_upsert_reviews(
 ):
     service = LandingService(db)
     return await service.upsert_reviews(lang, payload)
+
+
+# ===== Review Items CRUD =====
+
+@router.post("/landing/reviews/items", response_model=ReviewItemOut)
+async def create_review_item(
+    payload: ReviewItemCreate,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.create_review_item(lang, payload)
+
+
+@router.put("/landing/reviews/items/{item_id}", response_model=ReviewItemOut)
+async def update_review_item(
+    item_id: int,
+    payload: ReviewItemUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.update_review_item(item_id, payload)
+
+
+@router.delete("/landing/reviews/items/{item_id}")
+async def delete_review_item(
+    item_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    await service.delete_review_item(item_id)
+    return {"message": "Review item deleted successfully"}
 
 
 @router.get("/landing/bot", response_model=BotOut)

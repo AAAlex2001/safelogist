@@ -46,8 +46,7 @@ async function fetchSection<T>(endpoint: string, locale: string): Promise<T | nu
   try {
     const url = `${API_URL}/api/landing/${endpoint}?lang=${encodeURIComponent(locale)}`;
     const res = await fetch(url, { 
-      cache: "force-cache",
-      next: { revalidate: 3600 }
+      cache: "no-store",
     });
     if (res.ok) {
       return await res.json();

@@ -25,6 +25,8 @@ type StepsCard = {
   title: string;
   description: string;
   icon?: string;
+  reviews_count?: number;
+  rating?: number;
   order: number;
 };
 
@@ -168,6 +170,8 @@ export default function StepsAdminPage() {
           body: JSON.stringify({
             title: "Новая карточка",
             description: "Описание карточки",
+            reviews_count: 24,
+            rating: 5.0,
             order: content.cards?.length || 0,
           }),
         }
@@ -335,6 +339,25 @@ export default function StepsAdminPage() {
                       value={card.description}
                       onChange={(e) => handleUpdateCard(card.id, { description: e.target.value })}
                       rows={3}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Количество отзывов</label>
+                    <input
+                      type="number"
+                      value={card.reviews_count ?? 24}
+                      onChange={(e) => handleUpdateCard(card.id, { reviews_count: parseInt(e.target.value) })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Рейтинг (1-5)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="1"
+                      max="5"
+                      value={card.rating ?? 5.0}
+                      onChange={(e) => handleUpdateCard(card.id, { rating: parseFloat(e.target.value) })}
                     />
                   </div>
                   <div className={styles.formGroup}>

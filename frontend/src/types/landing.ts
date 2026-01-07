@@ -50,8 +50,8 @@ export type StepsCard = {
   id: number;
   title: string;
   description: string;
-  icon?: string | null;
-  order: number;
+  icon?: string | null;  reviews_count?: number;
+  rating?: number;  order: number;
 };
 
 export type StepsContent = {

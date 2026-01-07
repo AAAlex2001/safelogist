@@ -36,38 +36,17 @@ export default function Reviews({ content }: Props) {
           className={styles.swiper}
           loop={data.items && data.items.length > 2}
         >
-          {data.items && data.items.length > 0 ? (
-            data.items.map((item) => (
-              <SwiperSlide key={item.id} className={styles.slide}>
-                <div className={styles.reviewCard}>
-                  <div className={styles.reviewHeader}>
-                    {item.author_avatar && (
-                      <img src={item.author_avatar} alt={item.author_name} className={styles.avatar} />
-                    )}
-                    <div>
-                      <Typography as="h3" size={16} desktopSize={16} weight="bold" text={item.author_name} />
-                      <Typography as="p" size={14} desktopSize={14} text={item.author_role} />
-                      {item.author_company && (
-                        <Typography as="p" size={14} desktopSize={14} text={item.author_company} />
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles.rating}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className={i < item.rating ? styles.star : styles.starEmpty}>★</span>
-                    ))}
-                  </div>
-                  <Typography as="p" size={14} desktopSize={14} text={item.text} />
-                </div>
-              </SwiperSlide>
-            ))
-          ) : (
-            [...Array(15)].map((_, i) => (
-              <SwiperSlide key={i} className={styles.slide}>
-                <ReviewCard />
-              </SwiperSlide>
-            ))
-          )}
+          {data.items && data.items.map((item) => (
+            <SwiperSlide key={item.id} className={styles.slide}>
+              <ReviewCard 
+                authorName={item.author_name}
+                authorRole={item.author_role}
+                authorCompany={item.author_company ?? undefined}
+                text={item.text}
+                rating={item.rating}
+              />
+            </SwiperSlide>
+          ))}
         </Swiper>
 
         <div className={styles.slideBtns}>

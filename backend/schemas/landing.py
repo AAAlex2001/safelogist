@@ -111,6 +111,8 @@ class StepsCardOut(BaseModel):
     title: str
     description: str
     icon: Optional[str] = None
+    reviews_count: Optional[int] = None
+    rating: Optional[float] = None
     order: int
 
     class Config:
@@ -148,6 +150,8 @@ class StepsCardCreate(BaseModel):
     title: str = Field(..., min_length=1)
     description: str = Field(..., min_length=1)
     icon: Optional[str] = None
+    reviews_count: Optional[int] = None
+    rating: Optional[float] = None
     order: int = 0
 
 
@@ -155,6 +159,8 @@ class StepsCardUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1)
     description: Optional[str] = Field(None, min_length=1)
     icon: Optional[str] = None
+    reviews_count: Optional[int] = None
+    rating: Optional[float] = None
     order: Optional[int] = None
 
 

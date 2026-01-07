@@ -25,6 +25,7 @@ type StepsCard = {
   title: string;
   description: string;
   icon?: string;
+  card_type?: string;
   reviews_count?: number;
   reviews_text?: string;
   rating?: number;
@@ -108,6 +109,8 @@ export default function StepsAdminPage() {
     setMessage(null);
     try {
       const token = localStorage.getItem("token");
+      
+      // Сохраняем основной контент
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps?lang=${selectedLocale}`,
         {
@@ -117,9 +120,35 @@ export default function StepsAdminPage() {
         }
       );
       if (!res.ok) throw new Error("Failed to save");
-      setMessage({ type: "success", text: "Контент сохранён!" });
+
+      // Сохраняем все карточки
+      if (content.cards) {
+        for (const card of content.cards) {
+          const cardRes = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps/cards/${card.id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+              body: JSON.stringify({
+                title: card.title,
+                description: card.description,
+                card_type: card.card_type,
+                reviews_count: card.reviews_count,
+                reviews_text: card.reviews_text,
+                rating: card.rating,
+                rating_label: card.rating_label,
+                order: card.order,
+              }),
+            }
+          );
+          if (!cardRes.ok) throw new Error(`Failed to save card ${card.id}`);
+        }
+      }
+
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Все изменения сохранены!" });
     } catch {
-      setMessage({ type: "error", text: "Не удалось сохранить контент" });
+      setMessage({ type: "error", text: "Не удалось сохранить изменения" });
     } finally {
       setSaving(false);
     }
@@ -172,6 +201,7 @@ export default function StepsAdminPage() {
           body: JSON.stringify({
             title: "Новая карточка",
             description: "Описание карточки",
+            card_type: "assessment",
             reviews_count: 24,
             reviews_text: "отзывов о подрядчике",
             rating: 5.0,
@@ -329,19 +359,43 @@ export default function StepsAdminPage() {
               {content.cards.map((card) => (
                 <div key={card.id} className={styles.cardEdit}>
                   <div className={styles.formGroup}>
+                    <label style={{display: "flex", alignItems: "center", gap: "8px"}}>
+                      <input
+                        type="checkbox"
+                        checked={card.card_type === 'review'}
+                        onChange={(e) => {
+                          const newCards = content.cards?.map(c => 
+                            c.id === card.id ? { ...c, card_type: e.target.checked ? 'review' : 'assessment' } : c
+                          );
+                          setContent({ ...content, cards: newCards });
+                        }}
+                      />
+                      Карточка отзыва (ReviewCard)
+                    </label>
+                  </div>
+                  <div className={styles.formGroup}>
                     <label>Заголовок</label>
                     <input
                       type="text"
                       value={card.title}
-                      onChange={(e) => handleUpdateCard(card.id, { title: e.target.value })}
-                      onBlur={() => {}}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, title: e.target.value } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
                     <label>Описание</label>
                     <textarea
                       value={card.description}
-                      onChange={(e) => handleUpdateCard(card.id, { description: e.target.value })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, description: e.target.value } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                       rows={3}
                     />
                   </div>
@@ -350,7 +404,12 @@ export default function StepsAdminPage() {
                     <input
                       type="number"
                       value={card.reviews_count ?? 24}
-                      onChange={(e) => handleUpdateCard(card.id, { reviews_count: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, reviews_count: parseInt(e.target.value) } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -358,7 +417,12 @@ export default function StepsAdminPage() {
                     <input
                       type="text"
                       value={card.reviews_text ?? "отзывов о подрядчике"}
-                      onChange={(e) => handleUpdateCard(card.id, { reviews_text: e.target.value })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, reviews_text: e.target.value } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -369,7 +433,12 @@ export default function StepsAdminPage() {
                       min="1"
                       max="5"
                       value={card.rating ?? 5.0}
-                      onChange={(e) => handleUpdateCard(card.id, { rating: parseFloat(e.target.value) })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, rating: parseFloat(e.target.value) } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -377,7 +446,12 @@ export default function StepsAdminPage() {
                     <input
                       type="text"
                       value={card.rating_label ?? "Рейтинг"}
-                      onChange={(e) => handleUpdateCard(card.id, { rating_label: e.target.value })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, rating_label: e.target.value } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -385,7 +459,12 @@ export default function StepsAdminPage() {
                     <input
                       type="number"
                       value={card.order}
-                      onChange={(e) => handleUpdateCard(card.id, { order: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const newCards = content.cards?.map(c => 
+                          c.id === card.id ? { ...c, order: parseInt(e.target.value) } : c
+                        );
+                        setContent({ ...content, cards: newCards });
+                      }}
                     />
                   </div>
                   <button 
@@ -408,8 +487,8 @@ export default function StepsAdminPage() {
             </div>
           )}
 
-          <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
-            {saving ? "Сохранение..." : "Сохранить"}
+          <button className={styles.saveBtn} onClick={handleSave} disabled={saving} style={{marginTop: "24px"}}>
+            {saving ? "Сохранение..." : "Сохранить всё"}
           </button>
         </div>
       )}

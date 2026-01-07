@@ -79,8 +79,16 @@ export function Steps({ content }: Props) {
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[2].title} />
             <Typography as="h2" size={18} desktopSize={18} text={data.steps[2].text} />
             <div className={styles.cards}>
-              {data.cards && data.cards.map((card, idx) => (
-                idx % 2 === 0 ? (
+              {data.cards && data.cards.map((card) => (
+                card.card_type === 'review' ? (
+                  <ReviewCard 
+                    key={card.id}
+                    authorName={card.title}
+                    authorRole="Подрядчик"
+                    authorCompany={card.description}
+                    text={card.description}
+                  />
+                ) : (
                   <AssessmentCard 
                     key={card.id} 
                     title={card.title}
@@ -89,14 +97,6 @@ export function Steps({ content }: Props) {
                     reviewsText={card.reviews_text}
                     rating={card.rating}
                     ratingLabel={card.rating_label}
-                  />
-                ) : (
-                  <ReviewCard 
-                    key={card.id}
-                    authorName={card.title}
-                    authorRole="Подрядчик"
-                    authorCompany={card.description}
-                    text={card.description}
                   />
                 )
               ))}

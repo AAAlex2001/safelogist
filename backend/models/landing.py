@@ -265,6 +265,7 @@ class LandingStepsCard(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     icon = Column(String, nullable=True)  # URL или название иконки
+    card_type = Column(String, nullable=True)  # 'assessment' или 'review'
     reviews_count = Column(Integer, nullable=True)  # Количество отзывов
     reviews_text = Column(String, nullable=True)  # Текст "отзывов о подрядчике"
     rating = Column(Float, nullable=True)  # Рейтинг (например, 5.0)

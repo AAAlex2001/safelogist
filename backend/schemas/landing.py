@@ -116,6 +116,10 @@ class StepsCardOut(BaseModel):
     reviews_text: Optional[str] = None
     rating: Optional[float] = None
     rating_label: Optional[str] = None
+    author_name: Optional[str] = None
+    author_role: Optional[str] = None
+    author_company: Optional[str] = None
+    review_text: Optional[str] = None
     order: int
 
     class Config:
@@ -158,6 +162,10 @@ class StepsCardCreate(BaseModel):
     reviews_text: Optional[str] = None
     rating: Optional[float] = None
     rating_label: Optional[str] = None
+    author_name: Optional[str] = None
+    author_role: Optional[str] = None
+    author_company: Optional[str] = None
+    review_text: Optional[str] = None
     order: int = 0
 
 
@@ -170,6 +178,10 @@ class StepsCardUpdate(BaseModel):
     reviews_text: Optional[str] = None
     rating: Optional[float] = None
     rating_label: Optional[str] = None
+    author_name: Optional[str] = None
+    author_role: Optional[str] = None
+    author_company: Optional[str] = None
+    review_text: Optional[str] = None
     order: Optional[int] = None
 
 

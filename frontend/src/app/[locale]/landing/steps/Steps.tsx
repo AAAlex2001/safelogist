@@ -83,10 +83,10 @@ export function Steps({ content }: Props) {
                 card.card_type === 'review' ? (
                   <ReviewCard 
                     key={card.id}
-                    authorName={card.title}
-                    authorRole="Подрядчик"
-                    authorCompany={card.description}
-                    text={card.description}
+                    authorName={card.author_name || card.title}
+                    authorRole={card.author_role || "Подрядчик"}
+                    authorCompany={card.author_company || card.description}
+                    text={card.review_text || card.description}
                   />
                 ) : (
                   <AssessmentCard 

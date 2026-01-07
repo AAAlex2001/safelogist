@@ -266,10 +266,16 @@ class LandingStepsCard(Base):
     description = Column(String, nullable=False)
     icon = Column(String, nullable=True)  # URL или название иконки
     card_type = Column(String, nullable=True)  # 'assessment' или 'review'
+    # Поля для assessment карточек
     reviews_count = Column(Integer, nullable=True)  # Количество отзывов
     reviews_text = Column(String, nullable=True)  # Текст "отзывов о подрядчике"
     rating = Column(Float, nullable=True)  # Рейтинг (например, 5.0)
     rating_label = Column(String, nullable=True)  # Текст "Рейтинг"
+    # Поля для review карточек
+    author_name = Column(String, nullable=True)
+    author_role = Column(String, nullable=True)
+    author_company = Column(String, nullable=True)
+    review_text = Column(String, nullable=True)
     order = Column(Integer, default=0, nullable=False)
     
     created_at = Column(

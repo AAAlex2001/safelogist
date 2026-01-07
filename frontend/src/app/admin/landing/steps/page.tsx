@@ -30,6 +30,10 @@ type StepsCard = {
   reviews_text?: string;
   rating?: number;
   rating_label?: string;
+  author_name?: string;
+  author_role?: string;
+  author_company?: string;
+  review_text?: string;
   order: number;
 };
 
@@ -137,6 +141,10 @@ export default function StepsAdminPage() {
                 reviews_text: card.reviews_text,
                 rating: card.rating,
                 rating_label: card.rating_label,
+                author_name: card.author_name,
+                author_role: card.author_role,
+                author_company: card.author_company,
+                review_text: card.review_text,
                 order: card.order,
               }),
             }
@@ -373,87 +381,148 @@ export default function StepsAdminPage() {
                       Карточка отзыва (ReviewCard)
                     </label>
                   </div>
-                  <div className={styles.formGroup}>
-                    <label>Заголовок</label>
-                    <input
-                      type="text"
-                      value={card.title}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, title: e.target.value } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Описание</label>
-                    <textarea
-                      value={card.description}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, description: e.target.value } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                      rows={3}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Количество отзывов</label>
-                    <input
-                      type="number"
-                      value={card.reviews_count ?? 24}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, reviews_count: parseInt(e.target.value) } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Текст "отзывов о подрядчике"</label>
-                    <input
-                      type="text"
-                      value={card.reviews_text ?? "отзывов о подрядчике"}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, reviews_text: e.target.value } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Рейтинг (1-5)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="1"
-                      max="5"
-                      value={card.rating ?? 5.0}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, rating: parseFloat(e.target.value) } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Текст "Рейтинг"</label>
-                    <input
-                      type="text"
-                      value={card.rating_label ?? "Рейтинг"}
-                      onChange={(e) => {
-                        const newCards = content.cards?.map(c => 
-                          c.id === card.id ? { ...c, rating_label: e.target.value } : c
-                        );
-                        setContent({ ...content, cards: newCards });
-                      }}
-                    />
-                  </div>
+
+                  {card.card_type === 'review' ? (
+                    <>
+                      <div className={styles.formGroup}>
+                        <label>Имя автора</label>
+                        <input
+                          type="text"
+                          value={card.author_name || ""}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, author_name: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Должность</label>
+                        <input
+                          type="text"
+                          value={card.author_role || ""}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, author_role: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Компания</label>
+                        <input
+                          type="text"
+                          value={card.author_company || ""}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, author_company: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Текст отзыва</label>
+                        <textarea
+                          value={card.review_text || ""}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, review_text: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                          rows={4}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className={styles.formGroup}>
+                        <label>Заголовок</label>
+                        <input
+                          type="text"
+                          value={card.title}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, title: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Описание</label>
+                        <textarea
+                          value={card.description}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, description: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                          rows={3}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Количество отзывов</label>
+                        <input
+                          type="number"
+                          value={card.reviews_count ?? 24}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, reviews_count: parseInt(e.target.value) } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Текст "отзывов о подрядчике"</label>
+                        <input
+                          type="text"
+                          value={card.reviews_text ?? "отзывов о подрядчике"}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, reviews_text: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Рейтинг (1-5)</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="1"
+                          max="5"
+                          value={card.rating ?? 5.0}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, rating: parseFloat(e.target.value) } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Текст "Рейтинг"</label>
+                        <input
+                          type="text"
+                          value={card.rating_label ?? "Рейтинг"}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, rating_label: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+
                   <div className={styles.formGroup}>
                     <label>Порядок</label>
                     <input

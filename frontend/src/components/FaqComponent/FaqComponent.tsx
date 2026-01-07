@@ -51,7 +51,10 @@ export function FaqComponent({
           aria-hidden={!isOpen}
         >
           <div className={styles.answerInner}>
-            <div className={styles.answerText}>{answer}</div>
+            <div 
+              className={styles.answerText}
+              dangerouslySetInnerHTML={{ __html: answer!.replace(/\n/g, '<br />') }}
+            />
           </div>
         </div>
       )}

@@ -5,8 +5,7 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 244px;
-  padding-left: 20px;
-  padding-right: 20px;
+  overflow: hidden;
   @media (min-width: 1440px) {
     padding-bottom: 172px;
   }
@@ -19,6 +18,8 @@
   text-align: center;
   width: 100%;
   margin-bottom: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .swiperWrap {

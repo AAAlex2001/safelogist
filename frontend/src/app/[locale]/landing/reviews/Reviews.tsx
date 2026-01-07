@@ -33,6 +33,7 @@ export default function Reviews({ content }: Props) {
           }}
           spaceBetween={24}
           slidesPerView="auto"
+          centeredSlides={true}
           className={styles.swiper}
           loop={data.items && data.items.length > 2}
         >
@@ -42,6 +43,7 @@ export default function Reviews({ content }: Props) {
                 authorName={item.author_name}
                 authorRole={item.author_role}
                 authorCompany={item.author_company ?? undefined}
+                authorAvatar={item.author_avatar}
                 text={item.text}
                 rating={item.rating}
                 ratingLabel={item.rating_label}

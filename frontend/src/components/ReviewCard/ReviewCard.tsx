@@ -8,6 +8,7 @@ type ReviewCardProps = {
   authorName?: string;
   authorRole?: string;
   authorCompany?: string | null;
+  authorAvatar?: string | null;
   text?: string;
   rating?: number;
   ratingLabel?: string;
@@ -18,6 +19,7 @@ export function ReviewCard({
   authorName,
   authorRole, 
   authorCompany,
+  authorAvatar,
   text,
   rating,
   ratingLabel,
@@ -27,7 +29,15 @@ export function ReviewCard({
     <div className={styles.card}>
       <div className={styles.header}>
         <div className={styles.userBadge}>
-          <TruckIcon />
+          {authorAvatar ? (
+            <img 
+              src={`${process.env.NEXT_PUBLIC_API_URL}${authorAvatar}`} 
+              alt={authorName || "Avatar"}
+              className={styles.avatarImg}
+            />
+          ) : (
+            <TruckIcon />
+          )}
         </div>
 
         <div className={styles.info}>

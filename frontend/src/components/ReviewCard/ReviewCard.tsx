@@ -45,14 +45,12 @@ export function ReviewCard({
       {rating && (
         <div className={styles.ratingRow}>
           <div className={styles.ratingLabel}>{ratingLabel}</div>
-          <div className={styles.ratingValue}>
-            <div className={styles.stars} aria-hidden="true">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <StarIcon key={star} filled={star <= Math.round(rating)} />
-              ))}
-            </div>
-            <div className={styles.ratingNumber}>{rating.toFixed(1)}</div>
+          <div className={styles.stars} aria-hidden="true">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <StarIcon key={star} filled={star <= Math.round(rating)} />
+            ))}
           </div>
+          <div className={styles.ratingNumber}>{rating.toFixed(1)}</div>
         </div>
       )}
 

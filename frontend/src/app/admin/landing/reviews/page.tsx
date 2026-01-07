@@ -320,7 +320,7 @@ export default function ReviewsAdminPage() {
                     <label>Текст "От:"</label>
                     <input
                       type="text"
-                      value={item.from_label ?? "От:"}
+                      value={item.from_label || ""}
                       onChange={(e) => {
                         const newItems = content.items.map(i => 
                           i.id === item.id ? { ...i, from_label: e.target.value } : i
@@ -333,7 +333,7 @@ export default function ReviewsAdminPage() {
                     <label>Текст "Рейтинг"</label>
                     <input
                       type="text"
-                      value={item.rating_label ?? "Рейтинг"}
+                      value={item.rating_label || ""}
                       onChange={(e) => {
                         const newItems = content.items.map(i => 
                           i.id === item.id ? { ...i, rating_label: e.target.value } : i

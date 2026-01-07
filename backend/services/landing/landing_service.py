@@ -237,7 +237,7 @@ class LandingService:
 
         await self.db.commit()
         await self.db.refresh(reviews)
-        return ReviewsOut.model_validate(reviews)
+        return await self.get_reviews(locale)
 
     async def get_bot(self, locale: str) -> Optional[BotOut]:
         result = await self.db.execute(

@@ -458,7 +458,7 @@ export default function StepsAdminPage() {
                         <label>Текст "От:"</label>
                         <input
                           type="text"
-                          value={card.from_label ?? "От:"}
+                          value={card.from_label || ""}
                           onChange={(e) => {
                             const newCards = content.cards?.map(c => 
                               c.id === card.id ? { ...c, from_label: e.target.value } : c
@@ -471,7 +471,7 @@ export default function StepsAdminPage() {
                         <label>Текст "Рейтинг"</label>
                         <input
                           type="text"
-                          value={card.rating_label ?? "Рейтинг"}
+                          value={card.rating_label || ""}
                           onChange={(e) => {
                             const newCards = content.cards?.map(c => 
                               c.id === card.id ? { ...c, rating_label: e.target.value } : c
@@ -526,7 +526,7 @@ export default function StepsAdminPage() {
                         <label>Текст "отзывов о подрядчике"</label>
                         <input
                           type="text"
-                          value={card.reviews_text ?? "отзывов о подрядчике"}
+                          value={card.reviews_text || ""}
                           onChange={(e) => {
                             const newCards = content.cards?.map(c => 
                               c.id === card.id ? { ...c, reviews_text: e.target.value } : c
@@ -542,7 +542,7 @@ export default function StepsAdminPage() {
                           step="0.1"
                           min="1"
                           max="5"
-                          value={card.rating ?? 5.0}
+                          value={card.rating ?? ""}
                           onChange={(e) => {
                             const newCards = content.cards?.map(c => 
                               c.id === card.id ? { ...c, rating: parseFloat(e.target.value) } : c
@@ -555,7 +555,7 @@ export default function StepsAdminPage() {
                         <label>Текст "Рейтинг"</label>
                         <input
                           type="text"
-                          value={card.rating_label ?? "Рейтинг"}
+                          value={card.rating_label || ""}
                           onChange={(e) => {
                             const newCards = content.cards?.map(c => 
                               c.id === card.id ? { ...c, rating_label: e.target.value } : c

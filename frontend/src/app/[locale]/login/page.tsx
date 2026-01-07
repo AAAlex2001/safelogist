@@ -73,7 +73,7 @@ export default function LoginPage() {
               {t("loginButton")}
             </Button>
             <div className={styles.secondaryLink}>
-              {t("noAccount")} <a href="/register">{t("registerLink")}</a>
+              {t("noAccount")} <Link href="/register">{t("registerLink")}</Link>
             </div>
           </div>
         </form>

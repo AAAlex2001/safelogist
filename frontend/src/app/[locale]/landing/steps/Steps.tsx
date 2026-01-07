@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Typography } from "@/components/Typography";
 import styles from "./Steps.module.scss";
@@ -19,6 +20,7 @@ type Props = {
 export function Steps({ content }: Props) {
   const [activeStep, setActiveStep] = useState<Step>(1);
   const data = content;
+  const t = useTranslations("Steps");
 
   return (
     <section className={styles.steps}>
@@ -37,7 +39,7 @@ export function Steps({ content }: Props) {
               desktopSize={20}
               blue={true}
               weight="normal"
-              text={data.steps[0].counter}
+              text={data.steps?.[0]?.counter || t("step1")}
               className={styles.stepCounter}
             />
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[0].title} />
@@ -52,7 +54,7 @@ export function Steps({ content }: Props) {
               desktopSize={20}
               blue={true}
               weight="normal"
-              text={data.steps[1].counter}
+              text={data.steps?.[1]?.counter || t("step2")}
               className={styles.stepCounter}
             />
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[1].title} />
@@ -79,7 +81,7 @@ export function Steps({ content }: Props) {
               desktopSize={20}
               blue={true}
               weight="normal"
-              text={data.steps[2].counter}
+              text={data.steps?.[2]?.counter || t("step3")}
               className={styles.stepCounter}
             />
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[2].title} />

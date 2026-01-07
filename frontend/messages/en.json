@@ -134,6 +134,11 @@
     "statusRejected": "Rejected",
     "adminCommentLabel": "Rejection reason:"
   },
+  "Steps": {
+    "step1": "Step 1",
+    "step2": "Step 2",
+    "step3": "Step 3"
+  },
   "AddReview": {
     "pageTitle": "Add Review",
     "pageSubtitle": "Share your experience with other users",

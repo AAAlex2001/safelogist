@@ -134,6 +134,11 @@
     "statusRejected": "Відхилено",
     "adminCommentLabel": "Причина відхилення:"
   },
+  "Steps": {
+    "step1": "Крок 1",
+    "step2": "Крок 2",
+    "step3": "Крок 3"
+  },
   "AddReview": {
     "pageTitle": "Додати відгук",
     "pageSubtitle": "Поділіться своїм досвідом з іншими користувачами",

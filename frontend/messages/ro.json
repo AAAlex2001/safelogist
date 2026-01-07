@@ -134,6 +134,11 @@
     "statusRejected": "Respins",
     "adminCommentLabel": "Motivul respingerii:"
   },
+  "Steps": {
+    "step1": "Pasul 1",
+    "step2": "Pasul 2",
+    "step3": "Pasul 3"
+  },
   "AddReview": {
     "pageTitle": "Adaugă recenzie",
     "pageSubtitle": "Împartașiți experiența cu alți utilizatori",

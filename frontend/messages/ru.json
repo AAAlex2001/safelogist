@@ -134,6 +134,11 @@
     "statusRejected": "Отклонён",
     "adminCommentLabel": "Причина отклонения:"
   },
+  "Steps": {
+    "step1": "Шаг 1",
+    "step2": "Шаг 2",
+    "step3": "Шаг 3"
+  },
   "AddReview": {
     "pageTitle": "Добавить отзыв",
     "pageSubtitle": "Поделитесь своим опытом с другими пользователями",

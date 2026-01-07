@@ -15,10 +15,10 @@ type AssessmentCardProps = {
 export function AssessmentCard({ 
   title, 
   description, 
-  reviewsCount = 24, 
-  reviewsText = "отзывов о подрядчике",
-  rating = 5.0,
-  ratingLabel = "Рейтинг"
+  reviewsCount,
+  reviewsText,
+  rating,
+  ratingLabel
 }: AssessmentCardProps) {
   const displayRating = rating ?? 5.0;
   

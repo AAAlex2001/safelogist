@@ -58,6 +58,7 @@ export type StepsCard = {
   author_role?: string;
   author_company?: string;
   review_text?: string;
+  from_label?: string;
   order: number;
 };
 

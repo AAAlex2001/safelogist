@@ -276,6 +276,7 @@ class LandingStepsCard(Base):
     author_role = Column(String, nullable=True)
     author_company = Column(String, nullable=True)
     review_text = Column(String, nullable=True)
+    from_label = Column(String, nullable=True)  # Текст "От:"
     order = Column(Integer, default=0, nullable=False)
     
     created_at = Column(

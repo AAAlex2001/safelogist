@@ -87,6 +87,8 @@ export function Steps({ content }: Props) {
                     authorRole={card.author_role || "Подрядчик"}
                     authorCompany={card.author_company || card.description}
                     text={card.review_text || card.description}
+                    rating={card.rating}
+                    fromLabel={card.from_label}
                   />
                 ) : (
                   <AssessmentCard 

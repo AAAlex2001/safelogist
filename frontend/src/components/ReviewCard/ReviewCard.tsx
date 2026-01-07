@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./ReviewCard.module.scss";
 import TruckIcon from "@/icons/TruckIcon";
+import StarIcon from "@/icons/StarIcon";
 import LogoSmall from "@/icons/logoSmall";
 
 type ReviewCardProps = {
@@ -9,6 +10,7 @@ type ReviewCardProps = {
   authorCompany?: string | null;
   text: string;
   rating?: number;
+  fromLabel?: string;
 };
 
 export function ReviewCard({ 
@@ -16,7 +18,8 @@ export function ReviewCard({
   authorRole, 
   authorCompany,
   text,
-  rating = 5
+  rating = 5,
+  fromLabel = "От:"
 }: ReviewCardProps) {
   return (
     <div className={styles.card}>
@@ -37,9 +40,19 @@ export function ReviewCard({
         </div>
       </div>
 
+      {rating && (
+        <div className={styles.ratingRow}>
+          <div className={styles.stars} aria-hidden="true">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <StarIcon key={star} filled={star <= Math.round(rating)} />
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className={styles.footer}>
         <div className={styles.from}>
-          <div className={styles.fromLabel}>От:</div>
+          <div className={styles.fromLabel}>{fromLabel}</div>
           <div className={styles.fromName}>{authorName}</div>
         </div>
         <div className={styles.badge} aria-hidden="true">

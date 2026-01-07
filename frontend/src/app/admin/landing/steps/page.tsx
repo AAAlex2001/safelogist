@@ -34,6 +34,7 @@ type StepsCard = {
   author_role?: string;
   author_company?: string;
   review_text?: string;
+  from_label?: string;
   order: number;
 };
 
@@ -145,6 +146,7 @@ export default function StepsAdminPage() {
                 author_role: card.author_role,
                 author_company: card.author_company,
                 review_text: card.review_text,
+                from_label: card.from_label,
                 order: card.order,
               }),
             }
@@ -434,6 +436,35 @@ export default function StepsAdminPage() {
                             setContent({ ...content, cards: newCards });
                           }}
                           rows={4}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Рейтинг (1-5)</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="1"
+                          max="5"
+                          value={card.rating ?? 5.0}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, rating: parseFloat(e.target.value) } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
+                      <div className={styles.formGroup}>
+                        <label>Текст "От:"</label>
+                        <input
+                          type="text"
+                          value={card.from_label ?? "От:"}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, from_label: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
                         />
                       </div>
                     </>

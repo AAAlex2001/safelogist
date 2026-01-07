@@ -14,7 +14,6 @@ class UserRole(str, PyEnum):
     TRANSPORT_COMPANY = "TRANSPORT_COMPANY"
     CARGO_OWNER = "CARGO_OWNER"
     FORWARDER = "FORWARDER"
-    USER = "USER"
 
 
 class User(Base):
@@ -22,7 +21,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    role = Column(Enum(UserRole), default=UserRole.USER, nullable=False, index=True)
+    role = Column(Enum(UserRole), nullable=False, index=True)
     is_active = Column(Boolean, default=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     phone = Column(String, unique=True, index=True, nullable=False)

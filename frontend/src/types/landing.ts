@@ -43,6 +43,7 @@ export type StepItem = {
   counter: string;
   title: string;
   text: string;
+  image?: string | null;
 };
 
 export type StepsContent = {
@@ -50,6 +51,7 @@ export type StepsContent = {
   title: string;
   subtitle: string;
   steps: StepItem[];
+  step2_image?: string | null;
 };
 
 export type ReviewsContent = {

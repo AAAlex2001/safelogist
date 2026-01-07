@@ -152,9 +152,9 @@ class LandingService:
             return None
 
         step_items = [
-            StepItemOut(counter=steps.step1_counter, title=steps.step1_title, text=steps.step1_text),
-            StepItemOut(counter=steps.step2_counter, title=steps.step2_title, text=steps.step2_text),
-            StepItemOut(counter=steps.step3_counter, title=steps.step3_title, text=steps.step3_text),
+            StepItemOut(counter=steps.step1_counter, title=steps.step1_title, text=steps.step1_text, image=None),
+            StepItemOut(counter=steps.step2_counter, title=steps.step2_title, text=steps.step2_text, image=steps.step2_image),
+            StepItemOut(counter=steps.step3_counter, title=steps.step3_title, text=steps.step3_text, image=None),
         ]
 
         return StepsOut(
@@ -162,6 +162,7 @@ class LandingService:
             title=steps.title,
             subtitle=steps.subtitle,
             steps=step_items,
+            step2_image=steps.step2_image,
         )
 
     async def upsert_steps(self, locale: str, data: StepsUpsert) -> StepsOut:

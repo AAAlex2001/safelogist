@@ -8,7 +8,6 @@ class UserRole(str, Enum):
     TRANSPORT_COMPANY = "TRANSPORT_COMPANY"
     CARGO_OWNER = "CARGO_OWNER"
     FORWARDER = "FORWARDER"
-    USER = "USER"
 
 
 # ============================================================

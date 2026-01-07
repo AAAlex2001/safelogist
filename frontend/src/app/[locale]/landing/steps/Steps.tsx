@@ -58,7 +58,11 @@ export function Steps({ content }: Props) {
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[1].title} />
             <Typography as="h2" size={18} desktopSize={18} text={data.steps[1].text} />
             <div className={styles.stepImage}>
-              <Image src="/step.png" alt="Step 2" width={340} height={200} />
+              {data.step2_image ? (
+                <Image src={data.step2_image} alt="Step 2" width={340} height={200} />
+              ) : (
+                <Image src="/step.png" alt="Step 2" width={340} height={200} />
+              )}
             </div>
           </div>
 

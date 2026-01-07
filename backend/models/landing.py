@@ -122,6 +122,7 @@ class LandingSteps(Base):
     step2_counter = Column(String, nullable=False)
     step2_title = Column(String, nullable=False)
     step2_text = Column(String, nullable=False)
+    step2_image = Column(String, nullable=True)
 
     step3_counter = Column(String, nullable=False)
     step3_title = Column(String, nullable=False)

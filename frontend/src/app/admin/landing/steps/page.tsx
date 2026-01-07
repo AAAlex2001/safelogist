@@ -13,6 +13,7 @@ type StepsContent = {
   step2_counter: string;
   step2_title: string;
   step2_text: string;
+  step2_image?: string;
   step3_counter: string;
   step3_title: string;
   step3_text: string;
@@ -30,6 +31,7 @@ const emptyContent: StepsContent = {
   step2_counter: "",
   step2_title: "",
   step2_text: "",
+  step2_image: "",
   step3_counter: "",
   step3_title: "",
   step3_text: "",
@@ -40,6 +42,7 @@ export default function StepsAdminPage() {
   const [content, setContent] = useState<StepsContent>(emptyContent);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const fetchContent = useCallback(async (locale: string) => {
@@ -62,6 +65,7 @@ export default function StepsAdminPage() {
           step1_text: data.steps[0]?.text || "",
           step2_counter: data.steps[1]?.counter || "",
           step2_title: data.steps[1]?.title || "",
+          step2_image: data.step2_image || "",
           step2_text: data.steps[1]?.text || "",
           step3_counter: data.steps[2]?.counter || "",
           step3_title: data.steps[2]?.title || "",
@@ -106,7 +110,39 @@ export default function StepsAdminPage() {
     }
   };
 
-  const updateField = <K extends keyof StepsContent>(field: K, value: StepsContent[K]) => {
+  co
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessage(null);
+    try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps/upload-image?lang=${selectedLocale}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to upload");
+      
+      const data = await res.json();
+      updateField("step2_image", data.image_url);
+      setMessage({ type: "success", text: "Изображение загружено!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось загрузить изображение" });
+    } finally {
+      setUploading(false);
+    }
+  };nst updateField = <K extends keyof StepsContent>(field: K, value: StepsContent[K]) => {
     setContent((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -139,7 +175,35 @@ export default function StepsAdminPage() {
 
           <div className={styles.formGroup}>
             <label>Подзаголовок</label>
-            <textarea rows={3} value={content.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
+            <t  {i === 2 && (
+                  <div className={styles.formGroup}>
+                    <label>Изображение для Step 2</label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                    />
+                    {uploading && <p style={{ fontSize: "12px", color: "#666" }}>Загрузка...</p>}
+                    {content.step2_image && (
+                      <div style={{ marginTop: "8px" }}>
+                        <img 
+                          src={`${process.env.NEXT_PUBLIC_API_URL}${content.step2_image}`} 
+                          alt="Step 2" 
+                          style={{ maxWidth: "200px", display: "block", marginTop: "8px" }}
+                        />
+                        <input
+                          type="text"
+                          value={content.step2_image}
+                          onChange={(e) => updateField("step2_image", e.target.value)}
+                          placeholder="URL изображения"
+                          style={{ marginTop: "8px", fontSize: "12px" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              extarea rows={3} value={content.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
           </div>
 
           <h3 className={styles.statsHeader}>Шаги</h3>

@@ -48,7 +48,6 @@ export default function RegisterPage() {
     { value: "TRANSPORT_COMPANY", label: t("roleTransport") },
     { value: "CARGO_OWNER", label: t("roleCargoOwner") },
     { value: "FORWARDER", label: t("roleForwarder") },
-    { value: "USER", label: t("roleUser") },
   ];
 
   return (

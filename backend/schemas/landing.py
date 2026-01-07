@@ -103,6 +103,7 @@ class StepItemOut(BaseModel):
     counter: str
     title: str
     text: str
+    image: Optional[str] = None
 
 
 class StepsOut(BaseModel):
@@ -110,6 +111,7 @@ class StepsOut(BaseModel):
     title: str
     subtitle: str
     steps: List[StepItemOut]
+    step2_image: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -124,6 +126,7 @@ class StepsUpsert(BaseModel):
     step2_counter: str = Field(..., min_length=1)
     step2_title: str = Field(..., min_length=1)
     step2_text: str = Field(..., min_length=1)
+    step2_image: Optional[str] = None
     step3_counter: str = Field(..., min_length=1)
     step3_title: str = Field(..., min_length=1)
     step3_text: str = Field(..., min_length=1)

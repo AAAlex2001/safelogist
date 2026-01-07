@@ -93,8 +93,7 @@ class TelegramNotifier:
         role_names = {
             "TRANSPORT_COMPANY": "Транспортная компания",
             "CARGO_OWNER": "Грузовладелец",
-            "FORWARDER": "Экспедитор",
-            "USER": "Пользователь"
+            "FORWARDER": "Экспедитор"
         }
         role_display = role_names.get(user_role, user_role)
         

@@ -9,7 +9,7 @@ const ENDPOINTS = {
   deleteAccount: `${API_URL}/api/profile/delete`,
 } as const;
 
-export type UserRole = "TRANSPORT_COMPANY" | "CARGO_OWNER" | "FORWARDER" | "USER";
+export type UserRole = "TRANSPORT_COMPANY" | "CARGO_OWNER" | "FORWARDER";
 export type ActiveTab = "personal" | "security";
 
 export interface ProfileState {

@@ -28,7 +28,6 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  font-family: var(--font-base);
   transition: all 0.2s;
 
   &:hover {
@@ -91,7 +90,6 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
-    font-family: var(--font-base);
 
     &:focus {
       outline: none;
@@ -104,52 +102,63 @@
   }
 }
 
-.formRow {
+.faqList {
   display: flex;
-  gap: 12px;
-
-  .formGroup {
-    flex: 1;
-  }
-}
-
-.statsHeader {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 24px 0 16px;
-  color: #1a1a2e;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  flex-direction: column;
   gap: 16px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 }
 
-.statBlock {
+.faqItem {
   background: #f9f9f9;
   padding: 16px;
   border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.faqItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 
   h4 {
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 12px;
     color: #333;
+    margin: 0;
   }
+}
 
-  .formGroup {
-    margin-bottom: 12px;
+.deleteBtn {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  &:hover {
+    background: #c82333;
+  }
+}
+
+.addBtn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #218838;
   }
 }
 
@@ -163,7 +172,6 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: var(--font-base);
   transition: background 0.2s;
 
   &:hover {

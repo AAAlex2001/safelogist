@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import styles from "../hero/hero.module.scss";
+import styles from "./review-cta.module.scss";
 
 type ReviewCtaContent = {
   locale: string;

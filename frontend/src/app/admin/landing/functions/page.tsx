@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import styles from "../hero/hero.module.scss";
+import styles from "./functions.module.scss";
 
 type FunctionsContent = {
   locale: string;

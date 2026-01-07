@@ -28,7 +28,6 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  font-family: var(--font-base);
   transition: all 0.2s;
 
   &:hover {
@@ -91,7 +90,6 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
-    font-family: var(--font-base);
 
     &:focus {
       outline: none;
@@ -104,15 +102,6 @@
   }
 }
 
-.formRow {
-  display: flex;
-  gap: 12px;
-
-  .formGroup {
-    flex: 1;
-  }
-}
-
 .statsHeader {
   font-size: 16px;
   font-weight: 600;
@@ -122,7 +111,23 @@
   border-top: 1px solid #eee;
 }
 
-.statsGrid {
+.addBtn {
+  padding: 10px 20px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #218838;
+  }
+}
+
+.cardsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
@@ -132,25 +137,11 @@
   }
 }
 
-.statBlock {
-  background: #f9f9f9;
+.cardEdit {
+  border: 1px solid #ddd;
   padding: 16px;
-  border-radius: 6px;
-
-  h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #333;
-  }
-
-  .formGroup {
-    margin-bottom: 12px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  border-radius: 8px;
+  background: #f9f9f9;
 }
 
 .saveBtn {
@@ -163,7 +154,6 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: var(--font-base);
   transition: background 0.2s;
 
   &:hover {

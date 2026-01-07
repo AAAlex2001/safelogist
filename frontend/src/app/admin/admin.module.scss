@@ -2,6 +2,11 @@
   display: flex;
   min-height: 100vh;
   overflow-x: auto;
+  font-family: var(--font-base);
+
+  * {
+    font-family: var(--font-base) !important;
+  }
 }
 
 .sidebar {

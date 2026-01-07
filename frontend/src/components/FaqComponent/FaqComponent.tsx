@@ -53,7 +53,7 @@ export function FaqComponent({
           <div className={styles.answerInner}>
             <div 
               className={styles.answerText}
-              dangerouslySetInnerHTML={{ __html: answer!.replace(/\n/g, '<br />') }}
+              dangerouslySetInnerHTML={{ __html: answer! }}
             />
           </div>
         </div>

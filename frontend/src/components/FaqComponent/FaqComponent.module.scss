@@ -92,6 +92,46 @@
   color: var(--text-secondary);
   opacity: 0;
   transition: opacity 180ms ease;
+
+  :global(p) {
+    margin: 0 0 12px 0;
+  }
+
+  :global(h2) {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+    color: var(--text-primary);
+  }
+
+  :global(h3) {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 12px 0 8px 0;
+    color: var(--text-primary);
+  }
+
+  :global(ul),
+  :global(ol) {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  :global(li) {
+    margin: 6px 0;
+  }
+
+  :global(strong) {
+    font-weight: 600;
+  }
+
+  :global(em) {
+    font-style: italic;
+  }
+
+  :global(s) {
+    text-decoration: line-through;
+  }
 }
 
 .isOpen .answerText {

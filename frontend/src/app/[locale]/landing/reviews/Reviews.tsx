@@ -44,6 +44,8 @@ export default function Reviews({ content }: Props) {
                 authorCompany={item.author_company ?? undefined}
                 text={item.text}
                 rating={item.rating}
+                ratingLabel={item.rating_label}
+                fromLabel={item.from_label}
               />
             </SwiperSlide>
           ))}

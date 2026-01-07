@@ -210,6 +210,8 @@ class ReviewItemOut(BaseModel):
     author_avatar: Optional[str] = None
     rating: int
     text: str
+    from_label: Optional[str] = None
+    rating_label: Optional[str] = None
     order: int
 
     class Config:
@@ -223,6 +225,8 @@ class ReviewItemCreate(BaseModel):
     author_avatar: Optional[str] = None
     rating: int = Field(..., ge=1, le=5)
     text: str = Field(..., min_length=1)
+    from_label: Optional[str] = None
+    rating_label: Optional[str] = None
     order: int = 0
 
 
@@ -233,6 +237,8 @@ class ReviewItemUpdate(BaseModel):
     author_avatar: Optional[str] = None
     rating: Optional[int] = Field(None, ge=1, le=5)
     text: Optional[str] = Field(None, min_length=1)
+    from_label: Optional[str] = None
+    rating_label: Optional[str] = None
     order: Optional[int] = None
 
 

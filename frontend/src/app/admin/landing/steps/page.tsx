@@ -467,6 +467,19 @@ export default function StepsAdminPage() {
                           }}
                         />
                       </div>
+                      <div className={styles.formGroup}>
+                        <label>Текст "Рейтинг"</label>
+                        <input
+                          type="text"
+                          value={card.rating_label ?? "Рейтинг"}
+                          onChange={(e) => {
+                            const newCards = content.cards?.map(c => 
+                              c.id === card.id ? { ...c, rating_label: e.target.value } : c
+                            );
+                            setContent({ ...content, cards: newCards });
+                          }}
+                        />
+                      </div>
                     </>
                   ) : (
                     <>

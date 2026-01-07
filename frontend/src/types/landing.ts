@@ -79,6 +79,8 @@ export type ReviewItem = {
   author_avatar?: string | null;
   rating: number;
   text: string;
+  from_label?: string;
+  rating_label?: string;
   order: number;
 };
 

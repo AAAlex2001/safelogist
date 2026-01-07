@@ -304,6 +304,8 @@ class LandingReviewItem(Base):
     author_avatar = Column(String, nullable=True)  # URL фото
     rating = Column(Integer, nullable=False)  # 1-5
     text = Column(Text, nullable=False)
+    from_label = Column(String, nullable=True, comment='Текст "От:"')
+    rating_label = Column(String, nullable=True, comment='Текст "Рейтинг"')
     order = Column(Integer, default=0, nullable=False)
     
     created_at = Column(

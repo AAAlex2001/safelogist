@@ -18,6 +18,8 @@ type ReviewItem = {
   author_avatar?: string;
   rating: number;
   text: string;
+  from_label?: string;
+  rating_label?: string;
   order: number;
 };
 
@@ -99,6 +101,8 @@ export default function ReviewsAdminPage() {
               author_avatar: item.author_avatar,
               rating: item.rating,
               text: item.text,
+              from_label: item.from_label,
+              rating_label: item.rating_label,
               order: item.order,
             }),
           }
@@ -310,6 +314,32 @@ export default function ReviewsAdminPage() {
                         setContent({ ...content, items: newItems });
                       }}
                       rows={4}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Текст "От:"</label>
+                    <input
+                      type="text"
+                      value={item.from_label ?? "От:"}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, from_label: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Текст "Рейтинг"</label>
+                    <input
+                      type="text"
+                      value={item.rating_label ?? "Рейтинг"}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, rating_label: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>

@@ -5,11 +5,12 @@ import StarIcon from "@/icons/StarIcon";
 import LogoSmall from "@/icons/logoSmall";
 
 type ReviewCardProps = {
-  authorName: string;
-  authorRole: string;
+  authorName?: string;
+  authorRole?: string;
   authorCompany?: string | null;
-  text: string;
+  text?: string;
   rating?: number;
+  ratingLabel?: string;
   fromLabel?: string;
 };
 
@@ -18,8 +19,9 @@ export function ReviewCard({
   authorRole, 
   authorCompany,
   text,
-  rating = 5,
-  fromLabel = "От:"
+  rating,
+  ratingLabel,
+  fromLabel
 }: ReviewCardProps) {
   return (
     <div className={styles.card}>
@@ -42,10 +44,14 @@ export function ReviewCard({
 
       {rating && (
         <div className={styles.ratingRow}>
-          <div className={styles.stars} aria-hidden="true">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <StarIcon key={star} filled={star <= Math.round(rating)} />
-            ))}
+          <div className={styles.ratingLabel}>{ratingLabel}</div>
+          <div className={styles.ratingValue}>
+            <div className={styles.stars} aria-hidden="true">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <StarIcon key={star} filled={star <= Math.round(rating)} />
+              ))}
+            </div>
+            <div className={styles.ratingNumber}>{rating.toFixed(1)}</div>
           </div>
         </div>
       )}

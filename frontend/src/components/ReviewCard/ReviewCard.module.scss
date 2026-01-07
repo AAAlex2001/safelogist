@@ -71,6 +71,47 @@
   text-align: left;
 }
 
+.ratingRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 16px;
+  width: 100%;
+}
+
+.ratingLabel {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
+.ratingValue {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.stars svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ratingNumber {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
 .footer {
   display: flex;
   flex-direction: row;

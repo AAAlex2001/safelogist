@@ -547,36 +547,49 @@ async def upload_review_avatar(
 async def get_reviews_from_db(
     db: AsyncSession = Depends(get_db),
     limit: int = 20,
-    min_rating: int = 4,
 ):
-    """Получить список отзывов из основной базы для импорта"""
+    """Получить список компаний с отзывами для импорта (случайная выборка)"""
     from sqlalchemy import select
+    from models.company import Company
     from models.review import Review
 
+    # Берём случайные компании с отзывами
     stmt = (
-        select(Review)
-        .where(Review.rating >= min_rating)
-        .where(Review.comment.isnot(None))
-        .where(Review.reviewer.isnot(None))
-        .order_by(Review.review_date.desc())
+        select(Company)
+        .where(Company.reviews_count > 0)
+        .order_by(func.random())
         .limit(limit)
     )
 
     result = await db.execute(stmt)
-    reviews = result.scalars().all()
+    companies = result.scalars().all()
 
-    return [
-        {
-            "id": r.id,
-            "reviewer": r.reviewer,
-            "subject": r.subject,
-            "comment": r.comment,
-            "rating": r.rating,
-            "review_date": r.review_date.isoformat() if r.review_date else None,
-            "source": r.source,
-        }
-        for r in reviews
-    ]
+    # Для каждой компании берём один случайный отзыв
+    review_list = []
+    for company in companies:
+        # Берём случайный отзыв для этой компании
+        review_stmt = (
+            select(Review)
+            .where(Review.subject == company.name)
+            .order_by(func.random())
+            .limit(1)
+        )
+        review_result = await db.execute(review_stmt)
+        review = review_result.scalar()
+
+        if review:
+            review_list.append({
+                "id": review.id,
+                "reviewer": review.reviewer or "Аноним",
+                "subject": company.name,
+                "comment": review.comment or "Без комментария",
+                "rating": review.rating or 0,
+                "review_date": review.review_date.isoformat() if review.review_date else None,
+                "source": review.source,
+                "review_count": company.reviews_count,
+            })
+
+    return review_list
 
 
 @router.get("/landing/bot", response_model=BotOut)

@@ -41,8 +41,8 @@ export function ReviewCard({
         </div>
 
         <div className={styles.info}>
-          <div className={styles.label}>{authorRole}</div>
-          <div className={styles.contractor}>{authorCompany}</div>
+          <div className={styles.label}>{authorCompany}</div>
+          <div className={styles.contractor}>{authorRole}</div>
         </div>
       </div>
 

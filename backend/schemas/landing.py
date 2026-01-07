@@ -224,7 +224,7 @@ class ReviewItemCreate(BaseModel):
     author_role: str = Field(..., min_length=1)
     author_company: Optional[str] = None
     author_avatar: Optional[str] = None
-    rating: int = Field(..., ge=1, le=5)
+    rating: int = Field(..., ge=0, le=5)
     text: str = Field(..., min_length=1)
     from_label: Optional[str] = None
     rating_label: Optional[str] = None
@@ -236,7 +236,7 @@ class ReviewItemUpdate(BaseModel):
     author_role: Optional[str] = Field(None, min_length=1)
     author_company: Optional[str] = None
     author_avatar: Optional[str] = None
-    rating: Optional[int] = Field(None, ge=1, le=5)
+    rating: Optional[int] = Field(None, ge=0, le=5)
     text: Optional[str] = Field(None, min_length=1)
     from_label: Optional[str] = None
     rating_label: Optional[str] = None
@@ -301,23 +301,23 @@ class TariffsOut(BaseModel):
 
 
 class TariffsUpsert(BaseModel):
-    title: str = Field(..., min_length=1)
-    subtitle: str = Field(..., min_length=1)
-    card1_badge: str = Field(..., min_length=1)
-    card1_title: str = Field(..., min_length=1)
-    card1_price: str = Field(..., min_length=1)
-    card1_period: str = Field(..., min_length=1)
-    card1_note: str = Field(..., min_length=1)
-    card1_features: str = Field(..., min_length=1)
-    card1_cta: str = Field(..., min_length=1)
-    card2_badge: str = Field(..., min_length=1)
-    card2_title: str = Field(..., min_length=1)
-    card2_price: str = Field(..., min_length=1)
-    card2_period: str = Field(..., min_length=1)
-    card2_note: str = Field(..., min_length=1)
-    card2_features: str = Field(..., min_length=1)
-    card2_cta: str = Field(..., min_length=1)
-    card2_popular: bool = True
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    card1_badge: Optional[str] = None
+    card1_title: Optional[str] = None
+    card1_price: Optional[str] = None
+    card1_period: Optional[str] = None
+    card1_note: Optional[str] = None
+    card1_features: Optional[str] = None
+    card1_cta: Optional[str] = None
+    card2_badge: Optional[str] = None
+    card2_title: Optional[str] = None
+    card2_price: Optional[str] = None
+    card2_period: Optional[str] = None
+    card2_note: Optional[str] = None
+    card2_features: Optional[str] = None
+    card2_cta: Optional[str] = None
+    card2_popular: Optional[bool] = True
     card3_badge: str = Field(..., min_length=1)
     card3_title: str = Field(..., min_length=1)
     card3_price: str = Field(..., min_length=1)

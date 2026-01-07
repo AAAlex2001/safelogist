@@ -218,7 +218,7 @@ export default function ReviewsAdminPage() {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/import-from-db?limit=20&min_rating=4`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/import-from-db?limit=20`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error("Failed to load reviews");
@@ -240,9 +240,9 @@ export default function ReviewsAdminPage() {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({
             author_name: review.reviewer || "Аноним",
-            author_role: "Клиент",
+            author_role: `${review.review_count} отзывов`,
             author_company: review.subject || "",
-            rating: review.rating,
+            rating: review.rating || 0,
             text: review.comment || "",
             order: content.items.length,
           }),
@@ -543,16 +543,19 @@ export default function ReviewsAdminPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
-                          {review.reviewer || "Аноним"}
+                          От: {review.reviewer || "Аноним"}
+                        </div>
+                        <div style={{ fontSize: 14, color: "#666", marginBottom: 4 }}>
+                          Подрядчик: {review.subject}
                         </div>
                         <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                          Компания: {review.subject}
+                          Отзывов на компанию: {review.review_count || 0}
                         </div>
                         <div style={{ fontSize: 14, marginBottom: 8 }}>
-                          Рейтинг: {"⭐".repeat(review.rating)}
+                          Рейтинг: {"⭐".repeat(review.rating)} {review.rating}
                         </div>
-                        <div style={{ fontSize: 14, color: "#333" }}>{review.comment}</div>
-                        <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>
+                        <div style={{ fontSize: 14, color: "#333", marginBottom: 8 }}>{review.comment}</div>
+                        <div style={{ fontSize: 12, color: "#999" }}>
                           {review.review_date ? new Date(review.review_date).toLocaleDateString() : "Дата неизвестна"}
                           {review.source && ` • Источник: ${review.source}`}
                         </div>

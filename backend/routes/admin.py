@@ -542,6 +542,43 @@ async def upload_review_avatar(
 
     return {"image_url": image_url}
 
+
+@router.get("/landing/reviews/import-from-db")
+async def get_reviews_from_db(
+    db: AsyncSession = Depends(get_db),
+    limit: int = 20,
+    min_rating: int = 4,
+):
+    """Получить список отзывов из основной базы для импорта"""
+    from sqlalchemy import select
+    from models.review import Review
+
+    stmt = (
+        select(Review)
+        .where(Review.rating >= min_rating)
+        .where(Review.comment.isnot(None))
+        .where(Review.reviewer.isnot(None))
+        .order_by(Review.review_date.desc())
+        .limit(limit)
+    )
+
+    result = await db.execute(stmt)
+    reviews = result.scalars().all()
+
+    return [
+        {
+            "id": r.id,
+            "reviewer": r.reviewer,
+            "subject": r.subject,
+            "comment": r.comment,
+            "rating": r.rating,
+            "review_date": r.review_date.isoformat() if r.review_date else None,
+            "source": r.source,
+        }
+        for r in reviews
+    ]
+
+
 @router.get("/landing/bot", response_model=BotOut)
 async def admin_get_bot(
     lang: str = Query(..., min_length=2, max_length=10),

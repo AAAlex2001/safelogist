@@ -38,6 +38,8 @@ export default function ReviewsAdminPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importReviews, setImportReviews] = useState<any[]>([]);
 
   const fetchContent = useCallback(async (locale: string) => {
     setLoading(true);
@@ -212,6 +214,50 @@ export default function ReviewsAdminPage() {
     }
   };
 
+  const handleLoadImportReviews = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/import-from-db?limit=20&min_rating=4`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!res.ok) throw new Error("Failed to load reviews");
+      const data = await res.json();
+      setImportReviews(data);
+      setShowImportModal(true);
+    } catch {
+      setMessage({ type: "error", text: "Не удалось загрузить отзывы из базы" });
+    }
+  };
+
+  const handleImportReview = async (review: any) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items?lang=${selectedLocale}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            author_name: review.reviewer || "Аноним",
+            author_role: "Клиент",
+            author_company: review.subject || "",
+            rating: review.rating,
+            text: review.comment || "",
+            order: content.items.length,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to import review");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Отзыв импортирован!" });
+      // Убираем из списка импорта
+      setImportReviews(importReviews.filter(r => r.id !== review.id));
+    } catch {
+      setMessage({ type: "error", text: "Не удалось импортировать отзыв" });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Reviews секция</h1>
@@ -226,6 +272,25 @@ export default function ReviewsAdminPage() {
             {loc.toUpperCase()}
           </button>
         ))}
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <button
+          type="button"
+          onClick={handleLoadImportReviews}
+          style={{
+            background: "#6610f2",
+            color: "#fff",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: 6,
+            cursor: "pointer",
+            fontSize: 14,
+            fontWeight: 500,
+          }}
+        >
+          📥 Импортировать из базы данных
+        </button>
       </div>
 
       {message && <div className={`${styles.message} ${styles[message.type]}`}>{message.text}</div>}
@@ -412,6 +477,108 @@ export default function ReviewsAdminPage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {showImportModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+          onClick={() => setShowImportModal(false)}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "24px",
+              borderRadius: "8px",
+              maxWidth: "800px",
+              maxHeight: "80vh",
+              overflow: "auto",
+              width: "90%",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Импорт отзывов из базы</h2>
+              <button
+                onClick={() => setShowImportModal(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: 24,
+                  cursor: "pointer",
+                  padding: "0 8px",
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {importReviews.length === 0 ? (
+              <p>Нет отзывов для импорта</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {importReviews.map((review) => (
+                  <div
+                    key={review.id}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: 8,
+                      padding: 16,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
+                          {review.reviewer || "Аноним"}
+                        </div>
+                        <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
+                          Компания: {review.subject}
+                        </div>
+                        <div style={{ fontSize: 14, marginBottom: 8 }}>
+                          Рейтинг: {"⭐".repeat(review.rating)}
+                        </div>
+                        <div style={{ fontSize: 14, color: "#333" }}>{review.comment}</div>
+                        <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>
+                          {review.review_date ? new Date(review.review_date).toLocaleDateString() : "Дата неизвестна"}
+                          {review.source && ` • Источник: ${review.source}`}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleImportReview(review)}
+                        style={{
+                          padding: "8px 16px",
+                          background: "#28a745",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: 6,
+                          cursor: "pointer",
+                          fontSize: 14,
+                          flexShrink: 0,
+                          marginLeft: 16,
+                        }}
+                      >
+                        Импортировать
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

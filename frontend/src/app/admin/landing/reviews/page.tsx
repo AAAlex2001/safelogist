@@ -7,6 +7,18 @@ type ReviewsContent = {
   locale: string;
   title: string;
   subtitle: string;
+  items: ReviewItem[];
+};
+
+type ReviewItem = {
+  id: number;
+  author_name: string;
+  author_role: string;
+  author_company?: string;
+  author_avatar?: string;
+  rating: number;
+  text: string;
+  order: number;
 };
 
 const LOCALES = ["ru", "en", "uk", "ro"];
@@ -15,6 +27,7 @@ const emptyContent: ReviewsContent = {
   locale: "ru",
   title: "",
   subtitle: "",
+  items: [],
 };
 
 export default function ReviewsAdminPage() {
@@ -62,7 +75,10 @@ export default function ReviewsAdminPage() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          body: JSON.stringify(content),
+          body: JSON.stringify({
+            title: content.title,
+            subtitle: content.subtitle,
+          }),
         }
       );
       if (!res.ok) throw new Error("Failed to save");
@@ -74,8 +90,68 @@ export default function ReviewsAdminPage() {
     }
   };
 
-  const updateField = <K extends keyof ReviewsContent>(field: K, value: ReviewsContent[K]) => {
-    setContent((prev) => ({ ...prev, [field]: value }));
+  const handleAddReview = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items?lang=${selectedLocale}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            author_name: "Имя автора",
+            author_role: "Должность",
+            author_company: "Компания",
+            rating: 5,
+            text: "Текст отзыва",
+            order: content.items.length,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to add review");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Отзыв добавлен!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось добавить отзыв" });
+    }
+  };
+
+  const handleUpdateReview = async (itemId: number, updates: Partial<ReviewItem>) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items/${itemId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify(updates),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update review");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Отзыв обновлён!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось обновить отзыв" });
+    }
+  };
+
+  const handleDeleteReview = async (itemId: number) => {
+    if (!confirm("Удалить этот отзыв?")) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items/${itemId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error("Failed to delete review");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Отзыв удалён!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось удалить отзыв" });
+    }
   };
 
   return (
@@ -102,17 +178,112 @@ export default function ReviewsAdminPage() {
         <div className={styles.form}>
           <div className={styles.formGroup}>
             <label>Заголовок</label>
-            <input type="text" value={content.title} onChange={(e) => updateField("title", e.target.value)} />
+            <input
+              type="text"
+              value={content.title}
+              onChange={(e) => setContent((prev) => ({ ...prev, title: e.target.value }))}
+            />
           </div>
 
           <div className={styles.formGroup}>
             <label>Подзаголовок</label>
-            <input type="text" value={content.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
+            <textarea
+              rows={3}
+              value={content.subtitle}
+              onChange={(e) => setContent((prev) => ({ ...prev, subtitle: e.target.value }))}
+            />
           </div>
 
-          <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
-            {saving ? "Сохранение..." : "Сохранить"}
+          <button className={styles.saveBtn} onClick={handleSave} disabled={saving} style={{marginBottom: "24px"}}>
+            {saving ? "Сохранение..." : "Сохранить заголовки"}
           </button>
+
+          <h3 className={styles.statsHeader}>Отзывы</h3>
+          <button type="button" className={styles.addBtn} onClick={handleAddReview} style={{marginBottom: "16px"}}>
+            + Добавить отзыв
+          </button>
+
+          {content.items && content.items.length > 0 && (
+            <div className={styles.cardsGrid}>
+              {content.items.map((item) => (
+                <div key={item.id} className={styles.cardEdit} style={{border: "1px solid #ddd", padding: "16px", borderRadius: "8px"}}>
+                  <div className={styles.formGroup}>
+                    <label>Имя автора</label>
+                    <input
+                      type="text"
+                      value={item.author_name}
+                      onChange={(e) => handleUpdateReview(item.id, { author_name: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Должность</label>
+                    <input
+                      type="text"
+                      value={item.author_role}
+                      onChange={(e) => handleUpdateReview(item.id, { author_role: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Компания</label>
+                    <input
+                      type="text"
+                      value={item.author_company || ""}
+                      onChange={(e) => handleUpdateReview(item.id, { author_company: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Аватар (URL)</label>
+                    <input
+                      type="text"
+                      value={item.author_avatar || ""}
+                      onChange={(e) => handleUpdateReview(item.id, { author_avatar: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Рейтинг (1-5)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="5"
+                      value={item.rating}
+                      onChange={(e) => handleUpdateReview(item.id, { rating: parseInt(e.target.value) })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Текст отзыва</label>
+                    <textarea
+                      value={item.text}
+                      onChange={(e) => handleUpdateReview(item.id, { text: e.target.value })}
+                      rows={4}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Порядок</label>
+                    <input
+                      type="number"
+                      value={item.order}
+                      onChange={(e) => handleUpdateReview(item.id, { order: parseInt(e.target.value) })}
+                    />
+                  </div>
+                  <button 
+                    type="button" 
+                    onClick={() => handleDeleteReview(item.id)}
+                    style={{
+                      marginTop: "8px",
+                      padding: "8px 16px",
+                      background: "#dc3545",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Удалить отзыв
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

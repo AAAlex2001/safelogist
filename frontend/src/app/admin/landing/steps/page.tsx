@@ -17,6 +17,15 @@ type StepsContent = {
   step3_counter: string;
   step3_title: string;
   step3_text: string;
+  cards?: StepsCard[];
+};
+
+type StepsCard = {
+  id: number;
+  title: string;
+  description: string;
+  icon?: string;
+  order: number;
 };
 
 const LOCALES = ["ru", "en", "uk", "ro"];
@@ -35,6 +44,7 @@ const emptyContent: StepsContent = {
   step3_counter: "",
   step3_title: "",
   step3_text: "",
+  cards: [],
 };
 
 export default function StepsAdminPage() {
@@ -70,6 +80,7 @@ export default function StepsAdminPage() {
           step3_counter: data.steps[2]?.counter || "",
           step3_title: data.steps[2]?.title || "",
           step3_text: data.steps[2]?.text || "",
+          cards: data.cards || [],
         });
       } else if (res.status === 404) {
         setContent({ ...emptyContent, locale });
@@ -143,6 +154,67 @@ export default function StepsAdminPage() {
       setMessage({ type: "error", text: "Не удалось загрузить изображение" });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleAddCard = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps/cards?lang=${selectedLocale}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            title: "Новая карточка",
+            description: "Описание карточки",
+            order: content.cards?.length || 0,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to add card");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Карточка добавлена!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось добавить карточку" });
+    }
+  };
+
+  const handleUpdateCard = async (cardId: number, updates: Partial<StepsCard>) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps/cards/${cardId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify(updates),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update card");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Карточка обновлена!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось обновить карточку" });
+    }
+  };
+
+  const handleDeleteCard = async (cardId: number) => {
+    if (!confirm("Удалить эту карточку?")) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/steps/cards/${cardId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error("Failed to delete card");
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Карточка удалена!" });
+    } catch {
+      setMessage({ type: "error", text: "Не удалось удалить карточку" });
     }
   };
 
@@ -239,6 +311,59 @@ export default function StepsAdminPage() {
               </div>
             ))}
           </div>
+
+          <h3 className={styles.statsHeader}>Карточки для Step 3</h3>
+          <button type="button" className={styles.addBtn} onClick={handleAddCard} style={{marginBottom: "16px"}}>
+            + Добавить карточку
+          </button>
+          {content.cards && content.cards.length > 0 && (
+            <div className={styles.cardsGrid}>
+              {content.cards.map((card) => (
+                <div key={card.id} className={styles.cardEdit}>
+                  <div className={styles.formGroup}>
+                    <label>Заголовок</label>
+                    <input
+                      type="text"
+                      value={card.title}
+                      onChange={(e) => handleUpdateCard(card.id, { title: e.target.value })}
+                      onBlur={() => {}}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Описание</label>
+                    <textarea
+                      value={card.description}
+                      onChange={(e) => handleUpdateCard(card.id, { description: e.target.value })}
+                      rows={3}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Порядок</label>
+                    <input
+                      type="number"
+                      value={card.order}
+                      onChange={(e) => handleUpdateCard(card.id, { order: parseInt(e.target.value) })}
+                    />
+                  </div>
+                  <button 
+                    type="button" 
+                    onClick={() => handleDeleteCard(card.id)}
+                    style={{
+                      marginTop: "8px",
+                      padding: "8px 16px",
+                      background: "#dc3545",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Удалить
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
             {saving ? "Сохранение..." : "Сохранить"}

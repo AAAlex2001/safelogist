@@ -79,8 +79,19 @@ export function Steps({ content }: Props) {
             <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[2].title} />
             <Typography as="h2" size={18} desktopSize={18} text={data.steps[2].text} />
             <div className={styles.cards}>
-              <AssessmentCard />
-              <ReviewCard />
+              {data.cards && data.cards.length > 0 ? (
+                data.cards.map((card) => (
+                  <div key={card.id} className={styles.card}>
+                    <Typography as="h3" size={18} desktopSize={18} blue={true} text={card.title} />
+                    <Typography as="p" size={16} desktopSize={16} text={card.description} />
+                  </div>
+                ))
+              ) : (
+                <>
+                  <AssessmentCard />
+                  <ReviewCard />
+                </>
+              )}
             </div>
           </div>
         </div>

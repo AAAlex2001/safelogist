@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, UniqueConstraint, ForeignKey
+from sqlalchemy.orm import relationship
 
 from models.base import Base
 
@@ -253,3 +254,55 @@ class LandingFaq(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+
+class LandingStepsCard(Base):
+    __tablename__ = "landing_steps_cards"
+
+    id = Column(Integer, primary_key=True, index=True)
+    steps_id = Column(Integer, ForeignKey("landing_steps.id", ondelete="CASCADE"), nullable=False, index=True)
+    
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    icon = Column(String, nullable=True)  # URL или название иконки
+    order = Column(Integer, default=0, nullable=False)
+    
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+
+class LandingReviewItem(Base):
+    __tablename__ = "landing_reviews_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    reviews_id = Column(Integer, ForeignKey("landing_reviews.id", ondelete="CASCADE"), nullable=False, index=True)
+    
+    author_name = Column(String, nullable=False)
+    author_role = Column(String, nullable=False)  # Должность
+    author_company = Column(String, nullable=True)  # Компания
+    author_avatar = Column(String, nullable=True)  # URL фото
+    rating = Column(Integer, nullable=False)  # 1-5
+    text = Column(Text, nullable=False)
+    order = Column(Integer, default=0, nullable=False)
+    
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+

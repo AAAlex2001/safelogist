@@ -44,18 +44,16 @@ const META_BY_LOCALE: Record<string, { title: string; description: string }> = {
 
 async function fetchSection<T>(endpoint: string, locale: string): Promise<T | null> {
   try {
-    const res = await fetch(
-      `${API_URL}/api/landing/${endpoint}?lang=${encodeURIComponent(locale)}`,
-      { 
-        cache: "force-cache",
-        next: { revalidate: 3600 } // Кешировать на 1 час
-      }
-    );
+    const url = `${API_URL}/api/landing/${endpoint}?lang=${encodeURIComponent(locale)}`;
+    const res = await fetch(url, { 
+      cache: "force-cache",
+      next: { revalidate: 3600 }
+    });
     if (res.ok) {
       return await res.json();
     }
-  } catch {
-    console.error(`Failed to fetch ${endpoint}`);
+  } catch (error) {
+    console.error(`Failed to fetch ${endpoint}:`, error);
   }
   return null;
 }
@@ -122,8 +120,6 @@ export default async function Page({
 }) {
   const { locale } = await params;
   const content = await getLandingContent(locale);
-
-  // JSON-LD для FAQ
   const faqJsonLd = content.faq ? {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',

@@ -46,18 +46,39 @@ export type StepItem = {
   image?: string | null;
 };
 
+export type StepsCard = {
+  id: number;
+  title: string;
+  description: string;
+  icon?: string | null;
+  order: number;
+};
+
 export type StepsContent = {
   locale: string;
   title: string;
   subtitle: string;
   steps: StepItem[];
   step2_image?: string | null;
+  cards: StepsCard[];
+};
+
+export type ReviewItem = {
+  id: number;
+  author_name: string;
+  author_role: string;
+  author_company?: string | null;
+  author_avatar?: string | null;
+  rating: number;
+  text: string;
+  order: number;
 };
 
 export type ReviewsContent = {
   locale: string;
   title: string;
   subtitle: string;
+  items: ReviewItem[];
 };
 
 export type BotItem = {

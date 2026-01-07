@@ -106,12 +106,24 @@ class StepItemOut(BaseModel):
     image: Optional[str] = None
 
 
+class StepsCardOut(BaseModel):
+    id: int
+    title: str
+    description: str
+    icon: Optional[str] = None
+    order: int
+
+    class Config:
+        from_attributes = True
+
+
 class StepsOut(BaseModel):
     locale: str
     title: str
     subtitle: str
     steps: List[StepItemOut]
     step2_image: Optional[str] = None
+    cards: List[StepsCardOut]
 
     class Config:
         from_attributes = True
@@ -132,10 +144,25 @@ class StepsUpsert(BaseModel):
     step3_text: str = Field(..., min_length=1)
 
 
+class StepsCardCreate(BaseModel):
+    title: str = Field(..., min_length=1)
+    description: str = Field(..., min_length=1)
+    icon: Optional[str] = None
+    order: int = 0
+
+
+class StepsCardUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=1)
+    description: Optional[str] = Field(None, min_length=1)
+    icon: Optional[str] = None
+    order: Optional[int] = None
+
+
 class ReviewsOut(BaseModel):
     locale: str
     title: str
     subtitle: str
+    items: List['ReviewItemOut']
 
     class Config:
         from_attributes = True
@@ -144,6 +171,40 @@ class ReviewsOut(BaseModel):
 class ReviewsUpsert(BaseModel):
     title: str = Field(..., min_length=1)
     subtitle: str = Field(..., min_length=1)
+
+
+class ReviewItemOut(BaseModel):
+    id: int
+    author_name: str
+    author_role: str
+    author_company: Optional[str] = None
+    author_avatar: Optional[str] = None
+    rating: int
+    text: str
+    order: int
+
+    class Config:
+        from_attributes = True
+
+
+class ReviewItemCreate(BaseModel):
+    author_name: str = Field(..., min_length=1)
+    author_role: str = Field(..., min_length=1)
+    author_company: Optional[str] = None
+    author_avatar: Optional[str] = None
+    rating: int = Field(..., ge=1, le=5)
+    text: str = Field(..., min_length=1)
+    order: int = 0
+
+
+class ReviewItemUpdate(BaseModel):
+    author_name: Optional[str] = Field(None, min_length=1)
+    author_role: Optional[str] = Field(None, min_length=1)
+    author_company: Optional[str] = None
+    author_avatar: Optional[str] = None
+    rating: Optional[int] = Field(None, ge=1, le=5)
+    text: Optional[str] = Field(None, min_length=1)
+    order: Optional[int] = None
 
 
 class BotItemOut(BaseModel):

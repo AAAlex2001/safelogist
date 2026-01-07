@@ -8,7 +8,9 @@ from models.landing import (
     LandingReviewCta,
     LandingFunctions,
     LandingSteps,
+    LandingStepsCard,
     LandingReviews,
+    LandingReviewItem,
     LandingBot,
     LandingTariffs,
     LandingFaq,
@@ -24,8 +26,14 @@ from schemas.landing import (
     StepsOut,
     StepsUpsert,
     StepItemOut,
+    StepsCardOut,
+    StepsCardCreate,
+    StepsCardUpdate,
     ReviewsOut,
     ReviewsUpsert,
+    ReviewItemOut,
+    ReviewItemCreate,
+    ReviewItemUpdate,
     BotOut,
     BotUpsert,
     BotItemOut,
@@ -157,12 +165,21 @@ class LandingService:
             StepItemOut(counter=steps.step3_counter, title=steps.step3_title, text=steps.step3_text, image=None),
         ]
 
+        # Получаем карточки для шага 3
+        cards_result = await self.db.execute(
+            select(LandingStepsCard)
+            .where(LandingStepsCard.steps_id == steps.id)
+            .order_by(LandingStepsCard.order)
+        )
+        cards = [StepsCardOut.model_validate(card) for card in cards_result.scalars().all()]
+
         return StepsOut(
             locale=steps.locale,
             title=steps.title,
             subtitle=steps.subtitle,
             steps=step_items,
             step2_image=steps.step2_image,
+            cards=cards,
         )
 
     async def upsert_steps(self, locale: str, data: StepsUpsert) -> StepsOut:
@@ -189,7 +206,21 @@ class LandingService:
         reviews = result.scalar_one_or_none()
         if not reviews:
             return None
-        return ReviewsOut.model_validate(reviews)
+        
+        # Получаем отзывы
+        items_result = await self.db.execute(
+            select(LandingReviewItem)
+            .where(LandingReviewItem.reviews_id == reviews.id)
+            .order_by(LandingReviewItem.order)
+        )
+        items = [ReviewItemOut.model_validate(item) for item in items_result.scalars().all()]
+        
+        return ReviewsOut(
+            locale=reviews.locale,
+            title=reviews.title,
+            subtitle=reviews.subtitle,
+            items=items,
+        )
 
     async def upsert_reviews(self, locale: str, data: ReviewsUpsert) -> ReviewsOut:
         result = await self.db.execute(
@@ -373,3 +404,86 @@ class LandingService:
             tariffs=tariffs,
             faq=faq,
         )
+
+    # ===== Steps Cards CRUD =====
+    
+    async def create_steps_card(self, locale: str, data: StepsCardCreate) -> StepsCardOut:
+        # Получаем steps по локали
+        result = await self.db.execute(
+            select(LandingSteps).where(LandingSteps.locale == locale)
+        )
+        steps = result.scalar_one_or_none()
+        if not steps:
+            raise ValueError(f"Steps not found for locale {locale}")
+        
+        card = LandingStepsCard(steps_id=steps.id, **data.model_dump())
+        self.db.add(card)
+        await self.db.commit()
+        await self.db.refresh(card)
+        return StepsCardOut.model_validate(card)
+    
+    async def update_steps_card(self, card_id: int, data: StepsCardUpdate) -> StepsCardOut:
+        result = await self.db.execute(
+            select(LandingStepsCard).where(LandingStepsCard.id == card_id)
+        )
+        card = result.scalar_one_or_none()
+        if not card:
+            raise ValueError(f"Card {card_id} not found")
+        
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(card, key, value)
+        
+        await self.db.commit()
+        await self.db.refresh(card)
+        return StepsCardOut.model_validate(card)
+    
+    async def delete_steps_card(self, card_id: int) -> None:
+        result = await self.db.execute(
+            select(LandingStepsCard).where(LandingStepsCard.id == card_id)
+        )
+        card = result.scalar_one_or_none()
+        if card:
+            await self.db.delete(card)
+            await self.db.commit()
+    
+    # ===== Review Items CRUD =====
+    
+    async def create_review_item(self, locale: str, data: ReviewItemCreate) -> ReviewItemOut:
+        # Получаем reviews по локали
+        result = await self.db.execute(
+            select(LandingReviews).where(LandingReviews.locale == locale)
+        )
+        reviews = result.scalar_one_or_none()
+        if not reviews:
+            raise ValueError(f"Reviews not found for locale {locale}")
+        
+        item = LandingReviewItem(reviews_id=reviews.id, **data.model_dump())
+        self.db.add(item)
+        await self.db.commit()
+        await self.db.refresh(item)
+        return ReviewItemOut.model_validate(item)
+    
+    async def update_review_item(self, item_id: int, data: ReviewItemUpdate) -> ReviewItemOut:
+        result = await self.db.execute(
+            select(LandingReviewItem).where(LandingReviewItem.id == item_id)
+        )
+        item = result.scalar_one_or_none()
+        if not item:
+            raise ValueError(f"Review item {item_id} not found")
+        
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(item, key, value)
+        
+        await self.db.commit()
+        await self.db.refresh(item)
+        return ReviewItemOut.model_validate(item)
+    
+    async def delete_review_item(self, item_id: int) -> None:
+        result = await self.db.execute(
+            select(LandingReviewItem).where(LandingReviewItem.id == item_id)
+        )
+        item = result.scalar_one_or_none()
+        if item:
+            await self.db.delete(item)
+            await self.db.commit()
+

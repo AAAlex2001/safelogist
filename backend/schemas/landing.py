@@ -120,6 +120,7 @@ class StepsCardOut(BaseModel):
     author_role: Optional[str] = None
     author_company: Optional[str] = None
     review_text: Optional[str] = None
+    from_label: Optional[str] = None
     order: int
 
     class Config:

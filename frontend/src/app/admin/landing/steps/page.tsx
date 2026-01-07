@@ -110,7 +110,9 @@ export default function StepsAdminPage() {
     }
   };
 
-  co
+  const updateField = <K extends keyof StepsContent>(field: K, value: StepsContent[K]) => {
+    setContent((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -142,8 +144,6 @@ export default function StepsAdminPage() {
     } finally {
       setUploading(false);
     }
-  };nst updateField = <K extends keyof StepsContent>(field: K, value: StepsContent[K]) => {
-    setContent((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -175,35 +175,7 @@ export default function StepsAdminPage() {
 
           <div className={styles.formGroup}>
             <label>Подзаголовок</label>
-            <t  {i === 2 && (
-                  <div className={styles.formGroup}>
-                    <label>Изображение для Step 2</label>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/jpg,image/png,image/webp"
-                      onChange={handleImageUpload}
-                      disabled={uploading}
-                    />
-                    {uploading && <p style={{ fontSize: "12px", color: "#666" }}>Загрузка...</p>}
-                    {content.step2_image && (
-                      <div style={{ marginTop: "8px" }}>
-                        <img 
-                          src={`${process.env.NEXT_PUBLIC_API_URL}${content.step2_image}`} 
-                          alt="Step 2" 
-                          style={{ maxWidth: "200px", display: "block", marginTop: "8px" }}
-                        />
-                        <input
-                          type="text"
-                          value={content.step2_image}
-                          onChange={(e) => updateField("step2_image", e.target.value)}
-                          placeholder="URL изображения"
-                          style={{ marginTop: "8px", fontSize: "12px" }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              extarea rows={3} value={content.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
+            <textarea rows={3} value={content.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
           </div>
 
           <h3 className={styles.statsHeader}>Шаги</h3>
@@ -236,6 +208,34 @@ export default function StepsAdminPage() {
                     onChange={(e) => updateField(`step${i}_text` as keyof StepsContent, e.target.value)}
                   />
                 </div>
+                {i === 2 && (
+                  <div className={styles.formGroup}>
+                    <label>Изображение для Step 2</label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                    />
+                    {uploading && <p style={{ fontSize: "12px", color: "#666" }}>Загрузка...</p>}
+                    {content.step2_image && (
+                      <div style={{ marginTop: "8px" }}>
+                        <img 
+                          src={`${process.env.NEXT_PUBLIC_API_URL}${content.step2_image}`} 
+                          alt="Step 2" 
+                          style={{ maxWidth: "200px", display: "block", marginTop: "8px" }}
+                        />
+                        <input
+                          type="text"
+                          value={content.step2_image}
+                          onChange={(e) => updateField("step2_image", e.target.value)}
+                          placeholder="URL изображения"
+                          style={{ marginTop: "8px", fontSize: "12px" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

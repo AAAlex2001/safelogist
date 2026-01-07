@@ -20,7 +20,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: "SafeLogist — Проверенная информация о логистических компаниях",
-  description: "Честные отзывы о логистических компаниях, проверка надежности партнеров и подрядчиков. Безопасные решения для вашего бизнеса.",
+  description: "Сервис проверки и анализа транспортных и логистических компаний. Отзывы, судебные дела и оценка рисков сотрудничества на основе данных из официальных источников — SafeLogist.",
 };
 
 export function generateStaticParams() {
@@ -46,6 +46,13 @@ export default async function LocaleLayout({
   
   return (
     <html lang={locale}>
+      <head>
+        <link rel="alternate" hrefLang="ru" href="https://safelogist.com/ru" />
+        <link rel="alternate" hrefLang="en" href="https://safelogist.com/en" />
+        <link rel="alternate" hrefLang="uk" href="https://safelogist.com/uk" />
+        <link rel="alternate" hrefLang="ro" href="https://safelogist.com/ro" />
+        <link rel="alternate" hrefLang="x-default" href="https://safelogist.com/en" />
+      </head>
       <body className={montserrat.variable}>
         <TelegramWebApp />
         <NextIntlClientProvider messages={messages}>

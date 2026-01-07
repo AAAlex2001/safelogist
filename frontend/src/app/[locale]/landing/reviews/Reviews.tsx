@@ -8,25 +8,20 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import ArrowSwiper from "@/icons/Arrow";
+import type { ReviewsContent } from "@/types/landing";
 
-export default function Reviews() {
+type Props = {
+  content: ReviewsContent;
+};
+
+export default function Reviews({ content }: Props) {
+  const data = content;
+
   return (
     <section className={styles.reviews}>
       <div className={styles.headings}>
-        <Typography
-          as="h1"
-          size={24}
-          desktopSize={24}
-          blue={true}
-          text="Реальные отзывы о компаниях на платформе"
-        />
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text="Узнайте, как компании ведут себя на деле — по опыту других"
-          brown={true}
-        />
+        <Typography as="h1" size={24} desktopSize={24} blue={true} text={data.title} />
+        <Typography as="h2" size={18} desktopSize={18} text={data.subtitle} brown={true} />
       </div>
 
       <div className={styles.swiperWrap}>
@@ -37,7 +32,7 @@ export default function Reviews() {
             nextEl: `.${styles.btnNext}`,
           }}
           spaceBetween={24}
-          slidesPerView='auto'
+          slidesPerView="auto"
           className={styles.swiper}
           loop={true}
         >
@@ -49,10 +44,10 @@ export default function Reviews() {
         </Swiper>
 
         <div className={styles.slideBtns}>
-          <button type="button" className={styles.btnPrev} aria-label="Назад">
+          <button type="button" className={styles.btnPrev} aria-label="Back">
             <ArrowSwiper className={styles.arrow} />
           </button>
-          <button type="button" className={styles.btnNext} aria-label="Вперёд">
+          <button type="button" className={styles.btnNext} aria-label="Forward">
             <ArrowSwiper className={styles.arrow} />
           </button>
         </div>

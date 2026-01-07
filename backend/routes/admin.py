@@ -14,8 +14,25 @@ from models.user import User, UserRole
 from models.company_claim import CompanyClaim, ClaimStatus
 from models.review_request import ReviewRequest, ReviewRequestStatus
 from services.review_request_service import ReviewRequestService
-from services.landing.hero_service import HeroService
-from schemas.landing import HeroContentOut, HeroContentUpsert
+from services.landing import LandingService
+from schemas.landing import (
+    HeroContentOut,
+    HeroContentUpsert,
+    ReviewCtaOut,
+    ReviewCtaUpsert,
+    FunctionsOut,
+    FunctionsUpsert,
+    StepsOut,
+    StepsUpsert,
+    ReviewsOut,
+    ReviewsUpsert,
+    BotOut,
+    BotUpsert,
+    TariffsOut,
+    TariffsUpsert,
+    FaqOut,
+    FaqUpsert,
+)
 from fastapi import HTTPException
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
@@ -269,16 +286,15 @@ async def delete_review_request(request_id: int, db: AsyncSession = Depends(get_
     return {"message": "Заявка удалена"}
 
 
-# ===================== LANDING HERO =====================
+# ===================== LANDING =====================
 
 @router.get("/landing/hero", response_model=HeroContentOut)
 async def admin_get_hero(
     lang: str = Query(..., min_length=2, max_length=10),
     db: AsyncSession = Depends(get_db),
 ):
-    """Получить Hero контент для локали."""
-    service = HeroService(db)
-    hero = await service.get_by_locale(lang)
+    service = LandingService(db)
+    hero = await service.get_hero(lang)
     if not hero:
         raise HTTPException(status_code=404, detail="Hero content not found")
     return hero
@@ -290,7 +306,159 @@ async def admin_upsert_hero(
     lang: str = Query(..., min_length=2, max_length=10),
     db: AsyncSession = Depends(get_db),
 ):
-    """Создать или обновить Hero контент."""
-    service = HeroService(db)
-    hero = await service.upsert(lang, payload)
-    return hero
+    service = LandingService(db)
+    return await service.upsert_hero(lang, payload)
+
+
+@router.get("/landing/review-cta", response_model=ReviewCtaOut)
+async def admin_get_review_cta(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    cta = await service.get_review_cta(lang)
+    if not cta:
+        raise HTTPException(status_code=404, detail="ReviewCta content not found")
+    return cta
+
+
+@router.put("/landing/review-cta", response_model=ReviewCtaOut)
+async def admin_upsert_review_cta(
+    payload: ReviewCtaUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_review_cta(lang, payload)
+
+
+@router.get("/landing/functions", response_model=FunctionsOut)
+async def admin_get_functions(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    functions = await service.get_functions(lang)
+    if not functions:
+        raise HTTPException(status_code=404, detail="Functions content not found")
+    return functions
+
+
+@router.put("/landing/functions", response_model=FunctionsOut)
+async def admin_upsert_functions(
+    payload: FunctionsUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_functions(lang, payload)
+
+
+@router.get("/landing/steps", response_model=StepsOut)
+async def admin_get_steps(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    steps = await service.get_steps(lang)
+    if not steps:
+        raise HTTPException(status_code=404, detail="Steps content not found")
+    return steps
+
+
+@router.put("/landing/steps", response_model=StepsOut)
+async def admin_upsert_steps(
+    payload: StepsUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_steps(lang, payload)
+
+
+@router.get("/landing/reviews", response_model=ReviewsOut)
+async def admin_get_reviews(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    reviews = await service.get_reviews(lang)
+    if not reviews:
+        raise HTTPException(status_code=404, detail="Reviews content not found")
+    return reviews
+
+
+@router.put("/landing/reviews", response_model=ReviewsOut)
+async def admin_upsert_reviews(
+    payload: ReviewsUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_reviews(lang, payload)
+
+
+@router.get("/landing/bot", response_model=BotOut)
+async def admin_get_bot(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    bot = await service.get_bot(lang)
+    if not bot:
+        raise HTTPException(status_code=404, detail="Bot content not found")
+    return bot
+
+
+@router.put("/landing/bot", response_model=BotOut)
+async def admin_upsert_bot(
+    payload: BotUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_bot(lang, payload)
+
+
+@router.get("/landing/tariffs", response_model=TariffsOut)
+async def admin_get_tariffs(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    tariffs = await service.get_tariffs(lang)
+    if not tariffs:
+        raise HTTPException(status_code=404, detail="Tariffs content not found")
+    return tariffs
+
+
+@router.put("/landing/tariffs", response_model=TariffsOut)
+async def admin_upsert_tariffs(
+    payload: TariffsUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_tariffs(lang, payload)
+
+
+@router.get("/landing/faq", response_model=FaqOut)
+async def admin_get_faq(
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    faq = await service.get_faq(lang)
+    if not faq:
+        raise HTTPException(status_code=404, detail="FAQ content not found")
+    return faq
+
+
+@router.put("/landing/faq", response_model=FaqOut)
+async def admin_upsert_faq(
+    payload: FaqUpsert,
+    lang: str = Query(..., min_length=2, max_length=10),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LandingService(db)
+    return await service.upsert_faq(lang, payload)

@@ -8,29 +8,23 @@ import { SearchBar } from "@/components/SearchBar";
 import { AssessmentCard } from "@/components/AssessmentCard";
 import { ReviewCard } from "@/components/ReviewCard";
 import { DesktopStepsSwitcher } from "@/components/DesktopStepsSwitcher";
+import type { StepsContent } from "@/types/landing";
 
 type Step = 1 | 2 | 3;
 
-export function Steps() {
+type Props = {
+  content: StepsContent;
+};
+
+export function Steps({ content }: Props) {
   const [activeStep, setActiveStep] = useState<Step>(1);
+  const data = content;
 
   return (
     <section className={styles.steps}>
       <div className={styles.headings}>
-        <Typography
-          as="h1"
-          size={24}
-          desktopSize={24}
-          blue={true}
-          text="Мы поможем защитить ваш бизнес в 3 шага"
-        />
-        <Typography
-          as="h2"
-          size={18}
-          desktopSize={18}
-          text="Минимизируйте риски для вашего бизнеса: мы предоставляем полную информацию, вы принимаете взвешенное решение"
-          brown={true}
-        />
+        <Typography as="h1" size={24} desktopSize={24} blue={true} text={data.title} />
+        <Typography as="h2" size={18} desktopSize={18} text={data.subtitle} brown={true} />
       </div>
       <div className={styles.stepsWrapper} data-active-step={activeStep}>
         <DesktopStepsSwitcher activeStep={activeStep} onChange={setActiveStep} />
@@ -42,23 +36,12 @@ export function Steps() {
               size={20}
               desktopSize={20}
               blue={true}
-              weight={"normal"}
-              text="Шаг 1 из 3."
+              weight="normal"
+              text={data.steps[0].counter}
               className={styles.stepCounter}
             />
-            <Typography
-              as="h1"
-              size={20}
-              desktopSize={20}
-              blue={true}
-              text="Введите регистрационный/налоговый номер"
-            />
-            <Typography
-              as="h2"
-              size={18}
-              desktopSize={18}
-              text="Укажите интересующую организацию — мы начнём поиск по официальным источникам"
-            />
+            <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[0].title} />
+            <Typography as="h2" size={18} desktopSize={18} text={data.steps[0].text} />
             <SearchBar disabled={true} />
           </div>
 
@@ -68,25 +51,14 @@ export function Steps() {
               size={20}
               desktopSize={20}
               blue={true}
-              weight={"normal"}
-              text="Шаг 2 из 3."
+              weight="normal"
+              text={data.steps[1].counter}
               className={styles.stepCounter}
             />
-            <Typography
-              as="h1"
-              size={20}
-              desktopSize={20}
-              blue={true}
-              text="Изучите ключевую информацию об организации"
-            />
-            <Typography
-              as="h2"
-              size={18}
-              desktopSize={18}
-              text="Мы собираем судебные дела, отзывы, финансовые показатели и регистрационные данные в одном досье"
-            />
+            <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[1].title} />
+            <Typography as="h2" size={18} desktopSize={18} text={data.steps[1].text} />
             <div className={styles.stepImage}>
-              <Image src="/step.png" alt="Иллюстрация шага 2" width={340} height={200} />
+              <Image src="/step.png" alt="Step 2" width={340} height={200} />
             </div>
           </div>
 
@@ -96,23 +68,12 @@ export function Steps() {
               size={20}
               desktopSize={20}
               blue={true}
-              weight={"normal"}
-              text="Шаг 3 из 3."
+              weight="normal"
+              text={data.steps[2].counter}
               className={styles.stepCounter}
             />
-            <Typography
-              as="h1"
-              size={20}
-              desktopSize={20}
-              blue={true}
-              text="Оцените надёжность и примите взвешенное решение"
-            />
-            <Typography
-              as="h2"
-              size={18}
-              desktopSize={18}
-              text="Просматривайте готовое досье, чтобы быстро понять, можно ли доверять компании"
-            />
+            <Typography as="h1" size={20} desktopSize={20} blue={true} text={data.steps[2].title} />
+            <Typography as="h2" size={18} desktopSize={18} text={data.steps[2].text} />
             <div className={styles.cards}>
               <AssessmentCard />
               <ReviewCard />

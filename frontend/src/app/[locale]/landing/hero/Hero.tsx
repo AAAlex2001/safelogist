@@ -9,27 +9,9 @@ import StatsSourcesIcon from "@/icons/StatsSourcesIcon";
 import styles from "./Hero.module.scss";
 import { useEffect } from "react";
 import { animate, motion, useMotionValue, useTransform } from "framer-motion";
+import type { HeroContent } from "@/types/landing";
 
 type StatFormat = "int" | "comma";
-
-export type HeroContent = {
-  locale: string;
-  title: string;
-  title_highlight?: string | null;
-  subtitle: string;
-  stat_companies_label: string;
-  stat_companies_value: number;
-  stat_companies_suffix?: string | null;
-  stat_reviews_label: string;
-  stat_reviews_value: number;
-  stat_reviews_suffix?: string | null;
-  stat_countries_label: string;
-  stat_countries_value: number;
-  stat_countries_suffix?: string | null;
-  stat_sources_label: string;
-  stat_sources_value: number;
-  stat_sources_suffix?: string | null;
-};
 
 function AnimatedStatNumber({
   to,

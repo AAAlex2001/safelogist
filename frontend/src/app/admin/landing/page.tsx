@@ -4,10 +4,14 @@ import Link from "next/link";
 import styles from "../admin.module.scss";
 
 const landingSections = [
-  { href: "/admin/landing/hero", label: "Hero секция", description: "Заголовок, подзаголовок и статистика" },
-  // Будущие секции:
-  // { href: "/admin/landing/functions", label: "Функции", description: "Блок с функциями сервиса" },
-  // { href: "/admin/landing/steps", label: "Шаги", description: "Как это работает" },
+  { href: "/admin/landing/hero", label: "Hero", description: "Заголовок, подзаголовок и статистика" },
+  { href: "/admin/landing/review-cta", label: "ReviewCta", description: "Призыв к действию - оставить отзыв" },
+  { href: "/admin/landing/functions", label: "Functions", description: "Блок с функциями сервиса" },
+  { href: "/admin/landing/steps", label: "Steps", description: "3 шага - как это работает" },
+  { href: "/admin/landing/reviews", label: "Reviews", description: "Заголовок секции отзывов" },
+  { href: "/admin/landing/bot", label: "Bot", description: "Telegram бот - контент и ссылки" },
+  { href: "/admin/landing/tariffs", label: "Tariffs", description: "Тарифы - 3 карточки" },
+  { href: "/admin/landing/faq", label: "FAQ", description: "Часто задаваемые вопросы" },
 ];
 
 export default function LandingAdminPage() {

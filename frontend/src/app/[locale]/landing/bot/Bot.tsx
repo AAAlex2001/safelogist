@@ -1,76 +1,58 @@
-import React from "react";
 import styles from "./Bot.module.scss";
 import { Typography } from "@/components/Typography";
 import { CheckIconTG, SafeLogistBotQrCard } from "@/icons";
+import type { BotContent } from "@/types/landing";
 
-export default function Bot() {
+type Props = {
+  content: BotContent;
+};
+
+export default function Bot({ content }: Props) {
+  const data = content;
+
   return (
     <section className={styles.bot}>
       <div className={styles.headings}>
-        <Typography
-          as="h1"
-          size={24}
-          desktopSize={24}
-          blue={true}
-          text="Проверяйте компании прямо в Telegram"
-        />
+        <Typography as="h1" size={24} desktopSize={24} blue={true} text={data.title} />
 
         <h2 className={styles.subtitle}>
-          Откройте веб-приложение{" "}
+          {data.subtitle_text}{" "}
           <a
-            href="https://t.me/safelogist_bot"
+            href={data.subtitle_link_url}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.subtitleLink}
           >
-            SafeLogist
+            {data.subtitle_link_text}
           </a>
-          {" "}в один клик — без лишних шагов
+          {data.subtitle_after_link && ` ${data.subtitle_after_link}`}
         </h2>
       </div>
 
       <div className={styles.card}>
         <div className={styles.list}>
-          <div className={styles.listItem}>
-            <span className={styles.listIcon}>
-              <CheckIconTG size={24} />
-            </span>
-            <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Веб-приложение внутри Telegram" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Полный доступ к SafeLogist без браузера" />
+          {data.items.map((item, index) => (
+            <div key={index} className={styles.listItem}>
+              <span className={styles.listIcon}>
+                <CheckIconTG size={24} />
+              </span>
+              <div className={styles.listText}>
+                <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text={item.title} />
+                <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text={item.text} />
+              </div>
             </div>
-          </div>
-
-          <div className={styles.listItem}>
-            <span className={styles.listIcon}>
-              <CheckIconTG size={24} />
-            </span>
-            <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Быстрый поиск компании" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Введите регистрационный или налоговый номер" />
-            </div>
-          </div>
-
-          <div className={styles.listItem}>
-            <span className={styles.listIcon}>
-              <CheckIconTG size={24} />
-            </span>
-            <div className={styles.listText}>
-              <Typography as="h3" size={18} desktopSize={18} blue={true} white={true} weight="normal" text="Удобно на телефоне" />
-              <Typography as="h4" size={16} desktopSize={16} white={true} weight="normal" text="Проверяйте компании в дороге и на встречах" />
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className={styles.qrWrap}>
           <SafeLogistBotQrCard className={styles.qr} size={200} />
           <a
-            href="https://t.me/safelogist_bot"
+            href={data.bot_url}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.handle}
           >
-            @safelogist_bot
+            {data.bot_handle}
           </a>
         </div>
       </div>

@@ -74,3 +74,17 @@
   }
 }
 
+.arrow {
+  display: block;
+  width: 32px;
+  height: 32px;
+  color: currentColor;
+  flex: 0 0 auto;
+  transition: transform 300ms ease;
+}
+
+.button:hover .arrow,
+.button:focus-visible .arrow {
+  transform: translateX(5px);
+}
+

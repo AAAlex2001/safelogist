@@ -2,7 +2,8 @@
 
 import React, { FormEvent, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { InputField } from "@/components/input/InputField";
 import { StarRating } from "@/components/input/StarRating";
 import { Button } from "@/components/button/Button";
@@ -16,6 +17,8 @@ import styles from "./addReview.module.scss";
 export default function AddReviewPage() {
   const t = useTranslations("AddReview");
   const router = useRouter();
+  const params = useParams();
+  const { isLoggedIn } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -102,7 +105,7 @@ export default function AddReviewPage() {
                   value={state.form.targetCompany}
                   onChange={handleCompanyInput}
                   error={state.fieldErrors.targetCompany}
-                  disabled={state.submitting}
+                  disabled={!isLoggedIn || state.submitting}
                 />
 
                 {state.search.showDropdown && (
@@ -131,6 +134,7 @@ export default function AddReviewPage() {
                 value={state.form.rating}
                 onChange={setRating}
                 error={state.fieldErrors.rating}
+                disabled={!isLoggedIn}
               />
 
               <InputField
@@ -140,7 +144,7 @@ export default function AddReviewPage() {
                 value={state.form.comment}
                 onChange={setComment}
                 error={state.fieldErrors.comment}
-                disabled={state.submitting}
+                disabled={!isLoggedIn || state.submitting}
                 rows={3}
               />
             </div>
@@ -149,12 +153,13 @@ export default function AddReviewPage() {
               <div className={styles.fileUpload}>
                 <label className={styles.label}>{t("documentLabel")}</label>
                 <div className={styles.fileInputWrapper}>
-                  <Button variant="outline" fullWidth as="label" disabled={state.submitting}>
+                  <Button variant="outline" fullWidth as="label" disabled={!isLoggedIn || state.submitting}>
                     <input
                       type="file"
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={handleFileChange}
                       style={{ display: "none" }}
+                      disabled={!isLoggedIn}
                     />
                     {state.form.attachment ? state.form.attachment.name : t("selectFile")}
                   </Button>
@@ -191,12 +196,14 @@ export default function AddReviewPage() {
           </div>
 
           <Button 
-            type="submit" 
+            type={isLoggedIn ? "submit" : "button"}
             fullWidth 
-            disabled={state.submitting}
-            loading={state.submitting}
+            disabled={isLoggedIn && state.submitting}
+            loading={isLoggedIn && state.submitting}
+            onClick={!isLoggedIn ? () => router.push(`/${params.locale}/register`) : undefined}
+            showArrow={!isLoggedIn}
           >
-            {t("submitButton")}
+            {isLoggedIn ? t("submitButton") : t("registerButton")}
           </Button>
         </div>
       </form>

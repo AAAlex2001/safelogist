@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./button.module.scss";
+import { ArrowRightCtaIcon } from "@/icons";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ type ButtonProps = {
   fullWidth?: boolean;
   variant?: "primary" | "outline" | "tariff";
   as?: "button" | "label";
+  showArrow?: boolean;
 };
 
 export function Button({
@@ -22,6 +24,7 @@ export function Button({
   fullWidth = false,
   variant = "primary",
   as = "button",
+  showArrow = false,
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
@@ -35,7 +38,10 @@ export function Button({
   const content = loading ? (
     <span className={styles.spinner} aria-label="loading" />
   ) : (
-    children
+    <>
+      {children}
+      {showArrow && <ArrowRightCtaIcon className={styles.arrow} />}
+    </>
   );
 
   if (as === "label") {

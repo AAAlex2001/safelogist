@@ -157,6 +157,7 @@
     "docInvoice": "Товарная накладная",
     "docOther": "Другой документ, подтверждающий сотрудничество",
     "submitButton": "Отправить отзыв",
+    "registerButton": "Зарегистрироваться",
     "searching": "Поиск...",
     "noCompaniesFound": "Компании не найдены",
     "reviewsCount": "{count} отзывов"

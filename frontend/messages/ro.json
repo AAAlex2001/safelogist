@@ -157,6 +157,7 @@
     "docInvoice": "Factură",
     "docOther": "Alt document care confirmă cooperarea",
     "submitButton": "Trimite recenzia",
+    "registerButton": "Înregistrare",
     "searching": "Căutare...",
     "noCompaniesFound": "Nu s-au găsit companii",
     "reviewsCount": "{count} recenzii"

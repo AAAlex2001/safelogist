@@ -157,6 +157,7 @@
     "docInvoice": "Товарна накладна",
     "docOther": "Інший документ, що підтверджує співпрацю",
     "submitButton": "Надіслати відгук",
+    "registerButton": "Зареєструватися",
     "searching": "Пошук...",
     "noCompaniesFound": "Компанії не знайдено",
     "reviewsCount": "{count} відгуків"

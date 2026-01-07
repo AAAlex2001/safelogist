@@ -156,8 +156,7 @@
     "docAct": "Act of completed work",
     "docInvoice": "Waybill",
     "docOther": "Other document confirming cooperation",
-    "submitButton": "Submit Review",
-    "searching": "Searching...",
+    "submitButton": "Submit Review",    "registerButton": "Register",    "searching": "Searching...",
     "noCompaniesFound": "No companies found",
     "reviewsCount": "{count} reviews"
   },

@@ -28,11 +28,21 @@ def upgrade() -> None:
     # Пересоздаем enum без USER
     op.execute("ALTER TYPE userrole RENAME TO userrole_old")
     op.execute("CREATE TYPE userrole AS ENUM ('TRANSPORT_COMPANY', 'CARGO_OWNER', 'FORWARDER')")
+    
+    # Обновляем колонку role в таблице users
     op.execute("""
         ALTER TABLE users 
         ALTER COLUMN role TYPE userrole 
         USING role::text::userrole
     """)
+    
+    # Обновляем колонку industry в таблице company_claims
+    op.execute("""
+        ALTER TABLE company_claims 
+        ALTER COLUMN industry TYPE userrole 
+        USING industry::text::userrole
+    """)
+    
     op.execute("DROP TYPE userrole_old")
 
 
@@ -40,9 +50,19 @@ def downgrade() -> None:
     # Восстанавливаем enum с USER
     op.execute("ALTER TYPE userrole RENAME TO userrole_old")
     op.execute("CREATE TYPE userrole AS ENUM ('TRANSPORT_COMPANY', 'CARGO_OWNER', 'FORWARDER', 'USER')")
+    
+    # Обновляем колонку role в таблице users
     op.execute("""
         ALTER TABLE users 
         ALTER COLUMN role TYPE userrole 
         USING role::text::userrole
     """)
+    
+    # Обновляем колонку industry в таблице company_claims
+    op.execute("""
+        ALTER TABLE company_claims 
+        ALTER COLUMN industry TYPE userrole 
+        USING industry::text::userrole
+    """)
+    
     op.execute("DROP TYPE userrole_old")

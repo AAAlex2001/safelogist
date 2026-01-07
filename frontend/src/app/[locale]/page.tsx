@@ -119,6 +119,7 @@ export default async function Page({
 }) {
   const { locale } = await params;
   const content = await getLandingContent(locale);
+  
   const faqJsonLd = content.faq ? {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -132,12 +133,49 @@ export default async function Page({
     })),
   } : null;
 
+  const reviewsJsonLd = content.reviews?.items?.length ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'SafeLogist',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: (content.reviews.items.reduce((sum, item) => sum + item.rating, 0) / content.reviews.items.length).toFixed(1),
+      reviewCount: content.reviews.items.length,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: content.reviews.items.map((item) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: item.author_name,
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: item.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      reviewBody: item.text,
+      publisher: {
+        '@type': 'Organization',
+        name: item.author_company || 'Unknown',
+      },
+    })),
+  } : null;
+
   return (
     <div className={styles.landingWrap}>
       {faqJsonLd && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+      {reviewsJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
         />
       )}
       <main className={styles.landing}>

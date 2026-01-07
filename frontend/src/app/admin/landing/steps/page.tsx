@@ -26,7 +26,9 @@ type StepsCard = {
   description: string;
   icon?: string;
   reviews_count?: number;
+  reviews_text?: string;
   rating?: number;
+  rating_label?: string;
   order: number;
 };
 
@@ -171,7 +173,9 @@ export default function StepsAdminPage() {
             title: "Новая карточка",
             description: "Описание карточки",
             reviews_count: 24,
+            reviews_text: "отзывов о подрядчике",
             rating: 5.0,
+            rating_label: "Рейтинг",
             order: content.cards?.length || 0,
           }),
         }
@@ -350,6 +354,14 @@ export default function StepsAdminPage() {
                     />
                   </div>
                   <div className={styles.formGroup}>
+                    <label>Текст "отзывов о подрядчике"</label>
+                    <input
+                      type="text"
+                      value={card.reviews_text ?? "отзывов о подрядчике"}
+                      onChange={(e) => handleUpdateCard(card.id, { reviews_text: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
                     <label>Рейтинг (1-5)</label>
                     <input
                       type="number"
@@ -358,6 +370,14 @@ export default function StepsAdminPage() {
                       max="5"
                       value={card.rating ?? 5.0}
                       onChange={(e) => handleUpdateCard(card.id, { rating: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Текст "Рейтинг"</label>
+                    <input
+                      type="text"
+                      value={card.rating_label ?? "Рейтинг"}
+                      onChange={(e) => handleUpdateCard(card.id, { rating_label: e.target.value })}
                     />
                   </div>
                   <div className={styles.formGroup}>

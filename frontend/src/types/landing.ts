@@ -51,7 +51,9 @@ export type StepsCard = {
   title: string;
   description: string;
   icon?: string | null;  reviews_count?: number;
-  rating?: number;  order: number;
+  reviews_text?: string;
+  rating?: number;  rating_label?: string;
+  order: number;
 };
 
 export type StepsContent = {

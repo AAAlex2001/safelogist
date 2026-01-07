@@ -86,7 +86,9 @@ export function Steps({ content }: Props) {
                     title={card.title}
                     description={card.description}
                     reviewsCount={card.reviews_count}
+                    reviewsText={card.reviews_text}
                     rating={card.rating}
+                    ratingLabel={card.rating_label}
                   />
                 ) : (
                   <ReviewCard 

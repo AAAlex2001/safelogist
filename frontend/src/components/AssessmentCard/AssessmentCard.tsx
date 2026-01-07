@@ -7,10 +7,19 @@ type AssessmentCardProps = {
   title: string;
   description: string;
   reviewsCount?: number;
+  reviewsText?: string;
   rating?: number;
+  ratingLabel?: string;
 };
 
-export function AssessmentCard({ title, description, reviewsCount = 24, rating = 5.0 }: AssessmentCardProps) {
+export function AssessmentCard({ 
+  title, 
+  description, 
+  reviewsCount = 24, 
+  reviewsText = "отзывов о подрядчике",
+  rating = 5.0,
+  ratingLabel = "Рейтинг"
+}: AssessmentCardProps) {
   const displayRating = rating ?? 5.0;
   
   return (
@@ -26,10 +35,10 @@ export function AssessmentCard({ title, description, reviewsCount = 24, rating =
           </div>
         </div>
 
-        <div className={styles.reviewsRow}>{reviewsCount} отзыва о подрядчике</div>
+        <div className={styles.reviewsRow}>{reviewsCount} {reviewsText}</div>
 
         <div className={styles.ratingRow}>
-          <div className={styles.ratingLabel}>Рейтинг</div>
+          <div className={styles.ratingLabel}>{ratingLabel}</div>
           <div className={styles.stars} aria-hidden="true">
             {[1, 2, 3, 4, 5].map((star) => (
               <StarIcon key={star} filled={star <= Math.round(displayRating)} />
@@ -50,7 +59,7 @@ export function AssessmentCard({ title, description, reviewsCount = 24, rating =
           </div>
         </div>
 
-        <div className={styles.reviewsRow}>{reviewsCount} отзывов о подрядчике</div>
+        <div className={styles.reviewsRow}>{reviewsCount} {reviewsText}</div>
       </div>
     </div>
   );

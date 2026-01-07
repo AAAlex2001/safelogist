@@ -70,7 +70,9 @@ export default function ReviewsAdminPage() {
     setMessage(null);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(
+      
+      // Сохраняем заголовки
+      const headersRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews?lang=${selectedLocale}`,
         {
           method: "PUT",
@@ -81,10 +83,33 @@ export default function ReviewsAdminPage() {
           }),
         }
       );
-      if (!res.ok) throw new Error("Failed to save");
-      setMessage({ type: "success", text: "Контент сохранён!" });
-    } catch {
-      setMessage({ type: "error", text: "Не удалось сохранить контент" });
+      if (!headersRes.ok) throw new Error("Failed to save headers");
+
+      // Сохраняем все отзывы
+      for (const item of content.items) {
+        const itemRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/admin/landing/reviews/items/${item.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+              author_name: item.author_name,
+              author_role: item.author_role,
+              author_company: item.author_company,
+              author_avatar: item.author_avatar,
+              rating: item.rating,
+              text: item.text,
+              order: item.order,
+            }),
+          }
+        );
+        if (!itemRes.ok) throw new Error(`Failed to save review ${item.id}`);
+      }
+
+      await fetchContent(selectedLocale);
+      setMessage({ type: "success", text: "Все изменения сохранены!" });
+    } catch (err) {
+      setMessage({ type: "error", text: "Не удалось сохранить изменения" });
     } finally {
       setSaving(false);
     }
@@ -194,8 +219,8 @@ export default function ReviewsAdminPage() {
             />
           </div>
 
-          <button className={styles.saveBtn} onClick={handleSave} disabled={saving} style={{marginBottom: "24px"}}>
-            {saving ? "Сохранение..." : "Сохранить заголовки"}
+          <button className={styles.saveBtn} onClick={handleSave} disabled={saving} style={{marginTop: "24px"}}>
+            {saving ? "Сохранение..." : "Сохранить всё"}
           </button>
 
           <h3 className={styles.statsHeader}>Отзывы</h3>
@@ -212,7 +237,12 @@ export default function ReviewsAdminPage() {
                     <input
                       type="text"
                       value={item.author_name}
-                      onChange={(e) => handleUpdateReview(item.id, { author_name: e.target.value })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, author_name: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -220,7 +250,12 @@ export default function ReviewsAdminPage() {
                     <input
                       type="text"
                       value={item.author_role}
-                      onChange={(e) => handleUpdateReview(item.id, { author_role: e.target.value })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, author_role: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -228,7 +263,12 @@ export default function ReviewsAdminPage() {
                     <input
                       type="text"
                       value={item.author_company || ""}
-                      onChange={(e) => handleUpdateReview(item.id, { author_company: e.target.value })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, author_company: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -236,7 +276,12 @@ export default function ReviewsAdminPage() {
                     <input
                       type="text"
                       value={item.author_avatar || ""}
-                      onChange={(e) => handleUpdateReview(item.id, { author_avatar: e.target.value })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, author_avatar: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -246,14 +291,24 @@ export default function ReviewsAdminPage() {
                       min="1"
                       max="5"
                       value={item.rating}
-                      onChange={(e) => handleUpdateReview(item.id, { rating: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, rating: parseInt(e.target.value) } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <div className={styles.formGroup}>
                     <label>Текст отзыва</label>
                     <textarea
                       value={item.text}
-                      onChange={(e) => handleUpdateReview(item.id, { text: e.target.value })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, text: e.target.value } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                       rows={4}
                     />
                   </div>
@@ -262,7 +317,12 @@ export default function ReviewsAdminPage() {
                     <input
                       type="number"
                       value={item.order}
-                      onChange={(e) => handleUpdateReview(item.id, { order: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const newItems = content.items.map(i => 
+                          i.id === item.id ? { ...i, order: parseInt(e.target.value) } : i
+                        );
+                        setContent({ ...content, items: newItems });
+                      }}
                     />
                   </div>
                   <button 

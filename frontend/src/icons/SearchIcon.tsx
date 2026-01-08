@@ -4,7 +4,7 @@ type SearchIconProps = {
   height?: number;
 };
 
-export default function SearchIcon({ className, width = 14, height = 14 }: SearchIconProps) {
+export default function SearchIcon({ className, width = 22, height = 22 }: SearchIconProps) {
   return (
     <svg
       width={width}

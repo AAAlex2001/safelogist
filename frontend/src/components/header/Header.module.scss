@@ -19,15 +19,26 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-  max-width: 1675px;
+  max-width: 1635px;
   padding: 0 20px;
   margin: 0 auto;
+  gap: 14px;
+
+  @media (min-width: 1440px) {
+    justify-content: space-between;
+    gap: 24px;
+  }
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+
+  @media (min-width: 1440px) {
+    flex: none;
+    order: 0;
+  }
 }
 
 .logoLink {
@@ -53,10 +64,151 @@
 
 .headerNav {
   display: none;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    order: 1;
+  }
+}
+
+.headerControls {
+  display: none;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    order: 2;
+    flex-shrink: 0;
+  }
 }
 
 .headerRight {
   display: none;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    order: 3;
+    flex-shrink: 0;
+  }
+}
+
+.loginButton {
+  min-width: 100px !important;
+  padding: 10px 20px !important;
+}
+
+.registerButton {
+  min-width: 180px !important;
+  padding: 10px 24px !important;
+}
+
+.regionSelector {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.regionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 24px;
+  min-width: 200px;
+  height: 40px;
+  border-radius: 24px;
+  border: 2px solid var(--input-border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  font-size: 16px;
+  line-height: 28px;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}
+
+.regionButtonOpen {
+  border-color: var(--primary);
+  border-radius: 24px 24px 0 0;
+  border-bottom: none;
+}
+
+.regionArrow {
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.regionArrowOpen {
+  transform: rotate(180deg);
+}
+
+.regionDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 200px;
+  background: var(--card-bg);
+  border: 2px solid var(--primary);
+  border-top: none;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  z-index: 1001;
+}
+
+.regionOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: var(--font-base);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  color: var(--text-primary);
+  width: 100%;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.userIcons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 10px;
 }
 
 .burgerMenu {
@@ -71,6 +223,10 @@
   padding: 0;
   z-index: 1001;
   position: relative;
+
+  @media (min-width: 1440px) {
+    display: none;
+  }
 }
 
 .burgerMenu span {
@@ -96,15 +252,24 @@
 }
 
 .navLink {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 11px 8px;
+  height: 41px;
+  border-radius: 25px;
+  font-family: var(--font-base);
   font-size: 16px;
   font-weight: 400;
+  line-height: 19px;
   color: var(--text-primary);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .navLink:hover {
+  background: rgba(1, 42, 249, 0.05);
   color: var(--primary);
 }
 
@@ -133,19 +298,26 @@
 
 .btnLogin,
 .btnRegister {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-base);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21px;
   text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   padding: 10px 20px;
-  border-radius: 8px;
+  height: 41px;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .btnLogin {
-  background: var(--card-bg);
+  background: #ffffff;
   color: var(--primary);
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
+  box-sizing: border-box;
 }
 
 .btnLogin:hover {
@@ -157,7 +329,7 @@
 .btnRegister {
   background: var(--primary);
   color: #ffffff;
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .btnRegister:hover {
@@ -199,7 +371,7 @@
 .iconButton {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--icon-bg, rgba(0, 0, 0, 0.05));
   border-radius: 50px;
   border: none;
   display: flex;
@@ -208,20 +380,23 @@
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 0;
-}
+  text-decoration: none;
+  color: var(--text-primary);
 
-.iconButton:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
-}
+  &:hover {
+    background: var(--icon-bg-hover, rgba(0, 0, 0, 0.1));
+    transform: scale(1.05);
+  }
 
-.iconButton:active {
-  transform: scale(0.95);
-}
+  &:active {
+    transform: scale(0.95);
+  }
 
-.iconButton svg {
-  width: 22px;
-  height: 22px;
+  svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-primary);
+  }
 }
 
 .profilePhoto {
@@ -229,4 +404,119 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.themeBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--toggle-bg);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  flex: none;
+  order: 0;
+  color: var(--text-primary);
+
+  &:hover {
+    background: var(--icon-bg-hover, rgba(0, 0, 0, 0.1));
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-primary);
+  }
+}
+
+.langContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  width: 56px;
+  height: 40px;
+  flex: none;
+  order: 1;
+}
+
+.langBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  font-family: var(--font-base);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  span {
+    font-size: 16px;
+  }
+}
+
+.langDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 120px;
+  background: var(--card-bg);
+  border: 1px solid var(--header-border, rgba(229, 229, 229, 0.5));
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1002;
+}
+
+.langOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: var(--font-base);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background: rgba(1, 42, 249, 0.1);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 14px;
+  }
 }

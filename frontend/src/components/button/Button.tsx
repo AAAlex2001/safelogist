@@ -13,6 +13,7 @@ type ButtonProps = {
   variant?: "primary" | "outline" | "tariff";
   as?: "button" | "label";
   showArrow?: boolean;
+  className?: string;
 };
 
 export function Button({
@@ -25,6 +26,7 @@ export function Button({
   variant = "primary",
   as = "button",
   showArrow = false,
+  className = "",
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
@@ -33,6 +35,7 @@ export function Button({
     fullWidth ? styles.fullWidth : "",
     variant === "outline" ? styles.outline : "",
     variant === "tariff" ? styles.tariff : "",
+    className,
   ].filter(Boolean).join(" ");
 
   const content = loading ? (

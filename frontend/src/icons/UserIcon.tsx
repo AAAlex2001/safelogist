@@ -1,8 +1,14 @@
-export default function UserIcon({ className }: { className?: string }) {
+type UserIconProps = {
+  className?: string;
+  width?: number;
+  height?: number;
+};
+
+export default function UserIcon({ className, width = 22, height = 22 }: UserIconProps) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path d="M13.3333 14V12.6667C13.3333 11.9594 13.0524 11.2811 12.5523 10.781C12.0522 10.281 11.3739 10 10.6667 10H5.33333C4.62609 10 3.94781 10.281 3.44772 10.781C2.94762 11.2811 2.66667 11.9594 2.66667 12.6667V14" fill="#4D4D4D"/>
-      <path d="M8 7.33333C9.47276 7.33333 10.6667 6.13943 10.6667 4.66667C10.6667 3.19391 9.47276 2 8 2C6.52724 2 5.33333 3.19391 5.33333 4.66667C5.33333 6.13943 6.52724 7.33333 8 7.33333Z" fill="#4D4D4D"/>
+    <svg width={width} height={height} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M18 19V17C18 15.9391 17.5786 14.9217 16.8284 14.1716C16.0783 13.4214 15.0609 13 14 13H8C6.93913 13 5.92172 13.4214 5.17157 14.1716C4.42143 14.9217 4 15.9391 4 17V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M11 10C13.2091 10 15 8.20914 15 6C15 3.79086 13.2091 2 11 2C8.79086 2 7 3.79086 7 6C7 8.20914 8.79086 10 11 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }

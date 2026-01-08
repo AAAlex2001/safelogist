@@ -16,16 +16,20 @@
   width: fit-content;
   gap: 10px;
   flex: 1;
-  height: 38px;
+  min-height: 38px;
+  padding: 5px 15px;
   background: rgba(236, 236, 240, 0.2);
   border-radius: 25px;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 28px;
   font-family: var(--font-base);
   color: var(--text-primary);
   cursor: pointer;
   transition: background 0.2s ease;
+  @media (min-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 .iconWrapper {

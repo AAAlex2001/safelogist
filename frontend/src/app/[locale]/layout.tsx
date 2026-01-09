@@ -6,10 +6,12 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import "../globals.css";
-import Header from "../../components/header/Header";
+import { Header } from "@/widgets/header";
+import { BurgerMenu } from "@/widgets/burger-menu";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TelegramWebApp } from "@/components/telegram/TelegramWebApp";
+import { BurgerMenuProvider } from "@/shared/burger-menu";
 
 const montserrat = Montserrat({
   variable: "--font-base",
@@ -59,8 +61,11 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <AuthProvider>
-              <Header />
-              {children}
+              <BurgerMenuProvider>
+                <Header />
+                <BurgerMenu />
+                {children}
+              </BurgerMenuProvider>
             </AuthProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

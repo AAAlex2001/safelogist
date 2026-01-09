@@ -45,6 +45,7 @@
   display: block;
   font-size: 16px;
   font-weight: 400;
+  font-family: var(--font-base);
   color: var(--text-primary);
   text-decoration: none;
   transition: color 0.2s ease;
@@ -77,7 +78,7 @@
 
     & > span {
       color: var(--text-secondary);
-      font-family: BlinkMacSystemFont;
+      font-family: var(--font-base);
       font-weight: 400;
       font-style: Regular;
       font-size: 16px;

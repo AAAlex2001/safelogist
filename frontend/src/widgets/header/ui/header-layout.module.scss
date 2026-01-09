@@ -15,6 +15,7 @@
 
 .HeaderLayout_container {
   width: 100%;
+  max-width: 1635px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -28,12 +29,6 @@
   }
   @media (min-width: 1920px) {
     gap: 12px;
-  }
-
-  &.logged {
-    @media (min-width: 1440px) {
-      padding: 0 144px;
-    }
   }
 }
 
@@ -94,11 +89,6 @@
   letter-spacing: 0%;
   text-align: center;
   vertical-align: middle;
-  @media (min-width: 1920px) {
-    font-size: 18px;
-    padding: 11px 16px;
-    height: 43px;
-  }
 }
 
 .navLink:hover {

@@ -114,6 +114,15 @@ TRANSLATIONS = {
         "auth_required_text": "Текст отзыва доступен после входа",
         "register_button": "Зарегистрироваться",
         "login_button": "Войти",
+        # Header navigation
+        "nav_about": "О сервисе",
+        "nav_features": "Функции",
+        "nav_pricing": "Тарифы",
+        "nav_contacts": "Контакты",
+        "change_theme": "Сменить тему",
+        "menu": "Меню",
+        "leave_review": "Оставить отзыв",
+        "profile_button": "Профиль",
     },
     "en": {
         "list_title": "All company reviews",
@@ -223,6 +232,15 @@ TRANSLATIONS = {
         "auth_required_text": "Review text available after login",
         "register_button": "Register",
         "login_button": "Log in",
+        # Header navigation
+        "nav_about": "About",
+        "nav_features": "Features",
+        "nav_pricing": "Pricing",
+        "nav_contacts": "Contacts",
+        "change_theme": "Change theme",
+        "menu": "Menu",
+        "leave_review": "Leave a review",
+        "profile_button": "Profile",
     },
     "uk": {
         "list_title": "Усі відгуки компаній",
@@ -332,6 +350,15 @@ TRANSLATIONS = {
         "auth_required_text": "Текст відгуку доступний після входу",
         "register_button": "Зареєструватися",
         "login_button": "Увійти",
+        # Header navigation
+        "nav_about": "Про сервіс",
+        "nav_features": "Функції",
+        "nav_pricing": "Тарифи",
+        "nav_contacts": "Контакти",
+        "change_theme": "Змінити тему",
+        "menu": "Меню",
+        "leave_review": "Залишити відгук",
+        "profile_button": "Профіль",
     },
     "ro": {
         "list_title": "Toate recenziile companiilor",
@@ -439,6 +466,15 @@ TRANSLATIONS = {
         # Autorizare pentru vizualizarea recenziilor        "auth_required_heading": "Pentru a vizualiza recenziile complet, este necesară autentificarea",        "auth_required_text": "Textul recenziei disponibil după autentificare",
         "register_button": "Înregistrare",
         "login_button": "Autentificare",
+        # Header navigation
+        "nav_about": "Despre",
+        "nav_features": "Funcții",
+        "nav_pricing": "Tarife",
+        "nav_contacts": "Contacte",
+        "change_theme": "Schimbă tema",
+        "menu": "Meniu",
+        "leave_review": "Lasă o recenzie",
+        "profile_button": "Profil",
     },
 }
 

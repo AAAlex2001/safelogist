@@ -158,6 +158,9 @@ export function useLogin() {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userEmail", data.email || email);
 
+        // Save token to cookie for backend SSR pages
+        document.cookie = `authToken=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+
         if (data.company_name) {
           localStorage.setItem("companyName", data.company_name);
         }

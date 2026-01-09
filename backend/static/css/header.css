@@ -585,3 +585,529 @@ body {
     padding-top: 64px;
 }
 
+/* ===== Logged-in User Header Styles ===== */
+
+.HeaderLayout_HeaderRight--logged {
+    display: none;
+}
+
+@media (min-width: 1440px) {
+    .HeaderLayout_HeaderRight--logged {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+        order: 3;
+        flex-shrink: 0;
+    }
+}
+
+/* Region Selector */
+.regionSelector {
+    position: relative;
+}
+
+.regionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 200px;
+    height: 40px;
+    padding: 0 16px;
+    background: transparent;
+    border: 2px solid #0d0d0d;
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0d0d0d;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .regionButton {
+    border-color: #eaeaea;
+    color: #eaeaea;
+}
+
+.regionButton:hover {
+    border-color: #012af9;
+    color: #012af9;
+}
+
+[data-theme="dark"] .regionButton:hover {
+    border-color: #3958ff;
+    color: #3958ff;
+}
+
+.regionLabel {
+    opacity: 0.7;
+}
+
+.regionValue {
+    font-weight: 600;
+}
+
+.regionArrow {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.regionButton.active .regionArrow {
+    transform: rotate(180deg);
+}
+
+.regionDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    padding: 8px;
+    display: none;
+    z-index: 1100;
+}
+
+[data-theme="dark"] .regionDropdown {
+    background: #252542;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.regionDropdown.active {
+    display: block;
+}
+
+.regionOption {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0d0d0d;
+    text-align: left;
+    transition: background 0.2s ease;
+}
+
+[data-theme="dark"] .regionOption {
+    color: #eaeaea;
+}
+
+.regionOption:hover {
+    background: rgba(1, 42, 249, 0.1);
+}
+
+.regionOption.selected {
+    background: rgba(1, 42, 249, 0.15);
+    color: #012af9;
+}
+
+[data-theme="dark"] .regionOption.selected {
+    color: #3958ff;
+}
+
+/* User Icons */
+.userIcons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.IconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #0d0d0d;
+    text-decoration: none;
+}
+
+[data-theme="dark"] .IconButton {
+    background: rgba(255, 255, 255, 0.1);
+    color: #eaeaea;
+}
+
+.IconButton:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+[data-theme="dark"] .IconButton:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.IconButton svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* ===== Mobile Logged-in User Menu ===== */
+
+.mobileRegionSelector {
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .mobileRegionSelector {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.regionSelector--mobile {
+    width: 100%;
+}
+
+.regionSelector--mobile .regionButton {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.mobileUserLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mobileUserLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 8px;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #0d0d0d;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .mobileUserLink {
+    color: #eaeaea;
+}
+
+.mobileUserLink:hover {
+    background: rgba(1, 42, 249, 0.05);
+    color: #012af9;
+}
+
+[data-theme="dark"] .mobileUserLink:hover {
+    background: rgba(57, 88, 255, 0.1);
+    color: #3958ff;
+}
+
+.mobileUserLink svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* ===== Logged-in User Burger Menu Styles ===== */
+
+.BurgerMenu--logged {
+    gap: 0;
+    width: auto;
+    max-width: 332px;
+    padding: 16px 16px 8px;
+}
+
+.BurgerMenu--logged.active {
+    gap: 0;
+}
+
+/* Profile Section */
+.profileSection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.avatarCircle {
+    width: 42px;
+    height: 42px;
+    background: #EBEBEB;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #717182;
+}
+
+[data-theme="dark"] .avatarCircle {
+    background: #404060;
+    color: #a0a0b0;
+}
+
+.avatarPhoto {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.userName {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #0d0d0d;
+}
+
+[data-theme="dark"] .userName {
+    color: #eaeaea;
+}
+
+.userEmail {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #717182;
+    word-break: break-word;
+}
+
+[data-theme="dark"] .userEmail {
+    color: #a0a0b0;
+}
+
+.userPlan {
+    display: inline-flex;
+    padding: 5px 10px;
+    background: #ABBCFF;
+    border-radius: 8px;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #0d0d0d;
+    align-self: flex-start;
+    margin-top: 6px;
+}
+
+[data-theme="dark"] .userPlan {
+    background: #3958ff;
+    color: #ffffff;
+}
+
+/* Requests Stats */
+.requestsStats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(113, 113, 130, 0.2);
+    margin-bottom: 8px;
+}
+
+.requestsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.requestsLabel {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: #717182;
+}
+
+[data-theme="dark"] .requestsLabel {
+    color: #a0a0b0;
+}
+
+.requestsCount {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    color: #0d0d0d;
+}
+
+[data-theme="dark"] .requestsCount {
+    color: #eaeaea;
+}
+
+.progressBar {
+    width: 100%;
+    height: 6px;
+    background: #E5E7EA;
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .progressBar {
+    background: #404060;
+}
+
+.progressFill {
+    height: 100%;
+    background: #012AF9;
+    border-radius: 100px;
+    transition: width 0.3s ease;
+}
+
+[data-theme="dark"] .progressFill {
+    background: #3958ff;
+}
+
+/* Menu Tabs */
+.menuTabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(113, 113, 130, 0.2);
+    margin-bottom: 8px;
+}
+
+.menuTabs > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+    text-decoration: none;
+}
+
+.menuTabs > a > span {
+    color: #717182;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+}
+
+[data-theme="dark"] .menuTabs > a > span {
+    color: #a0a0b0;
+}
+
+.menuTabs > a:hover {
+    background: rgba(1, 42, 249, 0.1);
+}
+
+[data-theme="dark"] .menuTabs > a:hover {
+    background: rgba(57, 88, 255, 0.15);
+}
+
+.menuTabs > a > svg {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    color: #717182;
+}
+
+[data-theme="dark"] .menuTabs > a > svg {
+    color: #a0a0b0;
+}
+
+.menuBadge {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: rgba(65, 0, 204, 0.5);
+    width: fit-content;
+    padding: 0 8px;
+    border: 1px solid rgba(65, 0, 204, 0.5);
+    border-radius: 100px;
+    margin-left: auto;
+}
+
+[data-theme="dark"] .menuBadge {
+    color: rgba(171, 188, 255, 0.7);
+    border-color: rgba(171, 188, 255, 0.5);
+}
+
+/* Logout Button */
+.logoutButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.logoutButton > span {
+    color: #717182;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    transition: color 0.2s ease;
+}
+
+[data-theme="dark"] .logoutButton > span {
+    color: #a0a0b0;
+}
+
+.logoutButton > svg {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    color: #717182;
+    transition: color 0.2s ease;
+}
+
+[data-theme="dark"] .logoutButton > svg {
+    color: #a0a0b0;
+}
+
+.logoutButton:hover {
+    background: #FEF3F2;
+}
+
+[data-theme="dark"] .logoutButton:hover {
+    background: rgba(231, 0, 11, 0.15);
+}
+
+.logoutButton:hover > svg {
+    color: #E7000B;
+}
+
+.logoutButton:hover > span {
+    color: #E7000B;
+}

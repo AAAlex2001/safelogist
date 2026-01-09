@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import Depends, HTTPException, status, Request
+from fastapi import Depends, HTTPException, status, Request, Cookie
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -56,6 +56,34 @@ async def get_current_user_optional(
     
     # Проверяем и декодируем токен
     token_data = decode_access_token(credentials.credentials)
+    if token_data is None:
+        return None
+
+    # Достаём user_id из поля sub
+    user_id = token_data.sub
+
+    # Ищем пользователя в базе
+    query = select(User).where(User.id == user_id)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    return user
+
+
+async def get_user_from_cookie(
+    request: Request,
+    db: AsyncSession = Depends(get_db)
+) -> Optional[User]:
+    """
+    Получает пользователя из cookie access_token.
+    Используется для серверного рендеринга страниц.
+    """
+    token = request.cookies.get("access_token")
+    if not token:
+        return None
+
+    # Проверяем и декодируем токен
+    token_data = decode_access_token(token)
     if token_data is None:
         return None
 

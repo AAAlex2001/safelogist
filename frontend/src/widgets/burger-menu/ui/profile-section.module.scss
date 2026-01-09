@@ -1,0 +1,73 @@
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.avatarCircle {
+  width: 42px;
+  height: 42px;
+  background: #EBEBEB;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarCircle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.avatarPhoto {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.userName {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-primary);
+}
+
+.userEmail {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.userPlan {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  background: #ABBCFF;
+  border-radius: 8px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--text-primary);
+  align-self: flex-start;
+  margin-top: 6px;
+}

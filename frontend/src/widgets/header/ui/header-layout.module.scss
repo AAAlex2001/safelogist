@@ -1,0 +1,132 @@
+.HeaderLayout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--header-bg, rgba(255, 255, 255, 0.3));
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--header-border, rgba(229, 229, 229, 0.5));
+  border-top: 1px solid var(--header-border, rgba(229, 229, 229, 0.5));
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.HeaderLayout_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 20px;
+  margin: 0 auto;
+  gap: 16px;
+  @media (min-width: 1440px) {
+    padding: 0 50px;
+  }
+  @media (min-width: 1920px) {
+    gap: 12px;
+  }
+
+  &.logged {
+    @media (min-width: 1440px) {
+      padding: 0 144px;
+    }
+  }
+}
+
+.HeaderLayout_Left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  @media (min-width: 1440px) {
+    flex: none;
+    order: 0;
+  }
+}
+
+.HeaderLayout_Controls {
+  display: none;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 9px;
+    order: 2;
+    flex-shrink: 0;
+  }
+  @media (min-width: 1920px) {
+    gap: 14px;
+  }
+}
+
+.HeaderLayout_Nav {
+  display: none;
+  position: relative;
+  top: 2px;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    order: 1;
+  }
+}
+
+.navLink {
+  padding: 11px 8px;
+  height: 41px;
+  border-radius: 25px;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  @media (min-width: 1920px) {
+    font-size: 18px;
+    padding: 11px 16px;
+    height: 43px;
+  }
+}
+
+.navLink:hover {
+  background: rgba(1, 42, 249, 0.05);
+  color: var(--primary);
+}
+
+.HeaderLayout_HeaderRight {
+  display: none;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    order: 3;
+    flex-shrink: 0;
+  }
+  @media (min-width: 1920px) {
+    gap: 10px;
+  }
+}
+
+.userIcons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 10px;
+}

@@ -1,0 +1,90 @@
+.regionSelector {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.regionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 22px;
+  min-width: 200px;
+  height: 40px;
+  border-radius: 24px;
+  border: 2px solid var(--input-border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  font-size: 16px;
+  line-height: 28px;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}
+
+.regionButtonOpen {
+  border-color: var(--primary);
+  border-radius: 24px 24px 0 0;
+  border-bottom: none;
+}
+
+.regionArrow {
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.regionArrowOpen {
+  transform: rotate(180deg);
+}
+
+.regionDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 200px;
+  background: var(--card-bg);
+  border: 2px solid var(--primary);
+  border-top: none;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  z-index: 1001;
+}
+
+.regionOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: var(--font-base);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  color: var(--text-primary);
+  width: 100%;
+
+  &:hover {
+    color: var(--primary);
+  }
+}

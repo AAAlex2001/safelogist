@@ -1,0 +1,50 @@
+.requestsStats {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.requestsHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 5px;
+}
+
+.requestsLabel {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.requestsCount {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #CDCCD0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--text-secondary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}

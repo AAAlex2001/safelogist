@@ -64,9 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         userEmailDisplay.textContent = userData.email || '';
                     }
                     // Update avatar if available (API returns 'photo' field)
+                    // Update in burger menu
                     const avatarCircle = document.querySelector('.avatarCircle');
                     if (avatarCircle && userData.photo) {
-                        avatarCircle.innerHTML = `<img src="${userData.photo}" alt="" class="avatarPhoto">`;
+                        avatarCircle.innerHTML = `<img src="${userData.photo}" alt="Avatar" class="avatarPhoto">`;
+                    }
+                    // Update profile button icon
+                    if (profileMenuButton && userData.photo) {
+                        profileMenuButton.innerHTML = `<img src="${userData.photo}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;">`;
                     }
                 } else if (response.status === 401) {
                     // Token is invalid - clear and show not-logged UI
@@ -358,39 +363,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoutButton = document.getElementById('logoutButton');
 
     if (logoutButton) {
-        logoutButton.addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
+        logoutButton.addEventListener('click', () => {
+            // Очищаем localStorage
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('isLoggedIn');
 
-                if (response.ok) {
-                    // Очищаем localStorage
-                    localStorage.removeItem('access_token');
-                    localStorage.removeItem('refresh_token');
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('isLoggedIn');
+            // Очищаем cookie
+            document.cookie = 'authToken=; path=/; max-age=0';
 
-                    // Очищаем cookie
-                    document.cookie = 'authToken=; path=/; max-age=0';
+            // Определяем текущий язык для редиректа
+            const pathParts = window.location.pathname.split('/').filter(p => p);
+            const lang = pathParts[0] && ['ru', 'en', 'ro', 'uk'].includes(pathParts[0]) ? pathParts[0] : 'ru';
 
-                    // Определяем текущий язык для редиректа
-                    const pathParts = window.location.pathname.split('/').filter(p => p);
-                    const lang = pathParts[0] && ['ru', 'en', 'ro', 'uk'].includes(pathParts[0]) ? pathParts[0] : 'ru';
-
-                    // Перенаправляем на страницу логина
-                    window.location.href = '/' + lang + '/login';
-                } else {
-                    console.error('Logout failed');
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                // В случае ошибки всё равно перенаправляем на логин
-                const pathParts = window.location.pathname.split('/').filter(p => p);
-                const lang = pathParts[0] && ['ru', 'en', 'ro', 'uk'].includes(pathParts[0]) ? pathParts[0] : 'ru';
-                window.location.href = '/' + lang + '/login';
-            }
+            // Перенаправляем на страницу логина
+            window.location.href = '/' + lang + '/login';
         });
     }
 

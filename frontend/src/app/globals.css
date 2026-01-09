@@ -16,6 +16,12 @@
   --header-bg: rgba(255, 255, 255, 0.3);
   --header-border: rgba(229, 229, 229, 0.5);
   --toggle-bg: #e5e7ea;
+  --logout-hover-bg: #FEF3F2;
+  --logout-hover-color: #E7000B;
+  --progress-bar-bg: #CDCCD0;
+  --progress-fill-bg: #717182;
+  --icon-bg: rgba(0, 0, 0, 0.05);
+  --icon-bg-hover: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] {
@@ -34,6 +40,12 @@
   --header-bg: rgba(30, 30, 50, 0.95);
   --header-border: rgba(100, 100, 140, 0.3);
   --toggle-bg: #404060;
+  --logout-hover-bg: rgba(231, 0, 11, 0.15);
+  --logout-hover-color: #E7000B;
+  --progress-bar-bg: #404060;
+  --progress-fill-bg: #3958ff;
+  --icon-bg: rgba(255, 255, 255, 0.1);
+  --icon-bg-hover: rgba(255, 255, 255, 0.15);
 }
 
 html,

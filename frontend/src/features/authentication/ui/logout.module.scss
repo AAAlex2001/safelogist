@@ -12,9 +12,9 @@
 
   & > span {
     color: var(--text-secondary);
-    font-family: BlinkMacSystemFont;
+    font-family: var(--font-base);
     font-weight: 400;
-    font-style: Regular;
+    font-style: normal;
     font-size: 16px;
     line-height: 100%;
     transition: color .2s ease 0s;
@@ -31,14 +31,14 @@
   }
 
   &:hover {
-    background: #FEF3F2;
+    background: var(--logout-hover-bg);
     & > svg {
       & > path {
-        stroke: #E7000B;
+        stroke: var(--logout-hover-color);
       }
     }
     & > span {
-      color: #E7000B;
+      color: var(--logout-hover-color);
     }
   }
 }

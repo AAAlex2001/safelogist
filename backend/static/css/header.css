@@ -257,6 +257,10 @@
     padding: 0 8px;
 }
 
+.BurgerMenu .navLink:last-of-type {
+    margin-bottom: 12px;
+}
+
 [data-theme="dark"] .BurgerMenu .navLink {
     color: #eaeaea;
 }
@@ -275,6 +279,7 @@
     align-items: center;
     gap: 12px;
     position: relative;
+    margin-bottom: 12px;
 }
 
 .buttonsContainer {
@@ -287,6 +292,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-bottom: 12px;
 }
 
 .buttonsContainerBottom {
@@ -585,74 +591,115 @@ body {
     padding-top: 64px;
 }
 
-/* ===== Logged-in User Header Styles ===== */
+/* ===== Auth State Visibility Classes ===== */
 
-.HeaderLayout_HeaderRight--logged {
-    display: none;
+/* Hide elements when logged in */
+.HeaderLayout_HeaderRight.is-hidden,
+.HeaderLayout_Nav.is-hidden,
+#burgerMenuNotLogged.is-hidden {
+    display: none !important;
 }
 
+/* Not logged burger menu */
+#burgerMenuNotLogged {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Show logged burger menu */
+#burgerMenuLogged {
+    display: none;
+}
+#burgerMenuLogged.is-visible {
+    display: block;
+}
+
+/* ===== Logged-in User Header Styles ===== */
+
+/* On mobile (<1440px) - ALWAYS hide the logged-in header section */
+.HeaderLayout_HeaderRight--logged {
+    display: none !important;
+}
+
+/* On desktop (>=1440px) - show logged-in header if user is logged in */
 @media (min-width: 1440px) {
-    .HeaderLayout_HeaderRight--logged {
-        display: flex;
+    .HeaderLayout_HeaderRight--logged.is-logged-in {
+        display: flex !important;
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        gap: 20px;
+        gap: 8px;
         order: 3;
         flex-shrink: 0;
     }
 }
 
-/* Region Selector */
+@media (min-width: 1920px) {
+    .HeaderLayout_HeaderRight--logged.is-logged-in {
+        gap: 10px;
+    }
+}
+
+/* Region Selector - pixel perfect from frontend */
 .regionSelector {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .regionButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    padding: 6px 22px;
     min-width: 200px;
     height: 40px;
-    padding: 0 16px;
-    background: transparent;
-    border: 2px solid #0d0d0d;
     border-radius: 24px;
-    cursor: pointer;
+    border: 2px solid rgba(1, 42, 249, 0.1);
+    background: var(--card-bg, #ffffff);
+    box-shadow: var(--card-shadow, none);
+    font-size: 16px;
+    line-height: 28px;
     font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: #0d0d0d;
+    color: var(--text-primary, #0d0d0d);
+    cursor: pointer;
     transition: all 0.2s ease;
+    font-weight: 400;
 }
 
 [data-theme="dark"] .regionButton {
-    border-color: #eaeaea;
+    border-color: rgba(255, 255, 255, 0.15);
     color: #eaeaea;
+    background: #252542;
 }
 
 .regionButton:hover {
     border-color: #012af9;
-    color: #012af9;
 }
 
 [data-theme="dark"] .regionButton:hover {
     border-color: #3958ff;
-    color: #3958ff;
 }
 
-.regionLabel {
-    opacity: 0.7;
+.regionButton.active {
+    border-color: #012af9;
+    border-radius: 24px 24px 0 0;
+    border-bottom: none;
 }
 
-.regionValue {
-    font-weight: 600;
+[data-theme="dark"] .regionButton.active {
+    border-color: #3958ff;
 }
 
 .regionArrow {
-    transition: transform 0.2s ease;
+    color: inherit;
+    transition: all 0.2s ease;
     flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    display: block;
 }
 
 .regionButton.active .regionArrow {
@@ -661,40 +708,49 @@ body {
 
 .regionDropdown {
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     left: 0;
     right: 0;
+    min-width: 200px;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    padding: 8px;
+    border: 2px solid #012af9;
+    border-top: none;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 16px 24px;
     display: none;
-    z-index: 1100;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    z-index: 1001;
 }
 
 [data-theme="dark"] .regionDropdown {
     background: #252542;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    border-color: #3958ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .regionDropdown.active {
-    display: block;
+    display: flex;
 }
 
 .regionOption {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    background: transparent;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: left;
-    transition: background 0.2s ease;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 400;
+    color: #0d0d0d;
+    width: 100%;
 }
 
 [data-theme="dark"] .regionOption {
@@ -702,39 +758,40 @@ body {
 }
 
 .regionOption:hover {
-    background: rgba(1, 42, 249, 0.1);
-}
-
-.regionOption.selected {
-    background: rgba(1, 42, 249, 0.15);
     color: #012af9;
 }
 
-[data-theme="dark"] .regionOption.selected {
+[data-theme="dark"] .regionOption:hover {
     color: #3958ff;
 }
 
-/* User Icons */
+.regionOption.selected {
+    display: none;
+}
+
+/* User Icons - pixel perfect from frontend */
 .userIcons {
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 0;
     gap: 10px;
 }
 
 .IconButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 40px;
     height: 40px;
     background: rgba(0, 0, 0, 0.05);
-    border: none;
     border-radius: 50px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #0d0d0d;
+    padding: 0;
     text-decoration: none;
+    color: #0d0d0d;
 }
 
 [data-theme="dark"] .IconButton {
@@ -751,10 +808,14 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
+.IconButton:active {
+    transform: scale(0.95);
+}
+
 .IconButton svg {
     width: 22px;
     height: 22px;
-    flex-shrink: 0;
+    color: inherit;
 }
 
 /* ===== Mobile Logged-in User Menu ===== */
@@ -924,24 +985,26 @@ body {
 .requestsStats {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(113, 113, 130, 0.2);
-    margin-bottom: 8px;
+    padding: 0;
+    gap: 6px;
+    margin-bottom: 20px;
 }
 
 .requestsHeader {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
+    gap: 5px;
 }
 
 .requestsLabel {
     font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     font-weight: 400;
     font-size: 14px;
-    line-height: 100%;
+    line-height: 24px;
     color: #717182;
+    flex: 1;
 }
 
 [data-theme="dark"] .requestsLabel {
@@ -950,9 +1013,10 @@ body {
 
 .requestsCount {
     font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 14px;
-    line-height: 100%;
+    line-height: 24px;
+    text-align: right;
     color: #0d0d0d;
 }
 
@@ -961,10 +1025,11 @@ body {
 }
 
 .progressBar {
+    position: relative;
     width: 100%;
-    height: 6px;
-    background: #E5E7EA;
-    border-radius: 100px;
+    height: 8px;
+    background: #CDCCD0;
+    border-radius: 4px;
     overflow: hidden;
 }
 
@@ -973,9 +1038,12 @@ body {
 }
 
 .progressFill {
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 100%;
-    background: #012AF9;
-    border-radius: 100px;
+    background: #717182;
+    border-radius: 4px;
     transition: width 0.3s ease;
 }
 
@@ -1031,8 +1099,26 @@ body {
     color: #717182;
 }
 
+.menuTabs > a > svg path {
+    stroke: #717182;
+}
+
+.menuTabs > a > svg path[fill="currentColor"] {
+    fill: #717182;
+    stroke: none;
+}
+
 [data-theme="dark"] .menuTabs > a > svg {
     color: #a0a0b0;
+}
+
+[data-theme="dark"] .menuTabs > a > svg path {
+    stroke: #a0a0b0;
+}
+
+[data-theme="dark"] .menuTabs > a > svg path[fill="currentColor"] {
+    fill: #a0a0b0;
+    stroke: none;
 }
 
 .menuBadge {
@@ -1044,11 +1130,13 @@ body {
     font-size: 14px;
     line-height: 100%;
     color: rgba(65, 0, 204, 0.5);
+    flex: 0 0 auto;
     width: fit-content;
     padding: 0 8px;
     border: 1px solid rgba(65, 0, 204, 0.5);
     border-radius: 100px;
     margin-left: auto;
+    white-space: nowrap;
 }
 
 [data-theme="dark"] .menuBadge {

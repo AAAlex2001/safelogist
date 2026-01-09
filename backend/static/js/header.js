@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const token = localStorage.getItem('access_token') || localStorage.getItem('authToken') || getCookie('authToken');
 
         if (token) {
-            // User is logged in - show logged-in UI
-            if (headerLoggedIn) headerLoggedIn.style.display = 'flex';
-            if (headerNotLoggedIn) headerNotLoggedIn.style.display = 'none';
-            if (headerNav) headerNav.style.display = 'none';
-            if (burgerMenuLogged) burgerMenuLogged.style.display = 'block';
-            if (burgerMenuNotLogged) burgerMenuNotLogged.style.display = 'none';
+            // User is logged in - show logged-in UI via classes
+            if (headerLoggedIn) headerLoggedIn.classList.add('is-logged-in');
+            if (headerNotLoggedIn) headerNotLoggedIn.classList.add('is-hidden');
+            if (headerNav) headerNav.classList.add('is-hidden');
+            if (burgerMenuLogged) burgerMenuLogged.classList.add('is-visible');
+            if (burgerMenuNotLogged) burgerMenuNotLogged.classList.add('is-hidden');
 
             // Add logged class to burger menu panel
             if (burgerMenuPanel) burgerMenuPanel.classList.add('BurgerMenu--logged');
@@ -63,6 +63,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (userEmailDisplay) {
                         userEmailDisplay.textContent = userData.email || '';
                     }
+                    // Update avatar if available (API returns 'photo' field)
+                    const avatarCircle = document.querySelector('.avatarCircle');
+                    if (avatarCircle && userData.photo) {
+                        avatarCircle.innerHTML = `<img src="${userData.photo}" alt="" class="avatarPhoto">`;
+                    }
                 } else if (response.status === 401) {
                     // Token is invalid - clear and show not-logged UI
                     localStorage.removeItem('access_token');
@@ -81,11 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const showNotLoggedUI = () => {
-        if (headerLoggedIn) headerLoggedIn.style.display = 'none';
-        if (headerNotLoggedIn) headerNotLoggedIn.style.display = 'flex';
-        if (headerNav) headerNav.style.display = 'flex';
-        if (burgerMenuLogged) burgerMenuLogged.style.display = 'none';
-        if (burgerMenuNotLogged) burgerMenuNotLogged.style.display = 'block';
+        if (headerLoggedIn) headerLoggedIn.classList.remove('is-logged-in');
+        if (headerNotLoggedIn) headerNotLoggedIn.classList.remove('is-hidden');
+        if (headerNav) headerNav.classList.remove('is-hidden');
+        if (burgerMenuLogged) burgerMenuLogged.classList.remove('is-visible');
+        if (burgerMenuNotLogged) burgerMenuNotLogged.classList.remove('is-hidden');
         if (burgerMenuPanel) burgerMenuPanel.classList.remove('BurgerMenu--logged');
     };
 
@@ -94,9 +99,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === PROFILE MENU BUTTON (opens burger menu for logged user) ===
     if (profileMenuButton && burgerMenu && burgerMenuPanel) {
-        profileMenuButton.addEventListener('click', () => {
-            burgerMenu.classList.add('active');
-            burgerMenuPanel.classList.add('active');
+        profileMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = burgerMenuPanel.classList.contains('active');
+            if (isActive) {
+                burgerMenu.classList.remove('active');
+                burgerMenuPanel.classList.remove('active');
+            } else {
+                burgerMenu.classList.add('active');
+                burgerMenuPanel.classList.add('active');
+            }
         });
     }
 
@@ -286,11 +298,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Выбор региона (обновляет оба селектора)
+    // Тексты для регионов (используем data-атрибуты)
+    const regionTexts = {
+        'cis': document.querySelector('.regionOption[data-value="cis"]')?.textContent.split(': ').pop().trim() || 'СНГ',
+        'europe': document.querySelector('.regionOption[data-value="europe"]')?.textContent.split(': ').pop().trim() || 'Европа'
+    };
+
     if (regionOptions.length > 0) {
         regionOptions.forEach(option => {
             option.addEventListener('click', (e) => {
                 const selectedValue = option.getAttribute('data-value');
-                const selectedText = option.textContent.trim();
                 
                 // Убираем selected у всех, добавляем выбранному значению во всех селекторах
                 regionOptions.forEach(opt => {
@@ -301,9 +318,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 
-                // Обновляем текст кнопок
-                if (regionValue) regionValue.textContent = selectedText;
-                if (mobileRegionValue) mobileRegionValue.textContent = selectedText;
+                // Обновляем только значение региона (СНГ/Европа)
+                const regionName = regionTexts[selectedValue] || selectedValue;
+                if (regionValue) regionValue.textContent = regionName;
+                if (mobileRegionValue) mobileRegionValue.textContent = regionName;
                 
                 // Сохраняем в localStorage
                 saveRegion(selectedValue);
@@ -315,17 +333,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Устанавливаем начальный регион для всех селекторов
         const savedRegion = getSavedRegion();
-        let savedText = '';
         regionOptions.forEach(option => {
             if (option.getAttribute('data-value') === savedRegion) {
                 option.classList.add('selected');
-                savedText = option.textContent.trim();
             }
         });
-        if (savedText) {
-            if (regionValue) regionValue.textContent = savedText;
-            if (mobileRegionValue) mobileRegionValue.textContent = savedText;
-        }
+        const savedText = regionTexts[savedRegion] || savedRegion;
+        if (regionValue) regionValue.textContent = savedText;
+        if (mobileRegionValue) mobileRegionValue.textContent = savedText;
     }
 
     // Закрытие dropdown региона при клике вне

@@ -151,6 +151,19 @@ body::before {
     margin-top: 8px;
 }
 
+.company-card .company-info .rating-summary,
+.company-info .rating-summary {
+    justify-content: flex-start !important;
+    gap: 12px;
+}
+
+.rating-label {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--text-color);
+}
+
 .rating-stars {
     display: flex;
     gap: 2px;

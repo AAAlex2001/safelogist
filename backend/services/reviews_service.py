@@ -152,11 +152,27 @@ class ReviewsService:
         return result.scalar()
 
     async def get_company_avg_rating(self, company_name: str) -> Optional[float]:
-        """Получить среднюю оценку компании по всем отзывам"""
+        """
+        Получить среднюю оценку компании по всем отзывам.
+        Для источника ATI, если рейтинг не указан, считается как 5.
+        """
+        from sqlalchemy import case, func as sql_func
+        
+        # Используем CASE: если rating не NULL - берем его,
+        # если NULL и source='ATI' - берем 5, иначе NULL (не учитываем)
+        rating_expr = case(
+            (Review.rating.isnot(None), Review.rating),
+            (sql_func.upper(Review.source) == 'ATI', 5),
+            else_=None
+        )
+        
         query = (
-            select(func.avg(Review.rating))
+            select(func.avg(rating_expr))
             .where(Review.subject == company_name)
-            .where(Review.rating.isnot(None))
+            .where(
+                (Review.rating.isnot(None)) | 
+                (sql_func.upper(Review.source) == 'ATI')
+            )
         )
         result = await self.db.execute(query)
         avg = result.scalar()

@@ -51,40 +51,60 @@ def generate_company_seo(
     rating_str = f"{avg_rating:.1f}" if avg_rating else None
     jurisdiction_str = jurisdiction if jurisdiction and jurisdiction != "—" else None
 
-    # Страница > 1 → шаблон пагинации
-    if page > 1:
-        title = t["seo_title_page"].format(company=company_name, page=page)
-        desc = t["seo_desc_page"].format(company=company_name, page=page)
-
+    # Выбираем базовый шаблон в зависимости от данных
     # Высокий рейтинг (>=4.5) → позитивный шаблон
-    elif avg_rating and avg_rating >= 4.5 and reviews_count > 0:
-        title = t["seo_title_positive"].format(company=company_name)
-        desc = t["seo_desc_positive"].format(company=company_name, rating=rating_str, reviews=reviews_count)
+    if avg_rating and avg_rating >= 4.5 and reviews_count > 0:
+        if page > 1:
+            title = t["seo_title_positive_page"].format(company=company_name, page=page)
+            desc = t["seo_desc_positive_page"].format(company=company_name, rating=rating_str, reviews=reviews_count, page=page)
+        else:
+            title = t["seo_title_positive"].format(company=company_name)
+            desc = t["seo_desc_positive"].format(company=company_name, rating=rating_str, reviews=reviews_count)
 
     # Нет отзывов + есть юрисдикция → географический шаблон
     elif reviews_count == 0 and jurisdiction_str:
-        title = t["seo_title_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
-        desc = t["seo_desc_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
+        if page > 1:
+            title = t["seo_title_geo_page"].format(company=company_name, jurisdiction=jurisdiction_str, page=page)
+            desc = t["seo_desc_geo_page"].format(company=company_name, jurisdiction=jurisdiction_str, page=page)
+        else:
+            title = t["seo_title_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
+            desc = t["seo_desc_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
 
     # Нет отзывов, нет юрисдикции → шаблон без отзывов
     elif reviews_count == 0:
-        title = t["seo_title_no_reviews"].format(company=company_name)
-        desc = t["seo_desc_no_reviews"].format(company=company_name)
+        if page > 1:
+            title = t["seo_title_no_reviews_page"].format(company=company_name, page=page)
+            desc = t["seo_desc_no_reviews_page"].format(company=company_name, page=page)
+        else:
+            title = t["seo_title_no_reviews"].format(company=company_name)
+            desc = t["seo_desc_no_reviews"].format(company=company_name)
 
     # Есть отзывы и рейтинг → рейтинговый шаблон
     elif avg_rating and reviews_count > 0:
-        title = t["seo_title_rating"].format(company=company_name, rating=rating_str)
-        desc = t["seo_desc_rating"].format(company=company_name, reviews=reviews_count, rating=rating_str)
+        if page > 1:
+            title = t["seo_title_rating_page"].format(company=company_name, rating=rating_str, page=page)
+            desc = t["seo_desc_rating_page"].format(company=company_name, reviews=reviews_count, rating=rating_str, page=page)
+        else:
+            title = t["seo_title_rating"].format(company=company_name, rating=rating_str)
+            desc = t["seo_desc_rating"].format(company=company_name, reviews=reviews_count, rating=rating_str)
 
     # Есть отзывы, нет рейтинга → нейтральный шаблон
     elif reviews_count > 0:
-        title = t["seo_title_neutral"].format(company=company_name)
-        desc = t["seo_desc_neutral"].format(company=company_name, reviews=reviews_count)
+        if page > 1:
+            title = t["seo_title_neutral_page"].format(company=company_name, page=page)
+            desc = t["seo_desc_neutral_page"].format(company=company_name, reviews=reviews_count, page=page)
+        else:
+            title = t["seo_title_neutral"].format(company=company_name)
+            desc = t["seo_desc_neutral"].format(company=company_name, reviews=reviews_count)
 
     # Базовый шаблон
     else:
-        title = t["seo_title_base"].format(company=company_name)
-        desc = t["seo_desc_base"].format(company=company_name)
+        if page > 1:
+            title = t["seo_title_base_page"].format(company=company_name, page=page)
+            desc = t["seo_desc_base_page"].format(company=company_name, page=page)
+        else:
+            title = t["seo_title_base"].format(company=company_name)
+            desc = t["seo_desc_base"].format(company=company_name)
 
     return {"title": title, "description": desc}
 
@@ -347,29 +367,39 @@ async def company_reviews_page(
             continue
         reviewer_name = review.reviewer or "—"
         reviewer_id = reviewer_id_map.get(reviewer_name) if reviewer_name != "—" else None
-        rating_value = review.rating if review.rating is not None else 5
+        source = getattr(review, "source", None) or "—"
+        
+        # Определяем рейтинг: для ATI по умолчанию 5, для остальных - как есть
+        if review.rating is not None:
+            rating_value = review.rating
+        elif source.upper() == "ATI":
+            rating_value = 5
+        else:
+            rating_value = None
 
         review_items.append({
             "comment": comment,
             "reviewer": reviewer_name,
             "reviewer_id": reviewer_id,
-            "source": getattr(review, "source", None) or "—",
-            "rating": rating_value,
+            "source": source,
+            "rating": rating_value,  # Может быть None для не-ATI источников
             "date": review.review_date.strftime("%d.%m.%Y") if review.review_date else "—",
         })
-        structured_reviews.append({
-            "@type": "Review",
-            "author": reviewer_name,
-            "datePublished": review.review_date.isoformat() if review.review_date else None,
-            "reviewBody": comment,
-            "name": review.subject or display_name,
-            "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": rating_value,
-                "bestRating": 5,
-                "worstRating": 1
-            }
-        })
+        # Для JSON-LD добавляем только отзывы с рейтингом
+        if rating_value is not None:
+            structured_reviews.append({
+                "@type": "Review",
+                "author": reviewer_name,
+                "datePublished": review.review_date.isoformat() if review.review_date else None,
+                "reviewBody": comment,
+                "name": review.subject or display_name,
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": rating_value,
+                    "bestRating": 5,
+                    "worstRating": 1
+                }
+            })
 
     # Секции с информацией о компании
     company_sections = []
@@ -458,11 +488,11 @@ async def company_reviews_page(
         ])
 
         # JSON-LD
-        avg_rating = None
+        avg_rating_for_jsonld = None
         if structured_reviews:
             ratings = [r["reviewRating"]["ratingValue"] for r in structured_reviews if r["reviewRating"]["ratingValue"] is not None]
             if ratings:
-                avg_rating = sum(ratings) / len(ratings)
+                avg_rating_for_jsonld = sum(ratings) / len(ratings)
 
         company_jsonld = {
             "@context": "https://schema.org",
@@ -479,6 +509,7 @@ async def company_reviews_page(
             "legalName": getattr(first, "short_name", None) or display_name,
             "sameAs": getattr(first, "link", None) if hasattr(first, "link") else None,
         }
+        # Используем средний рейтинг по всем отзывам компании для JSON-LD
         if avg_rating is not None:
             company_jsonld["aggregateRating"] = {
                 "@type": "AggregateRating",
@@ -508,6 +539,7 @@ async def company_reviews_page(
             "og_image": f"{seo['base_url']}/static/safelogist_1.png",
             "is_claimed": is_claimed,
             "owner_data": owner_data,  # Данные владельца
+            "avg_rating": avg_rating,  # Средний рейтинг
             "show_locked_ui": True,
             **seo,
         }

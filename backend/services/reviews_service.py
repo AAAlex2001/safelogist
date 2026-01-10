@@ -150,3 +150,27 @@ class ReviewsService:
         query = select(Company.min_review_id).where(Company.name == company_name)
         result = await self.db.execute(query)
         return result.scalar()
+
+    async def get_company_avg_rating(self, company_name: str) -> Optional[float]:
+        """Получить среднюю оценку компании по всем отзывам"""
+        query = (
+            select(func.avg(Review.rating))
+            .where(Review.subject == company_name)
+            .where(Review.rating.isnot(None))
+        )
+        result = await self.db.execute(query)
+        avg = result.scalar()
+        return float(avg) if avg is not None else None
+
+    async def get_company_jurisdiction(self, company_name: str) -> Optional[str]:
+        """Получить юрисдикцию компании из любого отзыва"""
+        query = (
+            select(Review.jurisdiction)
+            .where(Review.subject == company_name)
+            .where(Review.jurisdiction.isnot(None))
+            .where(Review.jurisdiction != "")
+            .where(Review.jurisdiction != "—")
+            .limit(1)
+        )
+        result = await self.db.execute(query)
+        return result.scalar()

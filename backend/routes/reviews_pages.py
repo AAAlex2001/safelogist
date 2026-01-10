@@ -27,6 +27,68 @@ templates = Jinja2Templates(directory="templates")
 
 # === Вспомогательные функции для SEO ===
 
+def generate_company_seo(
+    company_name: str,
+    reviews_count: int,
+    avg_rating: float | None,
+    jurisdiction: str | None,
+    t: dict,
+    page: int = 1
+) -> dict:
+    """
+    Генерирует SEO title и description на основе данных компании.
+
+    Логика выбора шаблона:
+    - Страница > 1 → шаблон пагинации
+    - Высокий рейтинг (>=4.5) → позитивный шаблон
+    - Нет отзывов (0) + есть юрисдикция → географический шаблон
+    - Нет отзывов, нет юрисдикции → шаблон без отзывов
+    - Есть отзывы и рейтинг → рейтинговый шаблон
+    - Есть отзывы, нет рейтинга → нейтральный шаблон
+    - Иначе → базовый шаблон
+    """
+
+    rating_str = f"{avg_rating:.1f}" if avg_rating else None
+    jurisdiction_str = jurisdiction if jurisdiction and jurisdiction != "—" else None
+
+    # Страница > 1 → шаблон пагинации
+    if page > 1:
+        title = t["seo_title_page"].format(company=company_name, page=page)
+        desc = t["seo_desc_page"].format(company=company_name, page=page)
+
+    # Высокий рейтинг (>=4.5) → позитивный шаблон
+    elif avg_rating and avg_rating >= 4.5 and reviews_count > 0:
+        title = t["seo_title_positive"].format(company=company_name)
+        desc = t["seo_desc_positive"].format(company=company_name, rating=rating_str, reviews=reviews_count)
+
+    # Нет отзывов + есть юрисдикция → географический шаблон
+    elif reviews_count == 0 and jurisdiction_str:
+        title = t["seo_title_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
+        desc = t["seo_desc_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
+
+    # Нет отзывов, нет юрисдикции → шаблон без отзывов
+    elif reviews_count == 0:
+        title = t["seo_title_no_reviews"].format(company=company_name)
+        desc = t["seo_desc_no_reviews"].format(company=company_name)
+
+    # Есть отзывы и рейтинг → рейтинговый шаблон
+    elif avg_rating and reviews_count > 0:
+        title = t["seo_title_rating"].format(company=company_name, rating=rating_str)
+        desc = t["seo_desc_rating"].format(company=company_name, reviews=reviews_count, rating=rating_str)
+
+    # Есть отзывы, нет рейтинга → нейтральный шаблон
+    elif reviews_count > 0:
+        title = t["seo_title_neutral"].format(company=company_name)
+        desc = t["seo_desc_neutral"].format(company=company_name, reviews=reviews_count)
+
+    # Базовый шаблон
+    else:
+        title = t["seo_title_base"].format(company=company_name)
+        desc = t["seo_desc_base"].format(company=company_name)
+
+    return {"title": title, "description": desc}
+
+
 def build_base_url(request: Request) -> str:
     base = os.getenv("BASE_URL", str(request.base_url)).rstrip("/")
     if base.startswith("http://"):
@@ -255,17 +317,21 @@ async def company_reviews_page(
     total_pages = (total_reviews + per_page - 1) // per_page
     display_name = reviews[0].subject if reviews else company_name
 
-    # Мета-теги: разные для первой страницы и последующих
-    if page == 1:
-        meta_title = t.get("meta_title", "Reviews of {name}").format(name=display_name)
-        meta_desc = t.get("meta_desc", "").format(name=display_name)
-    else:
-        meta_title = t.get("meta_title_page", "Reviews of {name} — page {page}").format(
-            name=display_name, page=page
-        )
-        meta_desc = t.get("meta_desc_page", "").format(
-            name=display_name, page=page, total_pages=total_pages
-        )
+    # Вычисляем средний рейтинг и юрисдикцию по ВСЕМ отзывам компании для SEO
+    avg_rating = await service.get_company_avg_rating(company_name)
+    jurisdiction = await service.get_company_jurisdiction(company_name)
+
+    # Генерируем SEO мета-теги с учётом данных компании
+    seo_data = generate_company_seo(
+        company_name=display_name,
+        reviews_count=total_reviews,
+        avg_rating=avg_rating,
+        jurisdiction=jurisdiction,
+        t=t,
+        page=page
+    )
+    meta_title = seo_data["title"]
+    meta_desc = seo_data["description"]
 
     # Получаем ID reviewer'ов
     reviewer_names = [r.reviewer for r in reviews if r.reviewer and r.reviewer.strip()]

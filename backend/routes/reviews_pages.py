@@ -15,6 +15,9 @@ from helpers.translations import (
     SUPPORTED_LANGS, DEFAULT_LANG,
     normalize_lang, get_translations
 )
+from helpers.financial_translations import (
+    get_translated_group_name, get_translated_indicator
+)
 
 # Настройка логирования
 logger = logging.getLogger(__name__)
@@ -70,14 +73,14 @@ def generate_company_seo(
             title = t["seo_title_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
             desc = t["seo_desc_geo"].format(company=company_name, jurisdiction=jurisdiction_str)
 
-    # Нет отзывов, нет юрисдикции → шаблон без отзывов
+    # Нет отзывов, нет юрисдикции → шаблон финансовых отчетов
     elif reviews_count == 0:
         if page > 1:
-            title = t["seo_title_no_reviews_page"].format(company=company_name, page=page)
-            desc = t["seo_desc_no_reviews_page"].format(company=company_name, page=page)
+            title = t["seo_title_finances_page"].format(company=company_name, page=page)
+            desc = t["seo_desc_finances_page"].format(company=company_name, page=page)
         else:
-            title = t["seo_title_no_reviews"].format(company=company_name)
-            desc = t["seo_desc_no_reviews"].format(company=company_name)
+            title = t["seo_title_finances"].format(company=company_name)
+            desc = t["seo_desc_finances"].format(company=company_name)
 
     # Есть отзывы и рейтинг → рейтинговый шаблон
     elif avg_rating and reviews_count > 0:
@@ -403,6 +406,8 @@ async def company_reviews_page(
 
     # Секции с информацией о компании
     company_sections = []
+    financial_sections = []
+    financial_groups = []
     company_jsonld = {}
 
     if reviews:
@@ -487,6 +492,110 @@ async def company_reviews_page(
             },
         ])
 
+        # Секция финансовых отчетов (если данные из Moldova Financial Report)
+        financial_sections = []
+        if getattr(first, "source", None) == "Moldova Financial Report" and getattr(first, "fiscal_code", None):
+            yes_no = lambda val: t.get("value_yes", "Да") if val else t.get("value_no", "Нет") if val is not None else "—"
+            period_str = ""
+            if getattr(first, "period_from", None) and getattr(first, "period_to", None):
+                period_str = f"{first.period_from} — {first.period_to}"
+            elif getattr(first, "period_from", None):
+                period_str = first.period_from
+            
+            # Колонка 1: Данные отчета
+            financial_col1 = [
+                {
+                    "title": t.get("section_financial_report", "Данные отчета"),
+                    "rows": [
+                        {"label": t.get("label_report_year", "Год отчета"), "value": v(getattr(first, "report_year", None))},
+                        {"label": t.get("label_report_period", "Период отчета"), "value": v(period_str) if period_str else "—"},
+                        {"label": t.get("label_report_type", "Тип отчета"), "value": v(getattr(first, "report_type", None))},
+                        {"label": t.get("label_report_status", "Статус отчета"), "value": v(getattr(first, "report_status", None))},
+                        {"label": t.get("label_audited", "Аудирован"), "value": yes_no(getattr(first, "is_audited", None))},
+                        {"label": t.get("label_signed", "Подписан"), "value": yes_no(getattr(first, "signed", None))},
+                        {"label": t.get("label_declaration_date", "Дата декларации"), "value": v(getattr(first, "declaration_date", None))},
+                    ]
+                },
+            ]
+            
+            # Колонка 2: Основная информация + Деятельность
+            financial_col2 = [
+                {
+                    "title": t.get("section_financial_main", "Основная информация"),
+                    "rows": [
+                        {"label": t.get("label_fiscal_code", "Фискальный код"), "value": v(getattr(first, "fiscal_code", None))},
+                        {"label": t.get("label_cuiio", "CUIIO"), "value": v(getattr(first, "cuiio", None))},
+                        {"label": t.get("label_cfoj", "Организационная форма"), "value": v(getattr(first, "cfoj_name", None))},
+                        {"label": t.get("label_cfp", "Форма собственности"), "value": v(getattr(first, "cfp_name", None))},
+                        {"label": t.get("label_location", "Населенный пункт"), "value": v(getattr(first, "cuatm_name", None))},
+                        {"label": t.get("label_is_liquidation", "В ликвидации"), "value": yes_no(getattr(first, "liquidation", None))},
+                    ]
+                },
+                {
+                    "title": t.get("section_financial_activity", "Деятельность"),
+                    "rows": [
+                        {"label": t.get("label_caem", "CAEM код"), "value": v(getattr(first, "caem_code", None))},
+                        {"label": t.get("label_caem_name", "Вид деятельности"), "value": v(getattr(first, "caem_name", None))},
+                    ]
+                },
+            ]
+            
+            # Колонка 3: Контакты
+            financial_col3 = [
+                {
+                    "title": t.get("section_financial_contacts", "Контакты"),
+                    "rows": [
+                        {"label": t.get("label_address", "Адрес"), "value": v(getattr(first, "street_address", None))},
+                        {"label": t.get("label_email", "Email"), "value": v(getattr(first, "email", None))},
+                        {"label": t.get("label_phone", "Телефон"), "value": v(getattr(first, "phone", None))},
+                        {"label": t.get("label_web", "Веб-сайт"), "value": v(getattr(first, "web", None))},
+                        {"label": t.get("label_employees", "Количество сотрудников"), "value": v(getattr(first, "employees_count", None))},
+                        {"label": t.get("label_accountant", "Бухгалтер"), "value": v(getattr(first, "accountant", None))},
+                        {"label": t.get("label_responsible_person", "Ответственное лицо"), "value": v(getattr(first, "responsible_person", None))},
+                    ]
+                },
+            ]
+            
+            financial_sections = financial_col1 + financial_col2 + financial_col3
+            
+            # Извлекаем финансовые группы из detailed_data (баланс, прибыли/убытки и т.д.)
+            financial_groups = []
+            detailed_data = getattr(first, "detailed_data", None)
+            if detailed_data and isinstance(detailed_data, dict):
+                groups = detailed_data.get("groups", [])
+                for group in groups:
+                    group_name = group.get("name", "")
+                    fields = group.get("fields", [])
+                    
+                    # Переводим название группы
+                    translated_group_name = get_translated_group_name(group_name, lang)
+                    
+                    # Формируем строки только с непустыми значениями
+                    rows = []
+                    for field in fields:
+                        code = field.get("code", "")
+                        name = field.get("name", "")
+                        date_prev = field.get("datePrev", "")
+                        date_current = field.get("dateCurrent", "")
+                        
+                        # Переводим название показателя
+                        translated_name = get_translated_indicator(code, name, lang)
+                        
+                        # Показываем строку если есть хотя бы одно значение
+                        if date_prev or date_current:
+                            rows.append({
+                                "code": code,
+                                "name": translated_name,
+                                "date_prev": date_prev if date_prev else "—",
+                                "date_current": date_current if date_current else "—",
+                            })
+                    
+                    if rows:
+                        financial_groups.append({
+                            "title": translated_group_name,
+                            "rows": rows,
+                        })
+
         # JSON-LD
         avg_rating_for_jsonld = None
         if structured_reviews:
@@ -533,6 +642,8 @@ async def company_reviews_page(
             "company_id": company_id,
             "company_jsonld": company_jsonld,
             "company_sections": company_sections,
+            "financial_sections": financial_sections,
+            "financial_groups": financial_groups,
             "meta_title": meta_title,
             "meta_desc": meta_desc,
             "og_url": seo['canonical'],

@@ -182,6 +182,114 @@
         </div>
         {% endif %}
 
+        {% if financial_sections %}
+        <div class="company-accordion" id="financial-accordion">
+            <button class="accordion-header" type="button" id="financial-info-toggle">
+                <span>{{ t.financial_reports_title }}</span>
+                <svg class="accordion-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1.5L8 8.5L15 1.5" stroke="#012AF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="accordion-content" id="financial-info-content">
+                <div class="company-meta-card">
+                    <div class="meta-columns meta-columns-3">
+                        <!-- Колонка 1: Данные отчета -->
+                        <div class="meta-column">
+                            {% for section in financial_sections[:1] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Колонка 2: Основная информация + Деятельность -->
+                        <div class="meta-column">
+                            {% for section in financial_sections[1:3] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Колонка 3: Контакты -->
+                        <div class="meta-column">
+                            {% for section in financial_sections[3:] %}
+                            <div class="meta-section">
+                                <div class="section-title">{{ section.title }}</div>
+                                <div class="section-line"></div>
+                                {% for item in section.rows %}
+                                <div class="meta-row">
+                                    <div class="meta-label">{{ item.label }}:</div>
+                                    <div class="meta-value">{{ item.value }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if financial_groups %}
+        {% for group in financial_groups %}
+        <div class="company-accordion financial-group-accordion" id="financial-group-{{ loop.index }}">
+            <button class="accordion-header financial-group-header" type="button">
+                <span>{{ group.title }}</span>
+                <svg class="accordion-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1.5L8 8.5L15 1.5" stroke="#012AF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="accordion-content">
+                <div class="company-meta-card">
+                    <div class="meta-columns">
+                        {% set rows_per_col = (group.rows|length / 3)|round(0, 'ceil')|int %}
+                        <div class="meta-column">
+                            {% for row in group.rows[:rows_per_col] %}
+                            <div class="meta-row">
+                                <div class="meta-label">{{ row.name }}</div>
+                                <div class="meta-value">{{ t.table_prev_period }}: {{ row.date_prev }}<br>{{ t.table_current_period }}: {{ row.date_current }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="meta-column">
+                            {% for row in group.rows[rows_per_col:rows_per_col*2] %}
+                            <div class="meta-row">
+                                <div class="meta-label">{{ row.name }}</div>
+                                <div class="meta-value">{{ t.table_prev_period }}: {{ row.date_prev }}<br>{{ t.table_current_period }}: {{ row.date_current }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="meta-column">
+                            {% for row in group.rows[rows_per_col*2:] %}
+                            <div class="meta-row">
+                                <div class="meta-label">{{ row.name }}</div>
+                                <div class="meta-value">{{ t.table_prev_period }}: {{ row.date_prev }}<br>{{ t.table_current_period }}: {{ row.date_current }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
         <!-- Блок авторизации для незалогиненных пользователей -->
         {% if show_locked_ui %}
         <div class="auth-actions">
@@ -311,6 +419,27 @@
                 accordion.classList.toggle('open');
             });
         }
+
+        // Аккордеон финансовых отчетов
+        const financialAccordion = document.getElementById('financial-accordion');
+        const financialHeader = document.getElementById('financial-info-toggle');
+        if (financialAccordion && financialHeader) {
+            financialAccordion.classList.remove('open'); // старт: свернуто
+            financialHeader.addEventListener('click', function () {
+                financialAccordion.classList.toggle('open');
+            });
+        }
+
+        // Аккордеоны финансовых групп (баланс, прибыли/убытки и т.д.)
+        document.querySelectorAll('.financial-group-header').forEach(function(header) {
+            const accordion = header.closest('.financial-group-accordion');
+            if (accordion) {
+                accordion.classList.remove('open'); // старт: свернуто
+                header.addEventListener('click', function () {
+                    accordion.classList.toggle('open');
+                });
+            }
+        });
 
         // Показываем лоадер при клике на ссылку компании
         document.querySelectorAll('.review-author-link').forEach(function(link) {

@@ -182,6 +182,42 @@
         </div>
         {% endif %}
 
+        {% if available_years and available_years|length > 1 %}
+        <div class="year-selector-wrapper">
+            <span class="year-selector-label">{{ t.get('label_select_year', 'Выберите год') }}:</span>
+            <div class="yearSelector">
+                <button class="yearButton" type="button" id="yearButton">
+                    <span id="yearButtonText">{{ selected_year }}</span>
+                    <svg class="yearArrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="yearDropdown" id="yearDropdown">
+                    {% for yr in available_years %}
+                    <a href="/{{ lang }}/reviews/item/{{ company_id }}?year={{ yr }}&page=1" class="yearOption {% if yr == selected_year %}selected{% endif %}">{{ yr }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <script>
+        (function() {
+            const btn = document.getElementById('yearButton');
+            const dropdown = document.getElementById('yearDropdown');
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                btn.classList.toggle('active');
+                dropdown.classList.toggle('active');
+            });
+            document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                    btn.classList.remove('active');
+                    dropdown.classList.remove('active');
+                }
+            });
+        })();
+        </script>
+        {% endif %}
+
         {% if financial_groups %}
         {% for group in financial_groups %}
         <div class="company-accordion financial-group-accordion" id="financial-group-{{ loop.index }}">

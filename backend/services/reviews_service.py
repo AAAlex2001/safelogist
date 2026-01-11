@@ -112,20 +112,26 @@ class ReviewsService:
         return result.scalar()
 
     async def get_company_reviews_count(self, company_name: str) -> int:
-        """Получить количество отзывов компании — из таблицы Company (быстро!)"""
-        query = select(Company.reviews_count).where(Company.name == company_name)
+        """Получить количество отзывов компании с комментариями"""
+        query = select(func.count(Review.id)).where(
+            Review.subject == company_name,
+            Review.comment.isnot(None),
+            Review.comment != ''
+        )
         result = await self.db.execute(query)
         return result.scalar() or 0
 
     async def get_company_reviews(
         self, company_name: str, page: int, per_page: int = 10
     ) -> List[Review]:
-        """Получить отзывы компании с пагинацией"""
+        """Получить отзывы компании с пагинацией (только с комментариями)"""
         offset = (page - 1) * per_page
 
         query = (
             select(Review)
             .where(Review.subject == company_name)
+            .where(Review.comment.isnot(None))
+            .where(Review.comment != '')
             .order_by(Review.review_date.desc())
             .limit(per_page)
             .offset(offset)
@@ -190,3 +196,26 @@ class ReviewsService:
         )
         result = await self.db.execute(query)
         return result.scalar()
+
+    async def get_available_report_years(self, company_name: str) -> List[int]:
+        """Получить список доступных годов отчетов для компании"""
+        query = (
+            select(Review.report_year)
+            .where(Review.subject == company_name)
+            .where(Review.report_year.isnot(None))
+            .distinct()
+            .order_by(Review.report_year.desc())
+        )
+        result = await self.db.execute(query)
+        return [row[0] for row in result.all()]
+
+    async def get_company_review_by_year(self, company_name: str, year: int) -> Optional[Review]:
+        """Получить отзыв компании за конкретный год"""
+        query = (
+            select(Review)
+            .where(Review.subject == company_name)
+            .where(Review.report_year == year)
+            .limit(1)
+        )
+        result = await self.db.execute(query)
+        return result.scalars().first()

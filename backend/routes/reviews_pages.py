@@ -67,23 +67,27 @@ def generate_company_seo(
 
     # Нет отзывов + есть юрисдикция + есть финансовые данные → шаблон с финансами
     elif reviews_count == 0 and jurisdiction_str and financial_data:
+        # Формируем динамическое описание на основе доступных показателей
+        fin_parts = []
+        if financial_data.get('assets'):
+            fin_parts.append(f"активы {financial_data['assets']}")
+        if financial_data.get('fixed_assets'):
+            fin_parts.append(f"внеоборотные активы {financial_data['fixed_assets']}")
+        if financial_data.get('current_assets'):
+            fin_parts.append(f"оборотные активы {financial_data['current_assets']}")
+        if financial_data.get('cash'):
+            fin_parts.append(f"денежные средства {financial_data['cash']}")
+        if financial_data.get('capital'):
+            fin_parts.append(f"капитал {financial_data['capital']}")
+        
+        fin_info = ", ".join(fin_parts[:3]) if fin_parts else ""  # Берем максимум 3 показателя
+        
         if page > 1:
             title = t["seo_title_finances_page"].format(company=company_name, page=page)
-            desc = t["seo_desc_finances_page"].format(
-                company=company_name, 
-                page=page,
-                assets=financial_data.get('assets', ''),
-                capital=financial_data.get('capital', ''),
-                revenue=financial_data.get('revenue', '')
-            )
+            desc = f"{company_name}: {fin_info} — страница {page}. Финансовые отчеты и проверка на SafeLogist." if fin_info else t["seo_desc_finances_page"].format(company=company_name, page=page, assets='', capital='')
         else:
             title = t["seo_title_finances"].format(company=company_name)
-            desc = t["seo_desc_finances"].format(
-                company=company_name,
-                assets=financial_data.get('assets', ''),
-                capital=financial_data.get('capital', ''),
-                revenue=financial_data.get('revenue', '')
-            )
+            desc = f"{company_name}: {fin_info}. Финансовые отчеты, баланс, прибыли и убытки. Проверка финансового состояния на SafeLogist." if fin_info else t["seo_desc_finances"].format(company=company_name, assets='', capital='')
     
     # Нет отзывов + есть юрисдикция (без финансов) → географический шаблон
     elif reviews_count == 0 and jurisdiction_str:
@@ -299,6 +303,7 @@ async def company_reviews_page(
     lang: str,
     company_id: int,
     page: int = Query(1, ge=1),
+    year: int = Query(None),
     db: AsyncSession = Depends(get_db)
 ):
     lang_code = normalize_lang(lang)
@@ -330,6 +335,15 @@ async def company_reviews_page(
     # Получаем данные
     total_reviews = await service.get_company_reviews_count(company_name)
     reviews = await service.get_company_reviews(company_name, page, per_page)
+    
+    # Получаем доступные годы отчетов
+    available_years = await service.get_available_report_years(company_name)
+    selected_year = year if year and year in available_years else (available_years[0] if available_years else None)
+    
+    # Получаем данные за выбранный год (для финансовых отчетов)
+    financial_review = None
+    if selected_year:
+        financial_review = await service.get_company_review_by_year(company_name, selected_year)
     
     # Проверяем, занята ли компания (есть ли владелец) и получаем данные владельца
     from models.company import Company
@@ -365,10 +379,10 @@ async def company_reviews_page(
     avg_rating = await service.get_company_avg_rating(company_name)
     jurisdiction = await service.get_company_jurisdiction(company_name)
 
-    # Извлекаем финансовые данные для SEO (если есть)
+    # Извлекаем финансовые данные для SEO из financial_review (если есть)
     financial_data = None
-    if reviews and hasattr(reviews[0], 'detailed_data') and reviews[0].detailed_data:
-        detailed_data = reviews[0].detailed_data
+    if financial_review and hasattr(financial_review, 'detailed_data') and financial_review.detailed_data:
+        detailed_data = financial_review.detailed_data
         if isinstance(detailed_data, dict) and 'groups' in detailed_data:
             financial_data = {}
             for group in detailed_data['groups']:
@@ -376,13 +390,22 @@ async def company_reviews_page(
                 for field in fields:
                     name = field.get('name', '').lower()
                     current = field.get('dateCurrent', '')
-                    if current:
-                        if 'итого активы' in name or 'total active' in name:
+                    if current and current.strip():
+                        # Итого активы
+                        if 'total active' in name or 'итого активы' in name:
                             financial_data['assets'] = current
-                        elif 'уставный капитал' in name or 'уставний капітал' in name or 'capital social' in name:
+                        # Итого внеоборотные активы
+                        elif 'total active imobilizate' in name or 'итого внеоборотные активы' in name:
+                            financial_data['fixed_assets'] = current
+                        # Итого оборотные активы
+                        elif 'total active circulante' in name or 'итого оборотные активы' in name:
+                            financial_data['current_assets'] = current
+                        # Денежные средства
+                        elif 'numerar' in name or 'денежные средства' in name:
+                            financial_data['cash'] = current
+                        # Уставный капитал
+                        elif 'capital social' in name or 'уставный капитал' in name or 'уставний капітал' in name:
                             financial_data['capital'] = current
-                        elif 'venituri din activitatea operaţională' in name:
-                            financial_data['revenue'] = current
 
     # Генерируем SEO мета-теги с учётом данных компании
     seo_data = generate_company_seo(
@@ -451,13 +474,14 @@ async def company_reviews_page(
     financial_groups = []
     company_jsonld = {}
 
-    if reviews:
-        first = reviews[0]
+    if reviews or financial_review:
+        # Используем financial_review для финансовых данных, или первый отзыв
+        first = financial_review if financial_review else (reviews[0] if reviews else None)
         v = lambda val: "—" if val is None or (isinstance(val, str) and not val.strip()) else val
         yes_no = lambda val: t.get("value_yes", "Да") if val else t.get("value_no", "Нет") if val is not None else "—"
         
         # Проверяем, есть ли финансовые данные из Moldova Financial Report
-        has_financial_data = getattr(first, "source", None) == "Moldova Financial Report" and getattr(first, "fiscal_code", None)
+        has_financial_data = first and getattr(first, "source", None) == "Moldova Financial Report" and getattr(first, "fiscal_code", None)
 
         # Основная информация (заполняем из финансового отчета, если доступно)
         main_rows = [
@@ -707,6 +731,8 @@ async def company_reviews_page(
             "company_sections": company_sections,
             "financial_sections": financial_sections,
             "financial_groups": financial_groups,
+            "available_years": available_years,
+            "selected_year": selected_year,
             "meta_title": meta_title,
             "meta_desc": meta_desc,
             "og_url": seo['canonical'],

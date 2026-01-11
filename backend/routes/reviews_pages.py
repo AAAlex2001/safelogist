@@ -347,8 +347,13 @@ async def company_reviews_page(
     
     # Проверяем, занята ли компания (есть ли владелец) и получаем данные владельца
     from models.company import Company
+    from models.review import Review
     from models.user import User
     from sqlalchemy import select as sql_select
+
+    base_review_query = sql_select(Review).where(Review.id == company_id)
+    base_review_result = await db.execute(base_review_query)
+    base_review = base_review_result.scalars().first()
     company_query = sql_select(Company).where(Company.name == company_name)
     company_result = await db.execute(company_query)
     company = company_result.scalars().first()
@@ -474,238 +479,178 @@ async def company_reviews_page(
     financial_groups = []
     company_jsonld = {}
 
-    if reviews or financial_review:
-        # Используем financial_review для финансовых данных, или первый отзыв
-        first = financial_review if financial_review else (reviews[0] if reviews else None)
-        v = lambda val: "—" if val is None or (isinstance(val, str) and not val.strip()) else val
-        yes_no = lambda val: t.get("value_yes", "Да") if val else t.get("value_no", "Нет") if val is not None else "—"
-        
-        # Проверяем, есть ли финансовые данные из Moldova Financial Report
-        has_financial_data = first and getattr(first, "source", None) == "Moldova Financial Report" and getattr(first, "fiscal_code", None)
+    fin_review = financial_review
 
-        # Основная информация (заполняем из финансового отчета, если доступно)
-        main_rows = [
-            {"label": t.get("label_full_name"), "value": v(first.subject)},
-            {"label": t.get("label_short_name"), "value": v(getattr(first, "short_name", None))},
-            {"label": t.get("label_country"), "value": v(getattr(first, "jurisdiction", None) or getattr(first, "country", None))},
+    def pick(*vals):
+        for val in vals:
+            if val is None:
+                continue
+            if isinstance(val, str) and not val.strip():
+                continue
+            return val
+        return None
+
+    def show(val):
+        val = pick(val)
+        return "—" if val is None else val
+
+    def get_attr(obj, name: str):
+        return getattr(obj, name, None) if obj is not None else None
+
+    has_financial_data = bool(
+        fin_review
+        and get_attr(fin_review, "source") == "Moldova Financial Report"
+        and get_attr(fin_review, "fiscal_code")
+    )
+
+    main_rows = [
+        {"label": t.get("label_full_name"), "value": show(pick(get_attr(base_review, "subject"), get_attr(fin_review, "subject"), company_name))},
+        {"label": t.get("label_short_name"), "value": show(pick(get_attr(base_review, "short_name"), get_attr(fin_review, "short_name")))},
+        {"label": t.get("label_country"), "value": show(pick(get_attr(base_review, "jurisdiction"), get_attr(base_review, "country"), get_attr(fin_review, "jurisdiction"), get_attr(fin_review, "country")))},
+        {"label": t.get("label_status_company"), "value": show(pick(get_attr(base_review, "status"), get_attr(fin_review, "status")))},
+        {"label": t.get("label_legal_form"), "value": show(pick(get_attr(base_review, "legal_form"), get_attr(fin_review, "legal_form")))},
+    ]
+
+    if has_financial_data:
+        main_rows.extend([
+            {"label": t.get("label_fiscal_code", "Фискальный код"), "value": show(get_attr(fin_review, "fiscal_code"))},
+            {"label": t.get("label_cuiio", "CUIIO"), "value": show(get_attr(fin_review, "cuiio"))},
+            {"label": t.get("label_cfoj", "Организационная форма"), "value": show(get_attr(fin_review, "cfoj_name"))},
+            {"label": t.get("label_cfp", "Форма собственности"), "value": show(get_attr(fin_review, "cfp_name"))},
+            {"label": t.get("label_location", "Населенный пункт"), "value": show(get_attr(fin_review, "cuatm_name"))},
+            {"label": t.get("label_is_liquidation", "В ликвидации"), "value": show(t.get("value_yes", "Да") if get_attr(fin_review, "liquidation") else t.get("value_no", "Нет") if get_attr(fin_review, "liquidation") is not None else None)},
+        ])
+
+    registration_rows = [
+        {"label": t.get("label_registration_number"), "value": show(pick(get_attr(base_review, "registration_number"), get_attr(base_review, "company_number"), get_attr(fin_review, "registration_number"), get_attr(fin_review, "company_number"), get_attr(fin_review, "fiscal_code")))},
+        {"label": t.get("label_tax_number"), "value": show(pick(get_attr(base_review, "inn"), get_attr(fin_review, "inn")))},
+        {"label": t.get("label_registration_date"), "value": show(pick(get_attr(base_review, "registration_date"), get_attr(fin_review, "registration_date")))},
+    ]
+
+    activity_rows = [
+        {"label": t.get("label_company_category"), "value": show(pick(get_attr(base_review, "subtype"), get_attr(fin_review, "subtype")))},
+        {"label": t.get("label_activity_type"), "value": show(pick(get_attr(base_review, "activity_type"), get_attr(fin_review, "activity_type"), get_attr(fin_review, "caem_name")))},
+    ]
+    if has_financial_data:
+        activity_rows.extend([
+            {"label": t.get("label_caem", "CAEM код"), "value": show(get_attr(fin_review, "caem_code"))},
+            {"label": t.get("label_caem_name", "Вид деятельности"), "value": show(get_attr(fin_review, "caem_name"))},
+        ])
+
+    address_rows = [
+        {"label": t.get("label_legal_address"), "value": show(pick(get_attr(base_review, "legal_address"), get_attr(fin_review, "legal_address"), get_attr(fin_review, "street_address")))},
+        {"label": t.get("label_postal_address"), "value": show(pick(get_attr(base_review, "mailing_address"), get_attr(fin_review, "mailing_address"), get_attr(fin_review, "street_address")))},
+    ]
+    if has_financial_data:
+        address_rows.append({"label": t.get("label_address", "Адрес"), "value": show(get_attr(fin_review, "street_address"))})
+
+    company_sections = [
+        {"title": t.get("section_main", "Основная информация"), "rows": main_rows},
+        {"title": t.get("section_registration", "Регистрация"), "rows": registration_rows},
+        {"title": t.get("section_activity", "Деятельность"), "rows": activity_rows},
+        {"title": t.get("section_addresses", "Адреса"), "rows": address_rows},
+    ]
+
+    contact_rows = []
+    contact_person = pick(get_attr(company, "contact_person"), owner_data.get("name") if owner_data else None)
+    if contact_person:
+        contact_rows.append({"label": t.get("label_contact_person", "Контактное лицо"), "value": show(contact_person)})
+    if owner_data and owner_data.get("position"):
+        contact_rows.append({"label": t.get("label_position", "Должность"), "value": show(owner_data.get("position"))})
+
+    contact_rows.append({"label": t.get("label_email", "Email"), "value": show(pick(get_attr(company, "contact_email"), owner_data.get("email") if owner_data else None, get_attr(fin_review, "email")))})
+    contact_rows.append({"label": t.get("label_phone", "Телефон"), "value": show(pick(get_attr(company, "contact_phone"), owner_data.get("phone") if owner_data else None, get_attr(fin_review, "phone")))})
+    contact_rows.append({"label": t.get("label_web", "Веб-сайт"), "value": show(pick(get_attr(company, "website"), get_attr(fin_review, "web")))})
+
+    if any(r["value"] != "—" for r in contact_rows):
+        company_sections.append({"title": t.get("section_contacts", "Контактная информация"), "rows": contact_rows})
+
+    if has_financial_data:
+        period_str = ""
+        if get_attr(fin_review, "period_from") and get_attr(fin_review, "period_to"):
+            period_str = f"{fin_review.period_from} — {fin_review.period_to}"
+        elif get_attr(fin_review, "period_from"):
+            period_str = str(fin_review.period_from)
+        report_rows = [
+            {"label": t.get("label_report_year", "Год отчета"), "value": show(get_attr(fin_review, "report_year"))},
+            {"label": t.get("label_report_period", "Период отчета"), "value": show(period_str) if period_str else "—"},
+            {"label": t.get("label_report_type", "Тип отчета"), "value": show(get_attr(fin_review, "report_type"))},
+            {"label": t.get("label_report_status", "Статус отчета"), "value": show(get_attr(fin_review, "report_status"))},
+            {"label": t.get("label_audited", "Аудирован"), "value": show(t.get("value_yes", "Да") if get_attr(fin_review, "is_audited") else t.get("value_no", "Нет") if get_attr(fin_review, "is_audited") is not None else None)},
+            {"label": t.get("label_signed", "Подписан"), "value": show(t.get("value_yes", "Да") if get_attr(fin_review, "signed") else t.get("value_no", "Нет") if get_attr(fin_review, "signed") is not None else None)},
+            {"label": t.get("label_declaration_date", "Дата декларации"), "value": show(get_attr(fin_review, "declaration_date"))},
         ]
-        
-        if has_financial_data:
-            main_rows.extend([
-                {"label": t.get("label_fiscal_code", "Фискальный код"), "value": v(getattr(first, "fiscal_code", None))},
-                {"label": t.get("label_cuiio", "CUIIO"), "value": v(getattr(first, "cuiio", None))},
-                {"label": t.get("label_cfoj", "Организационная форма"), "value": v(getattr(first, "cfoj_name", None))},
-                {"label": t.get("label_cfp", "Форма собственности"), "value": v(getattr(first, "cfp_name", None))},
-                {"label": t.get("label_location", "Населенный пункт"), "value": v(getattr(first, "cuatm_name", None))},
-                {"label": t.get("label_is_liquidation", "В ликвидации"), "value": yes_no(getattr(first, "liquidation", None))},
-            ])
-        else:
-            main_rows.extend([
-                {"label": t.get("label_status_company"), "value": v(getattr(first, "status", None))},
-                {"label": t.get("label_legal_form"), "value": v(getattr(first, "legal_form", None))},
-            ])
+        company_sections.append({"title": t.get("section_financial_report", "Данные отчета"), "rows": report_rows})
 
-        # Регистрация
-        registration_rows = []
-        if has_financial_data:
-            # Для Moldova используем fiscal_code как регистрационный
-            registration_rows = [
-                {"label": t.get("label_registration_number"), "value": v(getattr(first, "fiscal_code", None))},
-            ]
-        else:
-            registration_rows = [
-                {"label": t.get("label_registration_number"), "value": v(getattr(first, "registration_number", None) or getattr(first, "company_number", None))},
-                {"label": t.get("label_tax_number"), "value": v(getattr(first, "inn", None))},
-                {"label": t.get("label_registration_date"), "value": v(getattr(first, "registration_date", None))},
-            ]
+    company_sections.extend([
+        {
+            "title": t.get("section_capital", "Капитал"),
+            "rows": [
+                {"label": t.get("label_authorized_capital"), "value": show(pick(get_attr(base_review, "authorized_capital"), get_attr(fin_review, "authorized_capital")))},
+                {"label": t.get("label_paid_capital"), "value": show(pick(get_attr(base_review, "paid_up_capital"), get_attr(fin_review, "paid_up_capital")))},
+            ],
+        },
+        {
+            "title": t.get("section_management", "Руководство и учредители"),
+            "rows": [
+                {"label": t.get("label_manager"), "value": show(pick(get_attr(base_review, "managers"), get_attr(fin_review, "managers")))},
+                {"label": t.get("label_founder"), "value": show(pick(get_attr(base_review, "branch"), get_attr(fin_review, "branch")))},
+            ],
+        },
+        {
+            "title": t.get("section_existence", "Статус существования"),
+            "rows": [
+                {"label": t.get("label_status"), "value": show(pick(get_attr(base_review, "status"), get_attr(fin_review, "status")))},
+                {"label": t.get("label_liquidation_date"), "value": show(pick(get_attr(base_review, "liquidation_date"), get_attr(fin_review, "liquidation_date")))},
+            ],
+        },
+    ])
 
-        # Деятельность
-        activity_rows = []
-        if has_financial_data:
-            activity_rows = [
-                {"label": t.get("label_caem", "CAEM код"), "value": v(getattr(first, "caem_code", None))},
-                {"label": t.get("label_caem_name", "Вид деятельности"), "value": v(getattr(first, "caem_name", None))},
-            ]
-        else:
-            activity_rows = [
-                {"label": t.get("label_company_category"), "value": v(getattr(first, "subtype", None))},
-                {"label": t.get("label_activity_type"), "value": v(getattr(first, "activity_type", None))},
-            ]
-
-        # Адреса
-        address_rows = []
-        if has_financial_data:
-            address_rows = [
-                {"label": t.get("label_address", "Адрес"), "value": v(getattr(first, "street_address", None))},
-            ]
-        else:
-            address_rows = [
-                {"label": t.get("label_legal_address"), "value": v(getattr(first, "legal_address", None))},
-                {"label": t.get("label_postal_address"), "value": v(getattr(first, "mailing_address", None))},
-            ]
-
-        company_sections = [
-            {
-                "title": t.get("section_main", "Основная информация"),
-                "rows": main_rows
-            },
-            {
-                "title": t.get("section_registration", "Регистрация"),
-                "rows": registration_rows
-            },
-            {
-                "title": t.get("section_activity", "Деятельность"),
-                "rows": activity_rows
-            },
-            {
-                "title": t.get("section_addresses", "Адреса"),
-                "rows": address_rows
-            },
-        ]
-        
-        # Добавляем контакты владельца или финансового отчета сразу после адресов
-        contact_rows = []
-        
-        if has_financial_data:
-            # Контакты из финансового отчета
-            if getattr(first, "email", None):
-                contact_rows.append({"label": t.get("label_email", "Email"), "value": v(getattr(first, "email", None))})
-            if getattr(first, "phone", None):
-                contact_rows.append({"label": t.get("label_phone", "Телефон"), "value": v(getattr(first, "phone", None))})
-            if getattr(first, "web", None):
-                contact_rows.append({"label": t.get("label_web", "Веб-сайт"), "value": v(getattr(first, "web", None))})
-            if getattr(first, "employees_count", None):
-                contact_rows.append({"label": t.get("label_employees", "Количество сотрудников"), "value": v(getattr(first, "employees_count", None))})
-            if getattr(first, "accountant", None):
-                contact_rows.append({"label": t.get("label_accountant", "Бухгалтер"), "value": v(getattr(first, "accountant", None))})
-            if getattr(first, "responsible_person", None):
-                contact_rows.append({"label": t.get("label_responsible_person", "Ответственное лицо"), "value": v(getattr(first, "responsible_person", None))})
-        elif owner_data:
-            # Контакты владельца компании
-            if owner_data.get("name"):
-                contact_rows.append({"label": "Контактное лицо", "value": owner_data["name"]})
-            if owner_data.get("position"):
-                contact_rows.append({"label": "Должность", "value": owner_data["position"]})
-            if owner_data.get("email"):
-                contact_rows.append({"label": "Email", "value": owner_data["email"]})
-            if owner_data.get("phone"):
-                contact_rows.append({"label": "Телефон", "value": owner_data["phone"]})
-        
-        if contact_rows:
-            company_sections.append({
-                "title": t.get("section_contacts", "Контактная информация"),
-                "rows": contact_rows
-            })
-        
-        # Добавляем секцию с данными отчета для Moldova (если есть)
-        if has_financial_data:
-            period_str = ""
-            if getattr(first, "period_from", None) and getattr(first, "period_to", None):
-                period_str = f"{first.period_from} — {first.period_to}"
-            elif getattr(first, "period_from", None):
-                period_str = first.period_from
-            
-            report_rows = [
-                {"label": t.get("label_report_year", "Год отчета"), "value": v(getattr(first, "report_year", None))},
-                {"label": t.get("label_report_period", "Период отчета"), "value": v(period_str) if period_str else "—"},
-                {"label": t.get("label_report_type", "Тип отчета"), "value": v(getattr(first, "report_type", None))},
-                {"label": t.get("label_report_status", "Статус отчета"), "value": v(getattr(first, "report_status", None))},
-                {"label": t.get("label_audited", "Аудирован"), "value": yes_no(getattr(first, "is_audited", None))},
-                {"label": t.get("label_signed", "Подписан"), "value": yes_no(getattr(first, "signed", None))},
-                {"label": t.get("label_declaration_date", "Дата декларации"), "value": v(getattr(first, "declaration_date", None))},
-            ]
-            company_sections.append({
-                "title": t.get("section_financial_report", "Данные отчета"),
-                "rows": report_rows
-            })
-        
-        # Продолжаем с остальными секциями (только если нет финансовых данных)
-        if not has_financial_data:
-            company_sections.extend([
-                {
-                    "title": t.get("section_capital", "Капитал"),
-                    "rows": [
-                        {"label": t.get("label_authorized_capital"), "value": v(getattr(first, "authorized_capital", None))},
-                        {"label": t.get("label_paid_capital"), "value": v(getattr(first, "paid_up_capital", None))},
-                    ]
-                },
-                {
-                    "title": t.get("section_management", "Руководство и учредители"),
-                    "rows": [
-                        {"label": t.get("label_manager"), "value": v(getattr(first, "managers", None))},
-                        {"label": t.get("label_founder"), "value": v(getattr(first, "branch", None))},
-                    ]
-                },
-                {
-                    "title": t.get("section_existence", "Статус существования"),
-                    "rows": [
-                        {"label": t.get("label_status"), "value": v(getattr(first, "status", None))},
-                        {"label": t.get("label_liquidation_date"), "value": v(getattr(first, "liquidation_date", None))},
-                    ]
-                },
-            ])
-
-        # Извлекаем финансовые группы из detailed_data (баланс, прибыли/убытки и т.д.)
-        if has_financial_data:
-            detailed_data = getattr(first, "detailed_data", None)
-            if detailed_data and isinstance(detailed_data, dict):
-                groups = detailed_data.get("groups", [])
-                for group in groups:
-                    group_name = group.get("name", "")
-                    fields = group.get("fields", [])
-                    
-                    # Переводим название группы
-                    translated_group_name = get_translated_group_name(group_name, lang)
-                    
-                    # Формируем строки только с непустыми значениями
-                    rows = []
-                    for field in fields:
-                        code = field.get("code", "")
-                        name = field.get("name", "")
-                        date_prev = field.get("datePrev", "")
-                        date_current = field.get("dateCurrent", "")
-                        
-                        # Переводим название показателя
-                        translated_name = get_translated_indicator(code, name, lang)
-                        
-                        # Показываем строку если есть хотя бы одно значение
-                        if date_prev or date_current:
-                            rows.append({
-                                "code": code,
-                                "name": translated_name,
-                                "date_prev": date_prev if date_prev else "—",
-                                "date_current": date_current if date_current else "—",
-                            })
-                    
-                    if rows:
-                        financial_groups.append({
-                            "title": translated_group_name,
-                            "rows": rows,
+    if has_financial_data:
+        detailed_data = get_attr(fin_review, "detailed_data")
+        if detailed_data and isinstance(detailed_data, dict):
+            groups = detailed_data.get("groups", [])
+            for group in groups:
+                group_name = group.get("name", "")
+                fields = group.get("fields", [])
+                translated_group_name = get_translated_group_name(group_name, lang)
+                rows = []
+                for field in fields:
+                    code = field.get("code", "")
+                    name = field.get("name", "")
+                    date_prev = field.get("datePrev", "")
+                    date_current = field.get("dateCurrent", "")
+                    translated_name = get_translated_indicator(code, name, lang)
+                    if date_prev or date_current:
+                        rows.append({
+                            "code": code,
+                            "name": translated_name,
+                            "date_prev": date_prev if date_prev else "—",
+                            "date_current": date_current if date_current else "—",
                         })
+                if rows:
+                    financial_groups.append({
+                        "title": translated_group_name,
+                        "rows": rows,
+                    })
 
-        # JSON-LD
-        avg_rating_for_jsonld = None
-        if structured_reviews:
-            ratings = [r["reviewRating"]["ratingValue"] for r in structured_reviews if r["reviewRating"]["ratingValue"] is not None]
-            if ratings:
-                avg_rating_for_jsonld = sum(ratings) / len(ratings)
-
+    first_for_jsonld = fin_review or base_review
+    if first_for_jsonld:
         company_jsonld = {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": display_name,
             "url": seo['canonical'],
-            "identifier": getattr(first, "id", None),
+            "identifier": getattr(first_for_jsonld, "id", None),
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": getattr(first, "legal_address", None) or "—",
-                "addressCountry": getattr(first, "jurisdiction", None) or getattr(first, "country", None) or "—",
+                "streetAddress": getattr(first_for_jsonld, "legal_address", None) or getattr(first_for_jsonld, "street_address", None) or "—",
+                "addressCountry": getattr(first_for_jsonld, "jurisdiction", None) or getattr(first_for_jsonld, "country", None) or "—",
             },
-            "foundingDate": getattr(first, "registration_date", None),
-            "legalName": getattr(first, "short_name", None) or display_name,
-            "sameAs": getattr(first, "link", None) if hasattr(first, "link") else None,
+            "foundingDate": getattr(first_for_jsonld, "registration_date", None),
+            "legalName": getattr(first_for_jsonld, "short_name", None) or display_name,
+            "sameAs": getattr(first_for_jsonld, "link", None) if hasattr(first_for_jsonld, "link") else None,
         }
-        # Используем средний рейтинг по всем отзывам компании для JSON-LD
         if avg_rating is not None:
             company_jsonld["aggregateRating"] = {
                 "@type": "AggregateRating",

@@ -242,7 +242,7 @@ async def reviews_search_api(
     companies = await service.search_companies(search_term, limit)
 
     return JSONResponse(content={
-        "companies": [{"name": c.name, "id": c.min_review_id, "reviews_count": c.reviews_count} for c in companies]
+        "companies": [{"name": c.name, "id": c.id, "reviews_count": c.reviews_count} for c in companies]
     })
 
 

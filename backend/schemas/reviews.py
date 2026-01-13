@@ -17,6 +17,7 @@ class CompanySearchResult(BaseModel):
     """Результат поиска компании"""
     name: str
     id: Optional[int]
+    reviews_count: Optional[int] = 0
 
 
 class ReviewItem(BaseModel):

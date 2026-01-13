@@ -54,7 +54,7 @@ class ReviewsService:
         pattern = f'%{query}%'
 
         search_query = (
-            select(Company.name, Company.min_review_id)
+            select(Company.name, Company.min_review_id, Company.reviews_count)
             .where(Company.name.ilike(pattern))
             .limit(limit)
         )
@@ -62,7 +62,7 @@ class ReviewsService:
         rows = result.all()
 
         return [
-            CompanySearchResult(name=row.name, id=row.min_review_id)
+            CompanySearchResult(name=row.name, id=row.min_review_id, reviews_count=row.reviews_count or 0)
             for row in rows
         ]
 

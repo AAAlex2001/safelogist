@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import ruMessages from "../../../messages/ru.json";
+import "../globals.css";
 import styles from "./admin.module.scss";
 import AdminAuth from "./AdminAuth";
 
@@ -38,7 +41,11 @@ export default function AdminLayout({
           ))}
         </nav>
       </aside>
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <NextIntlClientProvider messages={ruMessages as any} locale="ru">
+          {children}
+        </NextIntlClientProvider>
+      </main>
     </AdminAuth>
   );
 }

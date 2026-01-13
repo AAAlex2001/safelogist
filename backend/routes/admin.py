@@ -296,6 +296,427 @@ async def delete_review_request(request_id: int, db: AsyncSession = Depends(get_
     return {"message": "Заявка удалена"}
 
 
+# ===================== ВСЕ ОТЗЫВЫ (таблица reviews) =====================
+
+from models.review import Review
+from models.company import Company
+from urllib.parse import quote
+
+
+# === КОМПАНИИ (быстрый список из таблицы companies) ===
+
+class CompanyListItemResponse(BaseModel):
+    """Компания из таблицы companies"""
+    name: str
+    slug: str
+    reviews_count: int
+    min_review_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class PaginatedCompaniesResponse(BaseModel):
+    companies: List[CompanyListItemResponse]
+    page: int
+    per_page: int
+    has_next: bool
+
+
+@router.get("/companies", response_model=PaginatedCompaniesResponse)
+async def get_companies_list(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+    search: Optional[str] = None,
+    db: AsyncSession = Depends(get_db)
+):
+    """Получить список компаний с пагинацией (быстро из таблицы companies)"""
+    offset = (page - 1) * per_page
+
+    query = select(Company.name, Company.reviews_count, Company.min_review_id)
+
+    if search:
+        pattern = f"%{search}%"
+        query = query.where(Company.name.ilike(pattern))
+
+    query = query.limit(per_page + 1).offset(offset)
+    result = await db.execute(query)
+    rows = result.all()
+
+    has_next = len(rows) > per_page
+    if has_next:
+        rows = rows[:per_page]
+
+    companies = [
+        CompanyListItemResponse(
+            name=row.name,
+            slug=quote(row.name, safe=''),
+            reviews_count=row.reviews_count or 0,
+            min_review_id=row.min_review_id or 0
+        )
+        for row in rows
+    ]
+
+    return PaginatedCompaniesResponse(
+        companies=companies,
+        page=page,
+        per_page=per_page,
+        has_next=has_next
+    )
+
+
+@router.get("/companies/{company_name}/reviews")
+async def get_company_reviews(
+    company_name: str,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(50, ge=1, le=200),
+    db: AsyncSession = Depends(get_db)
+):
+    """Получить все отзывы конкретной компании для редактирования"""
+    from urllib.parse import unquote
+    decoded_name = unquote(company_name)
+    
+    offset = (page - 1) * per_page
+
+    # Считаем общее кол-во
+    count_query = select(func.count(Review.id)).where(Review.subject == decoded_name)
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    # Получаем отзывы
+    query = (
+        select(Review)
+        .where(Review.subject == decoded_name)
+        .order_by(Review.created_at.desc())
+        .limit(per_page)
+        .offset(offset)
+    )
+    result = await db.execute(query)
+    reviews = result.scalars().all()
+
+    return {
+        "company_name": decoded_name,
+        "reviews": [
+            {
+                "id": r.id,
+                "review_id": r.review_id,
+                "subject": r.subject,
+                "comment": r.comment,
+                "reviewer": r.reviewer,
+                "rating": r.rating,
+                "status": r.status,
+                "review_date": r.review_date.isoformat() if r.review_date else None,
+                "source": r.source,
+                "jurisdiction": r.jurisdiction,
+                "country": r.country,
+                "company_number": r.company_number,
+                "registration_number": r.registration_number,
+                "registration_date": r.registration_date,
+                "legal_form": r.legal_form,
+                "short_name": r.short_name,
+                "cin": r.cin,
+                "authorized_capital": r.authorized_capital,
+                "paid_up_capital": r.paid_up_capital,
+                "subtype": r.subtype,
+                "activity_type": r.activity_type,
+                "legal_address": r.legal_address,
+                "mailing_address": r.mailing_address,
+                "ogrn": r.ogrn,
+                "inn": r.inn,
+                "liquidation_date": r.liquidation_date,
+                "managers": r.managers,
+                "branch": r.branch,
+                "fiscal_code": r.fiscal_code,
+                "report_type": r.report_type,
+                "report_year": r.report_year,
+                "detail_data": r.detail_data,
+                "detailed_data": r.detailed_data,
+                "cuiio": r.cuiio,
+                "email": r.email,
+                "phone": r.phone,
+                "postal_code": r.postal_code,
+                "street_address": r.street_address,
+                "caem_code": r.caem_code,
+                "caem_name": r.caem_name,
+                "cfoj_code": r.cfoj_code,
+                "cfoj_name": r.cfoj_name,
+                "cfp_code": r.cfp_code,
+                "cfp_name": r.cfp_name,
+                "employees_count": r.employees_count,
+                "accountant": r.accountant,
+                "accountant_phone": r.accountant_phone,
+                "responsible_person": r.responsible_person,
+                "report_status": r.report_status,
+                "is_audited": r.is_audited,
+                "declaration_date": r.declaration_date,
+                "web": r.web,
+                "cuatm_code": r.cuatm_code,
+                "cuatm_name": r.cuatm_name,
+                "entity_type": r.entity_type,
+                "liquidation": r.liquidation,
+                "period_from": r.period_from,
+                "period_to": r.period_to,
+                "signed": r.signed,
+                "report_create_date": r.report_create_date,
+                "report_update_date": r.report_update_date,
+                "fiscal_date": r.fiscal_date,
+                "economic_agent_id": r.economic_agent_id,
+                "import_file_name": r.import_file_name,
+                "employees_abs": r.employees_abs,
+                "organization_id": r.organization_id,
+                "organization_name": r.organization_name,
+                "fisc": r.fisc,
+                "legal_entity_id": r.legal_entity_id,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+            }
+            for r in reviews
+        ],
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "has_next": offset + len(reviews) < total
+    }
+
+
+# === ОТДЕЛЬНЫЕ ОТЗЫВЫ (CRUD) ===
+
+class ReviewResponse(BaseModel):
+    """Отзыв из таблицы reviews"""
+    id: int
+    subject: str
+    review_id: str
+    comment: Optional[str] = None
+    reviewer: Optional[str] = None
+    rating: Optional[int] = None
+    status: Optional[str] = None
+    review_date: Optional[datetime] = None
+    source: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    country: Optional[str] = None
+    company_number: Optional[str] = None
+    registration_number: Optional[str] = None
+    registration_date: Optional[str] = None
+    legal_form: Optional[str] = None
+    short_name: Optional[str] = None
+    cin: Optional[str] = None
+    authorized_capital: Optional[str] = None
+    paid_up_capital: Optional[str] = None
+    subtype: Optional[str] = None
+    activity_type: Optional[str] = None
+    legal_address: Optional[str] = None
+    mailing_address: Optional[str] = None
+    ogrn: Optional[str] = None
+    inn: Optional[str] = None
+    liquidation_date: Optional[str] = None
+    managers: Optional[str] = None
+    branch: Optional[str] = None
+    fiscal_code: Optional[str] = None
+    report_type: Optional[str] = None
+    report_year: Optional[int] = None
+    detail_data: Optional[dict] = None
+    detailed_data: Optional[dict] = None
+    cuiio: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    postal_code: Optional[str] = None
+    street_address: Optional[str] = None
+    caem_code: Optional[str] = None
+    caem_name: Optional[str] = None
+    cfoj_code: Optional[str] = None
+    cfoj_name: Optional[str] = None
+    cfp_code: Optional[str] = None
+    cfp_name: Optional[str] = None
+    employees_count: Optional[str] = None
+    accountant: Optional[str] = None
+    accountant_phone: Optional[str] = None
+    responsible_person: Optional[str] = None
+    report_status: Optional[str] = None
+    is_audited: Optional[bool] = None
+    declaration_date: Optional[str] = None
+    web: Optional[str] = None
+    cuatm_code: Optional[str] = None
+    cuatm_name: Optional[str] = None
+    entity_type: Optional[str] = None
+    liquidation: Optional[bool] = None
+    period_from: Optional[str] = None
+    period_to: Optional[str] = None
+    signed: Optional[bool] = None
+    report_create_date: Optional[str] = None
+    report_update_date: Optional[str] = None
+    fiscal_date: Optional[str] = None
+    economic_agent_id: Optional[str] = None
+    import_file_name: Optional[str] = None
+    employees_abs: Optional[str] = None
+    organization_id: Optional[str] = None
+    organization_name: Optional[str] = None
+    fisc: Optional[str] = None
+    legal_entity_id: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class PaginatedReviewsResponse(BaseModel):
+    reviews: List[ReviewResponse]
+    total: int
+    page: int
+    per_page: int
+
+
+@router.get("/reviews", response_model=PaginatedReviewsResponse)
+async def get_all_reviews(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+    search: Optional[str] = None,
+    db: AsyncSession = Depends(get_db)
+):
+    """Получить все отзывы с пагинацией"""
+    offset = (page - 1) * per_page
+
+    count_query = select(func.count(Review.id))
+    query = select(Review).order_by(Review.created_at.desc())
+
+    if search:
+        pattern = f"%{search}%"
+        search_filter = (
+            (Review.subject.ilike(pattern)) |
+            (Review.reviewer.ilike(pattern)) |
+            (Review.inn.ilike(pattern)) |
+            (Review.ogrn.ilike(pattern))
+        )
+        count_query = count_query.where(search_filter)
+        query = query.where(search_filter)
+
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    query = query.limit(per_page).offset(offset)
+    result = await db.execute(query)
+    reviews = result.scalars().all()
+
+    return PaginatedReviewsResponse(
+        reviews=reviews,
+        total=total,
+        page=page,
+        per_page=per_page
+    )
+
+
+@router.get("/reviews/{review_id}", response_model=ReviewResponse)
+async def get_review(review_id: int, db: AsyncSession = Depends(get_db)):
+    """Получить один отзыв по ID"""
+    result = await db.execute(select(Review).where(Review.id == review_id))
+    review = result.scalar()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    return review
+
+
+class ReviewUpdateRequest(BaseModel):
+    """Запрос на обновление отзыва - все поля опциональные"""
+    subject: Optional[str] = None
+    comment: Optional[str] = None
+    reviewer: Optional[str] = None
+    rating: Optional[int] = None
+    status: Optional[str] = None
+    source: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    country: Optional[str] = None
+    company_number: Optional[str] = None
+    registration_number: Optional[str] = None
+    registration_date: Optional[str] = None
+    legal_form: Optional[str] = None
+    short_name: Optional[str] = None
+    cin: Optional[str] = None
+    authorized_capital: Optional[str] = None
+    paid_up_capital: Optional[str] = None
+    subtype: Optional[str] = None
+    activity_type: Optional[str] = None
+    legal_address: Optional[str] = None
+    mailing_address: Optional[str] = None
+    ogrn: Optional[str] = None
+    inn: Optional[str] = None
+    liquidation_date: Optional[str] = None
+    managers: Optional[str] = None
+    branch: Optional[str] = None
+    fiscal_code: Optional[str] = None
+    report_type: Optional[str] = None
+    report_year: Optional[int] = None
+    detail_data: Optional[dict] = None
+    detailed_data: Optional[dict] = None
+    cuiio: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    postal_code: Optional[str] = None
+    street_address: Optional[str] = None
+    caem_code: Optional[str] = None
+    caem_name: Optional[str] = None
+    cfoj_code: Optional[str] = None
+    cfoj_name: Optional[str] = None
+    cfp_code: Optional[str] = None
+    cfp_name: Optional[str] = None
+    employees_count: Optional[str] = None
+    accountant: Optional[str] = None
+    accountant_phone: Optional[str] = None
+    responsible_person: Optional[str] = None
+    report_status: Optional[str] = None
+    is_audited: Optional[bool] = None
+    declaration_date: Optional[str] = None
+    web: Optional[str] = None
+    cuatm_code: Optional[str] = None
+    cuatm_name: Optional[str] = None
+    entity_type: Optional[str] = None
+    liquidation: Optional[bool] = None
+    period_from: Optional[str] = None
+    period_to: Optional[str] = None
+    signed: Optional[bool] = None
+    report_create_date: Optional[str] = None
+    report_update_date: Optional[str] = None
+    fiscal_date: Optional[str] = None
+    economic_agent_id: Optional[str] = None
+    employees_abs: Optional[str] = None
+    organization_id: Optional[str] = None
+    organization_name: Optional[str] = None
+    fisc: Optional[str] = None
+    legal_entity_id: Optional[str] = None
+
+
+@router.patch("/reviews/{review_id}")
+async def update_review(
+    review_id: int,
+    data: ReviewUpdateRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Обновить отзыв"""
+    result = await db.execute(select(Review).where(Review.id == review_id))
+    review = result.scalar()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        if hasattr(review, field):
+            setattr(review, field, value)
+
+    await db.commit()
+    await db.refresh(review)
+    return {"message": "Отзыв обновлён", "id": review.id}
+
+
+@router.delete("/reviews/{review_id}")
+async def delete_review(review_id: int, db: AsyncSession = Depends(get_db)):
+    """Удалить отзыв"""
+    result = await db.execute(select(Review).where(Review.id == review_id))
+    review = result.scalar()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    await db.delete(review)
+    await db.commit()
+    return {"message": "Отзыв удалён"}
+
+
 # ===================== LANDING HERO =====================
 
 @router.get("/landing/hero", response_model=HeroContentOut)
@@ -656,3 +1077,121 @@ async def admin_upsert_faq(
 ):
     service = LandingService(db)
     return await service.upsert_faq(lang, payload)
+
+
+from models.review import Review
+from models.company import Company
+
+
+@router.get("/company/{company_name}")
+async def get_company_info(company_name: str, db: AsyncSession = Depends(get_db)):
+    """Получить информацию о компании"""
+    query = select(Company).where(Company.name == company_name)
+    result = await db.execute(query)
+    company = result.scalar_one_or_none()
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    return {
+        "name": company.name,
+        "reviews_count": company.reviews_count,
+        "logo": company.logo,
+        "description": company.description,
+        "website": company.website,
+        "contact_phone": company.contact_phone,
+        "contact_email": company.contact_email,
+        "contact_person": company.contact_person,
+    }
+
+
+@router.patch("/company/{company_name}")
+async def update_company_info(company_name: str, payload: dict, db: AsyncSession = Depends(get_db)):
+    """Обновить информацию о компании"""
+    query = select(Company).where(Company.name == company_name)
+    result = await db.execute(query)
+    company = result.scalar_one_or_none()
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Обновляем только разрешенные поля
+    allowed_fields = ["description", "website", "contact_phone", "contact_email", "contact_person", "logo"]
+    for key, value in payload.items():
+        if key in allowed_fields and hasattr(company, key):
+            setattr(company, key, value)
+    
+    await db.commit()
+    await db.refresh(company)
+    return {"message": "Updated successfully"}
+
+
+@router.get("/reviews/company/{company_name}")
+async def get_company_reviews(company_name: str, db: AsyncSession = Depends(get_db)):
+    """Получить все отзывы для компании по имени"""
+    query = select(Review).where(Review.subject == company_name).order_by(Review.id.desc())
+    result = await db.execute(query)
+    reviews = result.scalars().all()
+    return [
+        {
+            "id": r.id,
+            "subject": r.subject,
+            "review_id": r.review_id,
+            "comment": r.comment,
+            "reviewer": r.reviewer,
+            "rating": r.rating,
+            "status": r.status,
+            "review_date": r.review_date.isoformat() if r.review_date else None,
+            "source": r.source,
+            "jurisdiction": r.jurisdiction,
+            "country": r.country,
+            "company_number": r.company_number,
+            "legal_form": r.legal_form,
+            "inn": r.inn,
+            "ogrn": r.ogrn,
+            "created_at": r.created_at.isoformat() if r.created_at else None,
+        }
+        for r in reviews
+    ]
+
+
+@router.get("/reviews/company-name-by-id/{min_review_id}")
+async def get_company_name_by_id(min_review_id: int, db: AsyncSession = Depends(get_db)):
+    """Получить имя компании по min_review_id"""
+    query = select(Company.name).where(Company.min_review_id == min_review_id)
+    result = await db.execute(query)
+    company_name = result.scalar_one_or_none()
+    if not company_name:
+        raise HTTPException(status_code=404, detail="Company not found")
+    return {"company_name": company_name}
+
+
+@router.patch("/reviews/{review_id}")
+async def update_review(review_id: int, payload: dict, db: AsyncSession = Depends(get_db)):
+    """Обновить отзыв"""
+    query = select(Review).where(Review.id == review_id)
+    result = await db.execute(query)
+    review = result.scalar_one_or_none()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    # Обновляем все переданные поля
+    for key, value in payload.items():
+        if hasattr(review, key):
+            setattr(review, key, value)
+    
+    await db.commit()
+    await db.refresh(review)
+    return {"message": "Updated successfully"}
+
+
+@router.delete("/reviews/{review_id}")
+async def delete_review(review_id: int, db: AsyncSession = Depends(get_db)):
+    """Удалить отзыв"""
+    query = select(Review).where(Review.id == review_id)
+    result = await db.execute(query)
+    review = result.scalar_one_or_none()
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    await db.delete(review)
+    await db.commit()
+    return {"message": "Deleted successfully"}

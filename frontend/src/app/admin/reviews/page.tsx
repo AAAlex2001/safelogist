@@ -100,6 +100,12 @@ type Company = {
   min_review_id: number;
 };
 
+type SearchCompany = {
+  id: number;
+  name: string;
+  reviews_count?: number;
+};
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 type TabType = "requests" | "companies";
@@ -117,13 +123,22 @@ export default function ReviewsPage() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [companiesHasNext, setCompaniesHasNext] = useState(false);
-  const [companiesSearch, setCompaniesSearch] = useState("");
+  
+  // Поиск inline
+  const [searchResults, setSearchResults] = useState<SearchCompany[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Отзывы компании (для редактирования)
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [companyReviews, setCompanyReviews] = useState<Review[]>([]);
   const [companyReviewsTotal, setCompanyReviewsTotal] = useState(0);
+  const [minReviewId, setMinReviewId] = useState<number | null>(null);
+  const [reviewsSortOrder, setReviewsSortOrder] = useState<"newest" | "oldest">("newest");
+  
+  // Модалки
   const [editReviewModal, setEditReviewModal] = useState<Review | null>(null);
+  const [editCompanyModal, setEditCompanyModal] = useState<Review | null>(null);
   
   const [loading, setLoading] = useState(true);
 
@@ -131,20 +146,18 @@ export default function ReviewsPage() {
     if (activeTab === "requests") {
       fetchRequests();
     } else {
-      fetchCompanies();
+      if (!searchQuery) {
+        fetchCompanies();
+      }
     }
   }, [activeTab, requestFilter, companiesPage]);
 
-  // Поиск компаний с debounce
-  useEffect(() => {
-    if (activeTab === "companies") {
-      const timer = setTimeout(() => {
-        setCompaniesPage(1);
-        fetchCompanies();
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [companiesSearch]);
+  // Обработчик inline поиска из SearchBar
+  const handleInlineSearch = (results: SearchCompany[], isLoading: boolean, query: string) => {
+    setSearchQuery(query);
+    setSearchLoading(isLoading);
+    setSearchResults(results);
+  };
 
   // ========== ЗАЯВКИ ==========
   const fetchRequests = () => {
@@ -203,10 +216,7 @@ export default function ReviewsPage() {
   const fetchCompanies = async () => {
     setLoading(true);
     try {
-      let url = `${API_URL}/api/admin/companies?page=${companiesPage}&per_page=20`;
-      if (companiesSearch) {
-        url += `&search=${encodeURIComponent(companiesSearch)}`;
-      }
+      const url = `${API_URL}/api/admin/companies?page=${companiesPage}&per_page=20`;
       const res = await fetch(url);
       const data = await res.json();
       setCompanies(data.companies || []);
@@ -228,23 +238,59 @@ export default function ReviewsPage() {
       const data = await res.json();
       setCompanyReviews(data.reviews || []);
       setCompanyReviewsTotal(data.total || 0);
+      setMinReviewId(data.min_review_id || null);
     } catch (err) {
       console.error("Error fetching company reviews:", err);
       setCompanyReviews([]);
+      setMinReviewId(null);
     } finally {
       setLoading(false);
     }
   };
 
+  // Отсортированные отзывы
+  const sortedReviews = [...companyReviews].sort((a, b) => {
+    const dateA = new Date(a.review_date || a.created_at).getTime();
+    const dateB = new Date(b.review_date || b.created_at).getTime();
+    return reviewsSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+  });
+
   const saveReview = async () => {
     if (!editReviewModal) return;
     try {
+      // Отправляем только поля отзыва
+      const reviewData = {
+        rating: editReviewModal.rating,
+        comment: editReviewModal.comment,
+        reviewer: editReviewModal.reviewer,
+        source: editReviewModal.source,
+        review_date: editReviewModal.review_date,
+      };
       await fetch(`${API_URL}/api/admin/reviews/${editReviewModal.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editReviewModal),
+        body: JSON.stringify(reviewData),
       });
       setEditReviewModal(null);
+      if (selectedCompany) {
+        fetchCompanyReviews(selectedCompany);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при сохранении");
+    }
+  };
+
+  const saveCompanyData = async () => {
+    if (!editCompanyModal) return;
+    try {
+      // Отправляем все данные компании (не отзыва)
+      await fetch(`${API_URL}/api/admin/reviews/${editCompanyModal.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editCompanyModal),
+      });
+      setEditCompanyModal(null);
       if (selectedCompany) {
         fetchCompanyReviews(selectedCompany);
       }
@@ -277,41 +323,98 @@ export default function ReviewsPage() {
     <div>
       <h1 className={styles.pageTitle}>Управление отзывами</h1>
 
+      {/* SearchBar с inline режимом */}
       <div style={{ marginBottom: "20px" }}>
-        <SearchBar reviewsBasePath="/admin/company" />
+        <SearchBar 
+          placeholder="Поиск компании..."
+          onSearch={handleInlineSearch}
+        />
       </div>
 
-      {/* Вкладки */}
-      <div style={{ display: "flex", gap: "0", marginBottom: "20px", borderBottom: "2px solid #eee" }}>
-        <button
-          onClick={() => { setActiveTab("requests"); setSelectedCompany(null); }}
-          style={{
-            padding: "12px 24px",
-            border: "none",
-            background: activeTab === "requests" ? "#4f46e5" : "transparent",
-            color: activeTab === "requests" ? "#fff" : "#666",
-            cursor: "pointer",
-            fontWeight: 600,
-            borderRadius: "8px 8px 0 0"
-          }}
-        >
-          Заявки на модерацию
-        </button>
-        <button
-          onClick={() => { setActiveTab("companies"); setSelectedCompany(null); }}
-          style={{
-            padding: "12px 24px",
-            border: "none",
-            background: activeTab === "companies" ? "#4f46e5" : "transparent",
-            color: activeTab === "companies" ? "#fff" : "#666",
-            cursor: "pointer",
-            fontWeight: 600,
-            borderRadius: "8px 8px 0 0"
-          }}
-        >
-          Все компании и отзывы
-        </button>
-      </div>
+      {/* Результаты inline поиска */}
+      {searchQuery.length >= 2 && (
+        <div style={{ marginBottom: "20px" }}>
+          {searchLoading ? (
+            <div className={styles.loading}>Поиск...</div>
+          ) : searchResults.length === 0 ? (
+            <div className={styles.empty}>По запросу "{searchQuery}" ничего не найдено</div>
+          ) : (
+            <>
+              <h3 style={{ marginBottom: "12px" }}>Результаты поиска ({searchResults.length})</h3>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Компания</th>
+                    <th>Отзывов</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchResults.map((company) => (
+                    <tr key={company.id} style={{ cursor: "pointer" }} onClick={() => {
+                      setSearchQuery("");
+                      setSearchResults([]);
+                      setActiveTab("companies");
+                      fetchCompanyReviews(company.name);
+                    }}>
+                      <td><strong>{company.name}</strong></td>
+                      <td>{company.reviews_count ?? 0}</td>
+                      <td>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSearchQuery("");
+                            setSearchResults([]);
+                            setActiveTab("companies");
+                            fetchCompanyReviews(company.name);
+                          }}
+                          className={`${styles.actionBtn} ${styles.toggle}`}
+                        >
+                          Редактировать отзывы
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Вкладки - показываем только когда нет поиска */}
+      {searchQuery.length < 2 && (
+        <>
+          <div style={{ display: "flex", gap: "0", marginBottom: "20px", borderBottom: "2px solid #eee" }}>
+            <button
+              onClick={() => { setActiveTab("requests"); setSelectedCompany(null); }}
+              style={{
+                padding: "12px 24px",
+                border: "none",
+                background: activeTab === "requests" ? "#4f46e5" : "transparent",
+                color: activeTab === "requests" ? "#fff" : "#666",
+                cursor: "pointer",
+                fontWeight: 600,
+                borderRadius: "8px 8px 0 0"
+              }}
+            >
+              Заявки на модерацию
+            </button>
+            <button
+              onClick={() => { setActiveTab("companies"); setSelectedCompany(null); }}
+              style={{
+                padding: "12px 24px",
+                border: "none",
+                background: activeTab === "companies" ? "#4f46e5" : "transparent",
+                color: activeTab === "companies" ? "#fff" : "#666",
+                cursor: "pointer",
+                fontWeight: 600,
+                borderRadius: "8px 8px 0 0"
+              }}
+            >
+              Все компании и отзывы
+            </button>
+          </div>
 
       {/* ========== ЗАЯВКИ ========== */}
       {activeTab === "requests" && (
@@ -379,24 +482,6 @@ export default function ReviewsPage() {
       {/* ========== КОМПАНИИ И ОТЗЫВЫ ========== */}
       {activeTab === "companies" && !selectedCompany && (
         <>
-          {/* Поиск по компаниям */}
-          <div style={{ marginBottom: "20px" }}>
-            <input
-              type="text"
-              placeholder="Поиск компании по названию..."
-              value={companiesSearch}
-              onChange={(e) => setCompaniesSearch(e.target.value)}
-              style={{ 
-                padding: "12px 16px", 
-                width: "100%", 
-                maxWidth: "400px",
-                borderRadius: "6px", 
-                border: "1px solid #ddd",
-                fontSize: "14px"
-              }}
-            />
-          </div>
-
           {loading ? (
             <div className={styles.loading}>Загрузка...</div>
           ) : companies.length === 0 ? (
@@ -450,7 +535,7 @@ export default function ReviewsPage() {
       {/* ========== ОТЗЫВЫ ВЫБРАННОЙ КОМПАНИИ ========== */}
       {activeTab === "companies" && selectedCompany && (
         <>
-          <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "16px" }}>
+          <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
             <button
               onClick={() => setSelectedCompany(null)}
               className={`${styles.actionBtn} ${styles.toggle}`}
@@ -460,6 +545,31 @@ export default function ReviewsPage() {
             <h2 style={{ margin: 0, fontSize: "18px" }}>
               {selectedCompany} — {companyReviewsTotal} отзывов
             </h2>
+            {companyReviews.length > 0 && (
+              <button
+                onClick={() => {
+                  // Находим запись с min_review_id (базовая запись компании)
+                  const baseReview = companyReviews.find(r => r.id === minReviewId) || companyReviews[0];
+                  setEditCompanyModal({ ...baseReview });
+                }}
+                className={`${styles.actionBtn} ${styles.approve}`}
+              >
+                ✏️ Редактировать данные компании
+              </button>
+            )}
+          </div>
+
+          {/* Сортировка */}
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ marginRight: "8px", fontWeight: 500 }}>Сортировка:</label>
+            <select
+              value={reviewsSortOrder}
+              onChange={(e) => setReviewsSortOrder(e.target.value as "newest" | "oldest")}
+              style={{ padding: "8px 12px", borderRadius: "6px", border: "1px solid #ddd" }}
+            >
+              <option value="newest">От новых к старым</option>
+              <option value="oldest">От старых к новым</option>
+            </select>
           </div>
 
           {loading ? (
@@ -472,7 +582,7 @@ export default function ReviewsPage() {
               gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 500px), 1fr))",
               gap: "20px"
             }}>
-              {companyReviews.map((review) => (
+              {sortedReviews.map((review) => (
                 <div 
                   key={review.id}
                   style={{
@@ -566,11 +676,86 @@ export default function ReviewsPage() {
         </div>
       )}
 
-      {/* Модальное окно редактирования отзыва - ВСЕ ПОЛЯ */}
+      {/* Модальное окно редактирования отзыва - ТОЛЬКО ПОЛЯ ОТЗЫВА */}
       {editReviewModal && (
         <div className={styles.modal}>
-          <div className={styles.modalContent} style={{ maxWidth: "1000px", maxHeight: "90vh", overflow: "auto" }}>
+          <div className={styles.modalContent} style={{ maxWidth: "600px" }}>
             <h3 style={{ marginBottom: "16px" }}>Редактировать отзыв #{editReviewModal.id}</h3>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px" }}>
+              Компания: <strong>{editReviewModal.subject}</strong>
+            </p>
+            
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+              <div>
+                <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Рейтинг (1-5)</label>
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="5" 
+                  value={editReviewModal.rating || ""} 
+                  onChange={(e) => updateReviewField("rating", Number(e.target.value) || null)} 
+                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ddd" }} 
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Автор отзыва (от кого)</label>
+                <input 
+                  type="text" 
+                  value={editReviewModal.reviewer || ""} 
+                  onChange={(e) => updateReviewField("reviewer", e.target.value)} 
+                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ddd" }} 
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Источник</label>
+                <input 
+                  type="text" 
+                  value={editReviewModal.source || ""} 
+                  onChange={(e) => updateReviewField("source", e.target.value)} 
+                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ddd" }} 
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Дата отзыва</label>
+                <input 
+                  type="date" 
+                  value={editReviewModal.review_date ? editReviewModal.review_date.split('T')[0] : ""} 
+                  onChange={(e) => updateReviewField("review_date", e.target.value)} 
+                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ddd" }} 
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Текст отзыва</label>
+              <textarea 
+                value={editReviewModal.comment || ""} 
+                onChange={(e) => updateReviewField("comment", e.target.value)} 
+                rows={6} 
+                style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ddd" }} 
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+              <button className={`${styles.actionBtn} ${styles.toggle}`} onClick={() => setEditReviewModal(null)}>
+                Отмена
+              </button>
+              <button className={`${styles.actionBtn} ${styles.approve}`} onClick={saveReview}>
+                Сохранить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно редактирования ДАННЫХ КОМПАНИИ - ВСЕ ПОЛЯ */}
+      {editCompanyModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent} style={{ maxWidth: "1000px", maxHeight: "90vh", overflow: "auto" }}>
+            <h3 style={{ marginBottom: "16px" }}>Редактировать данные компании</h3>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px" }}>
+              Изменения применятся к записи #{editCompanyModal.id}
+            </p>
             
             {/* Основная информация */}
             <details open style={{ marginBottom: "16px" }}>
@@ -579,28 +764,16 @@ export default function ReviewsPage() {
               </summary>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Название компании (subject)</label>
-                  <input type="text" value={editReviewModal.subject || ""} onChange={(e) => updateReviewField("subject", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Название компании</label>
+                  <input type="text" value={editCompanyModal.subject || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, subject: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Сокращённое название</label>
-                  <input type="text" value={editReviewModal.short_name || ""} onChange={(e) => updateReviewField("short_name", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Источник</label>
-                  <input type="text" value={editReviewModal.source || ""} onChange={(e) => updateReviewField("source", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Рейтинг</label>
-                  <input type="number" min="1" max="5" value={editReviewModal.rating || ""} onChange={(e) => updateReviewField("rating", Number(e.target.value) || null)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Автор отзыва</label>
-                  <input type="text" value={editReviewModal.reviewer || ""} onChange={(e) => updateReviewField("reviewer", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.short_name || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, short_name: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Статус компании</label>
-                  <input type="text" value={editReviewModal.status || ""} onChange={(e) => updateReviewField("status", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.status || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, status: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -613,51 +786,51 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Юрисдикция</label>
-                  <input type="text" value={editReviewModal.jurisdiction || ""} onChange={(e) => updateReviewField("jurisdiction", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.jurisdiction || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, jurisdiction: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Страна</label>
-                  <input type="text" value={editReviewModal.country || ""} onChange={(e) => updateReviewField("country", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.country || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, country: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Орг-правовая форма</label>
-                  <input type="text" value={editReviewModal.legal_form || ""} onChange={(e) => updateReviewField("legal_form", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.legal_form || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, legal_form: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Регистрационный номер</label>
-                  <input type="text" value={editReviewModal.registration_number || ""} onChange={(e) => updateReviewField("registration_number", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.registration_number || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, registration_number: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Дата регистрации</label>
-                  <input type="text" value={editReviewModal.registration_date || ""} onChange={(e) => updateReviewField("registration_date", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.registration_date || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, registration_date: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>ИНН</label>
-                  <input type="text" value={editReviewModal.inn || ""} onChange={(e) => updateReviewField("inn", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.inn || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, inn: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>ОГРН</label>
-                  <input type="text" value={editReviewModal.ogrn || ""} onChange={(e) => updateReviewField("ogrn", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.ogrn || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, ogrn: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Номер компании</label>
-                  <input type="text" value={editReviewModal.company_number || ""} onChange={(e) => updateReviewField("company_number", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.company_number || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, company_number: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Фискальный код</label>
-                  <input type="text" value={editReviewModal.fiscal_code || ""} onChange={(e) => updateReviewField("fiscal_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.fiscal_code || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, fiscal_code: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CUIIO</label>
-                  <input type="text" value={editReviewModal.cuiio || ""} onChange={(e) => updateReviewField("cuiio", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.cuiio || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, cuiio: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CIN</label>
-                  <input type="text" value={editReviewModal.cin || ""} onChange={(e) => updateReviewField("cin", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.cin || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, cin: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Entity Type</label>
-                  <input type="text" value={editReviewModal.entity_type || ""} onChange={(e) => updateReviewField("entity_type", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.entity_type || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, entity_type: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -670,19 +843,15 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Уставный капитал</label>
-                  <input type="text" value={editReviewModal.authorized_capital || ""} onChange={(e) => updateReviewField("authorized_capital", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.authorized_capital || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, authorized_capital: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Оплаченный капитал</label>
-                  <input type="text" value={editReviewModal.paid_up_capital || ""} onChange={(e) => updateReviewField("paid_up_capital", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.paid_up_capital || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, paid_up_capital: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Кол-во сотрудников</label>
-                  <input type="text" value={editReviewModal.employees_count || ""} onChange={(e) => updateReviewField("employees_count", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>employees_abs</label>
-                  <input type="text" value={editReviewModal.employees_abs || ""} onChange={(e) => updateReviewField("employees_abs", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.employees_count || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, employees_count: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -695,39 +864,15 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Вид деятельности</label>
-                  <input type="text" value={editReviewModal.activity_type || ""} onChange={(e) => updateReviewField("activity_type", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Subtype</label>
-                  <input type="text" value={editReviewModal.subtype || ""} onChange={(e) => updateReviewField("subtype", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.activity_type || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, activity_type: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CAEM код</label>
-                  <input type="text" value={editReviewModal.caem_code || ""} onChange={(e) => updateReviewField("caem_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.caem_code || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, caem_code: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CAEM название</label>
-                  <input type="text" value={editReviewModal.caem_name || ""} onChange={(e) => updateReviewField("caem_name", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CFOJ код</label>
-                  <input type="text" value={editReviewModal.cfoj_code || ""} onChange={(e) => updateReviewField("cfoj_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CFOJ название</label>
-                  <input type="text" value={editReviewModal.cfoj_name || ""} onChange={(e) => updateReviewField("cfoj_name", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CFP код</label>
-                  <input type="text" value={editReviewModal.cfp_code || ""} onChange={(e) => updateReviewField("cfp_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CFP название</label>
-                  <input type="text" value={editReviewModal.cfp_name || ""} onChange={(e) => updateReviewField("cfp_name", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Branch</label>
-                  <input type="text" value={editReviewModal.branch || ""} onChange={(e) => updateReviewField("branch", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.caem_name || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, caem_name: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -740,27 +885,19 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Юридический адрес</label>
-                  <textarea value={editReviewModal.legal_address || ""} onChange={(e) => updateReviewField("legal_address", e.target.value)} rows={2} style={{ width: "100%", padding: "8px" }} />
+                  <textarea value={editCompanyModal.legal_address || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, legal_address: e.target.value })} rows={2} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Почтовый адрес</label>
-                  <textarea value={editReviewModal.mailing_address || ""} onChange={(e) => updateReviewField("mailing_address", e.target.value)} rows={2} style={{ width: "100%", padding: "8px" }} />
+                  <textarea value={editCompanyModal.mailing_address || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, mailing_address: e.target.value })} rows={2} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Улица</label>
-                  <input type="text" value={editReviewModal.street_address || ""} onChange={(e) => updateReviewField("street_address", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.street_address || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, street_address: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Почтовый индекс</label>
-                  <input type="text" value={editReviewModal.postal_code || ""} onChange={(e) => updateReviewField("postal_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CUATM код</label>
-                  <input type="text" value={editReviewModal.cuatm_code || ""} onChange={(e) => updateReviewField("cuatm_code", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>CUATM название</label>
-                  <input type="text" value={editReviewModal.cuatm_name || ""} onChange={(e) => updateReviewField("cuatm_name", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.postal_code || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, postal_code: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -773,15 +910,15 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Email</label>
-                  <input type="text" value={editReviewModal.email || ""} onChange={(e) => updateReviewField("email", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.email || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, email: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Телефон</label>
-                  <input type="text" value={editReviewModal.phone || ""} onChange={(e) => updateReviewField("phone", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.phone || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, phone: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Сайт</label>
-                  <input type="text" value={editReviewModal.web || ""} onChange={(e) => updateReviewField("web", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.web || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, web: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -794,19 +931,11 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Руководители</label>
-                  <textarea value={editReviewModal.managers || ""} onChange={(e) => updateReviewField("managers", e.target.value)} rows={3} style={{ width: "100%", padding: "8px" }} />
+                  <textarea value={editCompanyModal.managers || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, managers: e.target.value })} rows={3} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Бухгалтер</label>
-                  <input type="text" value={editReviewModal.accountant || ""} onChange={(e) => updateReviewField("accountant", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Телефон бухгалтера</label>
-                  <input type="text" value={editReviewModal.accountant_phone || ""} onChange={(e) => updateReviewField("accountant_phone", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Ответственное лицо</label>
-                  <input type="text" value={editReviewModal.responsible_person || ""} onChange={(e) => updateReviewField("responsible_person", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.accountant || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, accountant: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
             </details>
@@ -819,37 +948,20 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Дата ликвидации</label>
-                  <input type="text" value={editReviewModal.liquidation_date || ""} onChange={(e) => updateReviewField("liquidation_date", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.liquidation_date || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, liquidation_date: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 600 }}>
-                    <input type="checkbox" checked={editReviewModal.liquidation || false} onChange={(e) => updateReviewField("liquidation", e.target.checked)} />
+                    <input type="checkbox" checked={editCompanyModal.liquidation || false} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, liquidation: e.target.checked })} />
                     Ликвидирована
                   </label>
                 </div>
                 <div>
                   <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 600 }}>
-                    <input type="checkbox" checked={editReviewModal.is_audited || false} onChange={(e) => updateReviewField("is_audited", e.target.checked)} />
+                    <input type="checkbox" checked={editCompanyModal.is_audited || false} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, is_audited: e.target.checked })} />
                     Аудирована
                   </label>
                 </div>
-                <div>
-                  <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 600 }}>
-                    <input type="checkbox" checked={editReviewModal.signed || false} onChange={(e) => updateReviewField("signed", e.target.checked)} />
-                    Подписано
-                  </label>
-                </div>
-              </div>
-            </details>
-
-            {/* Отзыв */}
-            <details open style={{ marginBottom: "16px" }}>
-              <summary style={{ cursor: "pointer", fontWeight: 600, color: "#4f46e5", marginBottom: "12px" }}>
-                Текст отзыва
-              </summary>
-              <div>
-                <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Комментарий</label>
-                <textarea value={editReviewModal.comment || ""} onChange={(e) => updateReviewField("comment", e.target.value)} rows={5} style={{ width: "100%", padding: "8px" }} />
               </div>
             </details>
 
@@ -861,38 +973,26 @@ export default function ReviewsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Год отчёта</label>
-                  <input type="number" value={editReviewModal.report_year || ""} onChange={(e) => updateReviewField("report_year", Number(e.target.value) || null)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="number" value={editCompanyModal.report_year || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, report_year: Number(e.target.value) || null })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Тип отчёта</label>
-                  <input type="text" value={editReviewModal.report_type || ""} onChange={(e) => updateReviewField("report_type", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.report_type || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, report_type: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Статус отчёта</label>
-                  <input type="text" value={editReviewModal.report_status || ""} onChange={(e) => updateReviewField("report_status", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Period From</label>
-                  <input type="text" value={editReviewModal.period_from || ""} onChange={(e) => updateReviewField("period_from", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Period To</label>
-                  <input type="text" value={editReviewModal.period_to || ""} onChange={(e) => updateReviewField("period_to", e.target.value)} style={{ width: "100%", padding: "8px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>Declaration Date</label>
-                  <input type="text" value={editReviewModal.declaration_date || ""} onChange={(e) => updateReviewField("declaration_date", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                  <input type="text" value={editCompanyModal.report_status || ""} onChange={(e) => setEditCompanyModal({ ...editCompanyModal, report_status: e.target.value })} style={{ width: "100%", padding: "8px" }} />
                 </div>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>detail_data (JSON)</label>
                   <textarea 
-                    value={editReviewModal.detail_data ? JSON.stringify(editReviewModal.detail_data, null, 2) : ""} 
+                    value={editCompanyModal.detail_data ? JSON.stringify(editCompanyModal.detail_data, null, 2) : ""} 
                     onChange={(e) => {
                       try {
                         const parsed = e.target.value ? JSON.parse(e.target.value) : null;
-                        updateReviewField("detail_data", parsed);
+                        setEditCompanyModal({ ...editCompanyModal, detail_data: parsed });
                       } catch {
                         // Ignore parse errors while typing
                       }
@@ -904,11 +1004,11 @@ export default function ReviewsPage() {
                 <div>
                   <label style={{ display: "block", marginBottom: "4px", fontSize: "12px", fontWeight: 600 }}>detailed_data (JSON)</label>
                   <textarea 
-                    value={editReviewModal.detailed_data ? JSON.stringify(editReviewModal.detailed_data, null, 2) : ""} 
+                    value={editCompanyModal.detailed_data ? JSON.stringify(editCompanyModal.detailed_data, null, 2) : ""} 
                     onChange={(e) => {
                       try {
                         const parsed = e.target.value ? JSON.parse(e.target.value) : null;
-                        updateReviewField("detailed_data", parsed);
+                        setEditCompanyModal({ ...editCompanyModal, detailed_data: parsed });
                       } catch {
                         // Ignore parse errors while typing
                       }
@@ -920,34 +1020,18 @@ export default function ReviewsPage() {
               </div>
             </details>
 
-            {/* Системные поля */}
-            <details style={{ marginBottom: "16px" }}>
-              <summary style={{ cursor: "pointer", fontWeight: 600, color: "#4f46e5", marginBottom: "12px" }}>
-                Системные поля (только чтение)
-              </summary>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", fontSize: "12px", color: "#666" }}>
-                <div>review_id: {editReviewModal.review_id}</div>
-                <div>created_at: {editReviewModal.created_at}</div>
-                <div>economic_agent_id: {editReviewModal.economic_agent_id || "—"}</div>
-                <div>organization_id: {editReviewModal.organization_id || "—"}</div>
-                <div>organization_name: {editReviewModal.organization_name || "—"}</div>
-                <div>legal_entity_id: {editReviewModal.legal_entity_id || "—"}</div>
-                <div>fisc: {editReviewModal.fisc || "—"}</div>
-                <div>fiscal_date: {editReviewModal.fiscal_date || "—"}</div>
-                <div>import_file_name: {editReviewModal.import_file_name || "—"}</div>
-              </div>
-            </details>
-
             <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "24px", position: "sticky", bottom: 0, backgroundColor: "#fff", padding: "16px 0", borderTop: "1px solid #eee" }}>
-              <button className={`${styles.actionBtn} ${styles.toggle}`} onClick={() => setEditReviewModal(null)}>
+              <button className={`${styles.actionBtn} ${styles.toggle}`} onClick={() => setEditCompanyModal(null)}>
                 Отмена
               </button>
-              <button className={`${styles.actionBtn} ${styles.approve}`} onClick={saveReview}>
+              <button className={`${styles.actionBtn} ${styles.approve}`} onClick={saveCompanyData}>
                 Сохранить
               </button>
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

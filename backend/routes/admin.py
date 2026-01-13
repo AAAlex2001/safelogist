@@ -369,7 +369,7 @@ async def get_companies_list(
 async def get_company_reviews(
     company_name: str,
     page: int = Query(1, ge=1),
-    per_page: int = Query(50, ge=1, le=200),
+    per_page: int = Query(50000, ge=1, le=200),
     db: AsyncSession = Depends(get_db)
 ):
     """Получить все отзывы конкретной компании для редактирования"""
@@ -382,6 +382,11 @@ async def get_company_reviews(
     count_query = select(func.count(Review.id)).where(Review.subject == decoded_name)
     total_result = await db.execute(count_query)
     total = total_result.scalar() or 0
+
+    # Получаем min_review_id (базовая запись компании для редактирования данных)
+    min_id_query = select(func.min(Review.id)).where(Review.subject == decoded_name)
+    min_id_result = await db.execute(min_id_query)
+    min_review_id = min_id_result.scalar()
 
     # Получаем отзывы
     query = (
@@ -396,6 +401,7 @@ async def get_company_reviews(
 
     return {
         "company_name": decoded_name,
+        "min_review_id": min_review_id,
         "reviews": [
             {
                 "id": r.id,

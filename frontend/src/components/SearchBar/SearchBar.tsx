@@ -8,21 +8,25 @@ import SearchIcon from "../../icons/SearchIcon";
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
+type Company = {
+  id: number;
+  name: string;
+  reviews_count?: number;
+};
+
 type SearchBarProps = {
   placeholder?: string;
   reviewsBasePath?: string;
   disabled?: boolean;
-};
-
-type Company = {
-  id: number;
-  name: string;
+  /** Inline mode - вызывает onSearch callback вместо показа dropdown */
+  onSearch?: (results: Company[], loading: boolean, query: string) => void;
 };
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   reviewsBasePath,
   disabled = false,
+  onSearch,
 }) => {
   const t = useTranslations("SearchBar");
   const params = useParams<{ locale?: string }>();
@@ -62,6 +66,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSearch = async (searchQuery: string) => {
     if (searchQuery.length < 2) {
+      if (onSearch) {
+        onSearch([], false, searchQuery);
+        return;
+      }
       setShowDropdown(false);
       if (clearResultsTimeout.current) clearTimeout(clearResultsTimeout.current);
       clearResultsTimeout.current = setTimeout(() => {
@@ -71,19 +79,36 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     setLoading(true);
-    setShowDropdown(true);
+    if (onSearch) {
+      onSearch([], true, searchQuery);
+    } else {
+      setShowDropdown(true);
+    }
 
     try {
       const response = await fetch(`${API_URL}/api/reviews/search?q=${encodeURIComponent(searchQuery)}&limit=10`);
       if (response.ok) {
         const data = await response.json();
-        setResults(data.companies || []);
+        const companies = data.companies || [];
+        if (onSearch) {
+          onSearch(companies, false, searchQuery);
+        } else {
+          setResults(companies);
+        }
       } else {
-        setResults([]);
+        if (onSearch) {
+          onSearch([], false, searchQuery);
+        } else {
+          setResults([]);
+        }
       }
     } catch (error) {
       console.error("Ошибка поиска:", error);
-      setResults([]);
+      if (onSearch) {
+        onSearch([], false, searchQuery);
+      } else {
+        setResults([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -151,7 +176,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           </button>
         </div>
 
-        <div className={`${styles.autocompleteResults} ${showDropdown ? styles.show : ""}`}>
+        <div className={`${styles.autocompleteResults} ${showDropdown && !onSearch ? styles.show : ""}`}>
           {loading ? (
             <div className={styles.autocompleteItem} style={{ justifyContent: 'center' }}>
               <span className={styles.loader}></span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducer, useCallback, useMemo } from "react";
+import { useReducer, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -8,11 +8,17 @@ const ENDPOINTS = {
   sendCode: `${API_URL}/register/send-code`,
   verifyCode: `${API_URL}/register/verify-code`,
   register: `${API_URL}/register/`,
+  searchCompanies: `${API_URL}/api/reviews/search`,
 } as const;
 
 export type Step = "form" | "code" | "password";
 
 export type UserRole = "TRANSPORT_COMPANY" | "CARGO_OWNER" | "FORWARDER" | "USER";
+
+export interface CompanySearchResult {
+  name: string;
+  id: number;
+}
 
 export interface RegistrationState {
   step: Step;
@@ -40,6 +46,13 @@ export interface RegistrationState {
     confirm: string | null;
   };
 
+  search: {
+    query: string;
+    results: CompanySearchResult[];
+    loading: boolean;
+    showDropdown: boolean;
+  };
+
   emailVerified: boolean;
 }
 
@@ -59,6 +72,10 @@ type RegistrationAction =
   | { type: "SET_FIELD_ERROR"; payload: { field: keyof RegistrationState["fieldErrors"]; message: string | null } }
   | { type: "CLEAR_FIELD_ERRORS" }
   | { type: "SET_EMAIL_VERIFIED"; payload: boolean }
+  | { type: "SET_SEARCH_QUERY"; payload: string }
+  | { type: "SET_SEARCH_RESULTS"; payload: CompanySearchResult[] }
+  | { type: "SET_SEARCH_LOADING"; payload: boolean }
+  | { type: "SET_SHOW_DROPDOWN"; payload: boolean }
   | { type: "RESET" };
 
 const initialState: RegistrationState = {
@@ -85,6 +102,13 @@ const initialState: RegistrationState = {
     code: null,
     password: null,
     confirm: null,
+  },
+
+  search: {
+    query: "",
+    results: [],
+    loading: false,
+    showDropdown: false,
   },
 
   emailVerified: false,
@@ -157,6 +181,15 @@ function reducer(state: RegistrationState, action: RegistrationAction): Registra
     case "SET_EMAIL_VERIFIED":
       return { ...state, emailVerified: action.payload };
 
+    case "SET_SEARCH_QUERY":
+      return { ...state, search: { ...state.search, query: action.payload } };
+    case "SET_SEARCH_RESULTS":
+      return { ...state, search: { ...state.search, results: action.payload } };
+    case "SET_SEARCH_LOADING":
+      return { ...state, search: { ...state.search, loading: action.payload } };
+    case "SET_SHOW_DROPDOWN":
+      return { ...state, search: { ...state.search, showDropdown: action.payload } };
+
     case "RESET":
       return initialState;
 
@@ -181,6 +214,7 @@ function parseErrorMessage(detail: unknown): string {
 export function useRegistration() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Validate first step form
   const validateForm = useCallback(() => {
@@ -188,7 +222,7 @@ export function useRegistration() {
     dispatch({ type: "CLEAR_FIELD_ERRORS" });
 
     if (!state.form.name.trim()) {
-      dispatch({ type: "SET_FIELD_ERROR", payload: { field: "name", message: "Введите имя" } });
+      dispatch({ type: "SET_FIELD_ERROR", payload: { field: "name", message: "Введите название компании" } });
       hasError = true;
     }
 
@@ -322,7 +356,7 @@ export function useRegistration() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first_name: state.form.name.trim(),
+          company_name: state.form.name.trim(),
           role: state.form.role,
           phone: state.form.phone,
           email: state.form.email.trim(),
@@ -355,6 +389,52 @@ export function useRegistration() {
     dispatch({ type: "CLEAR_FIELD_ERRORS" });
   }, []);
 
+  const searchCompanies = useCallback(async (query: string) => {
+    dispatch({ type: "SET_SEARCH_QUERY", payload: query });
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (query.length < 2) {
+      dispatch({ type: "SET_SEARCH_RESULTS", payload: [] });
+      dispatch({ type: "SET_SHOW_DROPDOWN", payload: false });
+      return;
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      dispatch({ type: "SET_SEARCH_LOADING", payload: true });
+
+      try {
+        const response = await fetch(`${ENDPOINTS.searchCompanies}?q=${encodeURIComponent(query)}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          dispatch({ type: "SET_SEARCH_RESULTS", payload: data.companies || [] });
+          dispatch({ type: "SET_SHOW_DROPDOWN", payload: true });
+        }
+      } catch {
+        dispatch({ type: "SET_SEARCH_RESULTS", payload: [] });
+      } finally {
+        dispatch({ type: "SET_SEARCH_LOADING", payload: false });
+      }
+    }, 300);
+  }, []);
+
+  const selectCompany = useCallback((company: CompanySearchResult) => {
+    dispatch({ type: "SET_NAME", payload: company.name });
+    dispatch({ type: "SET_SEARCH_QUERY", payload: company.name });
+    dispatch({ type: "SET_SHOW_DROPDOWN", payload: false });
+  }, []);
+
+  const hideDropdown = useCallback(() => {
+    dispatch({ type: "SET_SHOW_DROPDOWN", payload: false });
+  }, []);
+
+  const showDropdown = useCallback(() => {
+    dispatch({ type: "SET_SHOW_DROPDOWN", payload: true });
+  }, []);
+
   const actions = useMemo(
     () => ({
       setName: (v: string) => dispatch({ type: "SET_NAME", payload: v }),
@@ -385,6 +465,10 @@ export function useRegistration() {
     register,
 
     goBackToForm,
+    searchCompanies,
+    selectCompany,
+    hideDropdown,
+    showDropdown,
 
     ...actions,
   };

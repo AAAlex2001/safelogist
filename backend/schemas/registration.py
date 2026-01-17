@@ -22,7 +22,7 @@ class UserRole(str, Enum):
 
 class UserRegistration(BaseModel):
     "модель валидации пользователя"
-    first_name: str = Field(..., description="Имя пользователя")
+    company_name: str = Field(..., description="Название компании")
     role: UserRole = Field(..., description="Роль пользователя")
     phone: str = Field(..., description="Номер телефона пользователя")
     password: str = Field(..., description="Пароль пользователя")

@@ -127,7 +127,7 @@ class RegistrationService:
 
         # Создание пользователя
         new_user = User(
-            name=data.first_name,
+            company_name=data.company_name,
             role=data.role,
             phone=normalized_phone,
             email=data.email,
@@ -148,7 +148,7 @@ class RegistrationService:
         
         # Отправляем уведомление в Telegram группу
         await telegram_notifier.notify_user_registration(
-            user_name=new_user.name,
+            user_name=new_user.company_name or "Не указано",
             user_email=new_user.email,
             user_phone=new_user.phone,
             user_role=new_user.role.value,

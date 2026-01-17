@@ -164,8 +164,10 @@
   },
   "Registration": {
     "title": "Створити акаунт",
-    "nameLabel": "Ім'я",
-    "namePlaceholder": "Ваше ім'я",
+    "nameLabel": "Назва компанії",
+    "namePlaceholder": "Введіть назву компанії",
+    "searching": "Пошук...",
+    "noCompaniesFound": "Компанії не знайдено",
     "roleLabel": "Рід діяльності",
     "rolePlaceholder": "Оберіть рід діяльності",
     "roleTransport": "Транспортна компанія",

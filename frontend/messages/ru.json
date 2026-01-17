@@ -164,8 +164,10 @@
   },
   "Registration": {
     "title": "Создать аккаунт",
-    "nameLabel": "Имя",
-    "namePlaceholder": "Ваше имя",
+    "nameLabel": "Название компании",
+    "namePlaceholder": "Введите название компании",
+    "searching": "Поиск...",
+    "noCompaniesFound": "Компании не найдены",
     "roleLabel": "Род деятельности",
     "rolePlaceholder": "Выберите род деятельности",
     "roleTransport": "Транспортная компания",

@@ -162,8 +162,10 @@
   },
   "Registration": {
     "title": "Create account",
-    "nameLabel": "Name",
-    "namePlaceholder": "Your name",
+    "nameLabel": "Company Name",
+    "namePlaceholder": "Enter company name",
+    "searching": "Searching...",
+    "noCompaniesFound": "No companies found",
     "roleLabel": "Industry",
     "rolePlaceholder": "Select industry",
     "roleTransport": "Transport Company",

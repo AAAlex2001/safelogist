@@ -2,10 +2,17 @@
 
 import { useState, useRef, useEffect } from "react";
 import styles from "./input.module.scss";
+import { Loader } from "@/components/loader/Loader";
 
 type SelectOption = {
   value: string;
   label: string;
+};
+
+type AutocompleteItem = {
+  id: string | number;
+  label: string;
+  value: any;
 };
 
 type BaseProps = {
@@ -33,7 +40,18 @@ type SelectProps = BaseProps & {
   options: SelectOption[];
 };
 
-type InputFieldProps = TextInputProps | TextareaProps | SelectProps;
+type AutocompleteProps = BaseProps & {
+  type: "autocomplete";
+  items: AutocompleteItem[];
+  loading?: boolean;
+  showDropdown?: boolean;
+  onSelect?: (item: AutocompleteItem) => void;
+  onClose?: () => void;
+  loadingText?: string;
+  emptyText?: string;
+};
+
+type InputFieldProps = TextInputProps | TextareaProps | SelectProps | AutocompleteProps;
 
 export function InputField(props: InputFieldProps) {
   const {
@@ -57,11 +75,14 @@ export function InputField(props: InputFieldProps) {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setIsOpen(false);
+        if (type === "autocomplete" && "onClose" in props && props.onClose) {
+          props.onClose();
+        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [type, props]);
 
   if (type === "textarea") {
     const { rows = 4 } = props as TextareaProps;
@@ -80,6 +101,52 @@ export function InputField(props: InputFieldProps) {
         />
         {error && <span className={styles.error}>{error}</span>}
       </label>
+    );
+  }
+
+  if (type === "autocomplete") {
+    const { items, loading = false, showDropdown = false, onSelect, loadingText = "Загрузка...", emptyText = "Нет данных" } = props as AutocompleteProps;
+
+    return (
+      <div className={styles.inputBlock} ref={ref}>
+        <span className={styles.label}>{label}</span>
+        <div className={`${styles.autocompleteWrapper} ${showDropdown ? styles.autocompleteWrapperOpen : ""}`}>
+          <input
+            name={name}
+            type="text"
+            placeholder={placeholder}
+            className={`${styles.input} ${styles.autocompleteInput} ${variantClass} ${error ? styles.inputError : ""}`}
+            value={value}
+            onChange={(e) => onChange?.(e.target.value)}
+            disabled={disabled}
+            aria-invalid={Boolean(error)}
+            autoComplete="off"
+          />
+          {showDropdown && (
+            <div className={styles.selectDropdown}>
+              {loading ? (
+                <div className={styles.selectLoading}>
+                  <Loader size="medium" color="primary" />
+                </div>
+              ) : items.length > 0 ? (
+                items.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={styles.selectOption}
+                    onClick={() => onSelect?.(item)}
+                  >
+                    {item.label}
+                  </button>
+                ))
+              ) : (
+                <div className={styles.selectEmpty}>{emptyText}</div>
+              )}
+            </div>
+          )}
+        </div>
+        {error && <span className={styles.error}>{error}</span>}
+      </div>
     );
   }
 

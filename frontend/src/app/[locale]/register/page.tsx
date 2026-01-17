@@ -8,13 +8,14 @@ import { SuccessNotification } from "@/components/notifications/SuccessNotificat
 import { useRegistration, UserRole } from "./store/useRegistration";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import LogoIcon from "@/icons/LogoIcon";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 export default function RegisterPage() {
   const t = useTranslations("Registration");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const {
     state,
@@ -31,7 +32,26 @@ export default function RegisterPage() {
     setConfirmPassword,
     setError,
     setSuccess,
+    searchCompanies,
+    selectCompany,
+    hideDropdown,
   } = useRegistration();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        hideDropdown();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [hideDropdown]);
+
+  const handleCompanyInput = (value: string) => {
+    setName(value);
+    searchCompanies(value);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -81,12 +101,23 @@ export default function RegisterPage() {
                 <InputField
                   label={t("nameLabel")}
                   placeholder={t("namePlaceholder")}
-                  type="text"
+                  type="autocomplete"
                   name="name"
                   value={state.form.name}
-                  onChange={setName}
+                  onChange={handleCompanyInput}
                   error={state.fieldErrors.name}
                   disabled={state.loading}
+                  items={state.search.results.map((company) => ({
+                    id: company.id,
+                    label: company.name,
+                    value: company,
+                  }))}
+                  loading={state.search.loading}
+                  showDropdown={state.search.showDropdown}
+                  onSelect={(item) => selectCompany(item.value)}
+                  onClose={hideDropdown}
+                  loadingText={t("searching")}
+                  emptyText={t("noCompaniesFound")}
                 />
 
                 <InputField

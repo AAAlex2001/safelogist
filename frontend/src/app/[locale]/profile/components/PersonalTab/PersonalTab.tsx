@@ -102,7 +102,6 @@ export function PersonalTab() {
               { value: "TRANSPORT_COMPANY", label: t("industryTransport") },
               { value: "CARGO_OWNER", label: t("industryCargoOwner") },
               { value: "FORWARDER", label: t("industryForwarder") },
-              { value: "USER", label: t("industryUser") },
             ]}
             variant="white"
           />

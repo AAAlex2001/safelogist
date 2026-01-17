@@ -164,8 +164,10 @@
   },
   "Registration": {
     "title": "Creați un cont",
-    "nameLabel": "Nume",
-    "namePlaceholder": "Numele dvs.",
+    "nameLabel": "Denumirea companiei",
+    "namePlaceholder": "Introduceți denumirea companiei",
+    "searching": "Căutare...",
+    "noCompaniesFound": "Companii negăsite",
     "roleLabel": "Domeniu de activitate",
     "rolePlaceholder": "Selectați domeniul",
     "roleTransport": "Companie de transport",

@@ -2,6 +2,7 @@
 
 import styles from "./button.module.scss";
 import { ArrowRightCtaIcon } from "@/icons";
+import { Loader } from "@/components/loader/Loader";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -39,7 +40,7 @@ export function Button({
   ].filter(Boolean).join(" ");
 
   const content = loading ? (
-    <span className={styles.spinner} aria-label="loading" />
+    <Loader size="medium" color="white" />
   ) : (
     <>
       {children}

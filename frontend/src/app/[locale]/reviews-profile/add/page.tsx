@@ -98,36 +98,26 @@ export default function AddReviewPage() {
         <div className={styles.infoInputs}>
           <div className={styles.reviewInput}>
             <div className={styles.inputReview}>
-              <div className={styles.companySearchWrapper} ref={dropdownRef}>
-                <InputField
-                  label={t("companyLabel")}
-                  placeholder={t("companyPlaceholder")}
-                  value={state.form.targetCompany}
-                  onChange={handleCompanyInput}
-                  error={state.fieldErrors.targetCompany}
-                  disabled={!isLoggedIn || state.submitting}
-                />
-
-                {state.search.showDropdown && (
-                  <div className={styles.searchDropdown}>
-                    {state.search.loading ? (
-                      <div className={styles.searchLoading}>{t("searching")}</div>
-                    ) : state.search.results.length > 0 ? (
-                      state.search.results.map((company) => (
-                        <div
-                          key={company.id}
-                          className={styles.searchItem}
-                          onClick={() => selectCompany(company)}
-                        >
-                          <span className={styles.searchItemName}>{company.name}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className={styles.noResults}>{t("noCompaniesFound")}</div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <InputField
+                label={t("companyLabel")}
+                placeholder={t("companyPlaceholder")}
+                type="autocomplete"
+                value={state.form.targetCompany}
+                onChange={handleCompanyInput}
+                error={state.fieldErrors.targetCompany}
+                disabled={!isLoggedIn || state.submitting}
+                items={state.search.results.map((company) => ({
+                  id: company.id,
+                  label: company.name,
+                  value: company,
+                }))}
+                loading={state.search.loading}
+                showDropdown={state.search.showDropdown}
+                onSelect={(item) => selectCompany(item.value)}
+                onClose={hideDropdown}
+                loadingText={t("searching")}
+                emptyText={t("noCompaniesFound")}
+              />
 
               <StarRating
                 label={t("ratingLabel")}

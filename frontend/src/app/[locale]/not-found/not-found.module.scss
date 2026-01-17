@@ -72,3 +72,33 @@
     margin-top: 20px;
   }
 }
+
+.notFoundPage::before,
+.notFoundPage::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 16vw;
+  height: 50%;
+  background: var(--primary);
+  filter: blur(70px);
+  opacity: 1;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.notFoundPage::before {
+  left: -15vw;
+}
+
+.notFoundPage::after {
+  right: -15vw;
+}
+
+@media (max-width: 768px) {
+  /* Hide decorative pseudo-elements on small screens */
+  .notFoundPage::before,
+  .notFoundPage::after {
+    display: none;
+  }
+}

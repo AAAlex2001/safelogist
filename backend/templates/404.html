@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-language" content="{{ lang }}">
+    <title>404 - {{ t.not_found_title }}</title>
+    <meta name="description" content="{{ t.not_found_description }}">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon 32x32 main.svg">
+    {% include "partials/analytics.html" %}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/reviews.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/searchbar.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/404.css">
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const theme = (saved === 'light' || saved === 'dark') ? saved :
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+    {% include "partials/header.html" %}
+
+    <div class="notFoundPage">
+        <div class="content">
+            <div class="code">404</div>
+            <h1 class="title">{{ t.not_found_title }}</h1>
+            <p class="description">{{ t.not_found_description }}</p>
+
+            {% set placeholder = t.not_found_description %}
+            {% set button_text = t.search_button %}
+            {% set input_id = "searchInput404" %}
+            {% set button_id = "searchButton404" %}
+            {% include "partials/search_bar.html" with context %}
+
+            <a href="/" class="button">{{ t.not_found_button }}</a>
+        </div>
+    </div>
+
+    {% include "partials/footer.html" %}
+
+    <script src="/static/js/header.js"></script>
+    <script src="/static/js/search_bar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.initSearchBar({
+                inputId: 'searchInput404',
+                buttonId: 'searchButton404',
+                basePath: '/{{ lang }}/reviews',
+                emptyText: '{{ t.empty_results }}'
+            });
+        });
+    </script>
+</body>
+</html>

@@ -213,4 +213,10 @@
     "themeDark": "Dark",
     "languageLabel": "Interface language"
   }
+  ,
+  "NotFound": {
+    "title": "Sorry, the page was not found",
+    "description": "Use search or return to the homepage"
+    ,"buttonText": "Return to homepage"
+  }
 }

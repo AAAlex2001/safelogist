@@ -215,4 +215,10 @@
     "themeDark": "Întunecata",
     "languageLabel": "Limba interfeței"
   }
+  ,
+  "NotFound": {
+    "title": "Ne pare rău, pagina nu a fost găsită",
+    "description": "Folosiți căutarea sau reveniți la pagina principală"
+    ,"buttonText": "Înapoi la pagina principală"
+  }
 }

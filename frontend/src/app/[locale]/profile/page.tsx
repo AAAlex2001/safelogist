@@ -4,8 +4,9 @@ import ProfileClient from "./ProfileClient";
 
 export const dynamic = "force-dynamic";
 
-export default function ProfilePage() {
-  const token = cookies().get("authToken")?.value;
+export default async function ProfilePage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("authToken")?.value;
   if (!token) notFound();
   return <ProfileClient />;
 }

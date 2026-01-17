@@ -88,6 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem("authToken");
+    document.cookie = "authToken=; path=/; max-age=0; SameSite=Lax";
     setIsLoggedIn(false);
     setUserData(null);
     window.dispatchEvent(new Event("authChange"));

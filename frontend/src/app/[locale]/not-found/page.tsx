@@ -1,18 +1,10 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import styles from "./not-found.module.scss";
-import Footer from "@/components/footer/Footer";
-import {SearchBar} from "@/components/SearchBar/SearchBar";
-import {Button} from "@/components/button/Button";
-import { useRouter } from "next/navigation";
+import NotFoundClientActions from "./NotFoundClientActions";
+import NotFoundFooter from "./NotFoundFooter";
 
-export default function NotFoundPage() {
-  const t = useTranslations("NotFound");
-  const router = useRouter();
-  const push = () => {
-    router.push('/');
-  }
+export default async function NotFoundPage() {
+  const t = await getTranslations("NotFound");
 
   return (
     <div className={styles.notFoundPage}>
@@ -20,10 +12,14 @@ export default function NotFoundPage() {
         <span className={styles.code}>404</span>
         <h1 className={styles.title}>{t("title")}</h1>
         <p className={styles.description}>{t("description")}</p>
-        <SearchBar placeholder={t("description")} />
-        <Button variant="outline" className={styles.button} onClick={push}>{t("buttonText")}</Button>
+
+        <NotFoundClientActions
+          searchPlaceholder={t("description")}
+          buttonText={t("buttonText")}
+        />
       </div>
-      <Footer />
+
+      <NotFoundFooter />
     </div>
   );
 }
